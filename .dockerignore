@@ -1,2 +1,3 @@
+.dockeringnore
 node_modules
 dist
