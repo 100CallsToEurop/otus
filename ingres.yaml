@@ -10,7 +10,7 @@ spec:
   - host: arch.homework
     http:
       paths:
-      - pathType: Prefix
+      - pathType: Exact
         path: "/v1"
         backend:
           service:
