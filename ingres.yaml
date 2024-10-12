@@ -4,21 +4,14 @@ metadata:
   name: otus-app-ingress
   annotations:
     kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/rewrite-target: /health
+    nginx.ingress.kubernetes.io/rewrite-target: $1/health
 spec:
   rules:
   - host: arch.homework
     http:
       paths:
-      - path: /otusapp/.*
-        pathType: ImplementationSpecific
-        backend:
-          service:
-            name: otus-app
-            port:
-              number: 80
-      - path: /health
-        pathType: Exact
+      - path: /otusapp/(.+)/health
+        pathType: Prefix
         backend:
           service:
             name: otus-app
