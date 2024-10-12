@@ -18,7 +18,7 @@ spec:
             port:
               number: 80
       - path: /health
-        pathType: Exact
+        pathType: Prefix
         backend:
           service:
             name: otus-app
