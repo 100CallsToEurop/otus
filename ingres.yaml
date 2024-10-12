@@ -7,11 +7,12 @@ spec:
   - host: arch.homework
     http:
       paths:
-      - path: /
+      - path: /otusapp/(.*)
         pathType: Prefix
         backend:
           service:
             name: otus-app
             port:
               number: 80
+      rewrite: /health
   ingressClassName: nginx
