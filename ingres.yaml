@@ -17,4 +17,11 @@ spec:
             name: otus-app
             port:
               number: 80
+      - path: /health
+        pathType: Exact
+        backend:
+          service:
+            name: otus-app
+            port:
+              number: 80
   ingressClassName: nginx
