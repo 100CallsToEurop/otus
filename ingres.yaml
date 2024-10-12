@@ -11,7 +11,7 @@ spec:
     http:
       paths:
       - path: /otusapp/.*
-        pathType: Mixed
+        pathType: ImplementationSpecific
         backend:
           service:
             name: otus-app
