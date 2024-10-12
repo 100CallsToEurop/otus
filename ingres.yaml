@@ -4,7 +4,7 @@ metadata:
   name: otus-app-ingress
   annotations:
     kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/rewrite-target: $1/health
+    nginx.ingress.kubernetes.io/rewrite-target: /$1/health
 spec:
   rules:
   - host: arch.homework
