@@ -2,18 +2,14 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: otus-app-ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/rewrite-target: /health
 spec:
   rules:
   - host: arch.homework
     http:
       paths:
-      - path: /health
-        pathType: Exact
-        backend:
-          service:
-            name: otus-app
-            port:
-              number: 80
       - path: /otusapp/.*
         pathType: Prefix
         backend:
@@ -21,6 +17,4 @@ spec:
             name: otus-app
             port:
               number: 80
-        rewrite: 
-          path: /health
   ingressClassName: nginx
