@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: otus
+  name: otus-app
 spec:
   replicas: 2
   selector:
     matchLabels:
-      env: prod
+      app: otus-app
   template:
     metadata:
       labels:
-        env: prod
+        app: otus-app
     spec:
       containers:
       - name: otus-app
@@ -18,6 +18,6 @@ spec:
         resources:
           limits:
             memory: "128Mi"
-            cpu: "250m"
+            cpu: "500m"
         ports:
         - containerPort: 8000

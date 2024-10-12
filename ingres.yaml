@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: otus-ingress
+  name: otus-app-ingress
 spec:
   rules:
   - host: arch.homework
@@ -11,7 +11,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: otus-service
+            name: otus-app
             port:
               number: 80
   ingressClassName: nginx
