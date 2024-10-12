@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: otus-app
-        image: 100callstoeurop/otus
+        image: 100callstoeurop/otus:otus
         resources:
           limits:
             memory: "128Mi"
