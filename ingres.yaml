@@ -14,5 +14,5 @@ spec:
             name: otus-app
             port:
               number: 80
-      rewrite: /health
+        rewrite: /health
   ingressClassName: nginx
