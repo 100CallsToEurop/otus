@@ -19,6 +19,7 @@ export class UserEntity extends AggregateRoot implements IUser {
   @IsNumber()
   @PrimaryGeneratedColumn('increment')
   id: number;
+  @IsOptional()
   @IsString()
   @MaxLength(256)
   @Column({ name: 'user_name' })
