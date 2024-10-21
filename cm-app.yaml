@@ -4,4 +4,5 @@ metadata:
   name: otus-app-cm
 data:
   PORT: "8000"
-  PG_HOST: "5432"
+  PG_PORT: "5432"
+  PG_HOST: "postgresql-dev-0"
