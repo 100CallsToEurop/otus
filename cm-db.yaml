@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: database-cm
+data:
+  create-database-table.sql: |
+    CREATE TABLE users (
+      id SERIAL PRIMARY KEY,
+      user_name VARCHAR,
+      first_name VARCHAR,
+      last_name VARCHAR,
+      email VARCHAR,
+      phone VARCHAR
+    );
