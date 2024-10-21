@@ -1,0 +1,10 @@
+image:
+  repository: postgres:latest
+  tag: latest
+
+database:
+  user: postgres
+  password: Deusmodus
+  name: otus
+
+resources: {}
