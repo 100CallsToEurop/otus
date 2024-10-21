@@ -13,6 +13,8 @@ spec:
         envFrom:
         - configMapRef:
             name: otus-app-cm
+        - secretRef:
+            name: db-secret-credentials
         env:
             - name: PORT
               valueFrom:
