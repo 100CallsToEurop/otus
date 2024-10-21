@@ -4,8 +4,9 @@ metadata:
   name: db-migration-job
 spec:
   template:
-    spec:
-      completions: 1
+    completions: 1
+    backoffLimit: 1
+    spec:  
       restartPolicy: Never
       containers:
       - name: otus-app
