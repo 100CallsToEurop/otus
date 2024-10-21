@@ -10,6 +10,32 @@ spec:
       - name: otus-app
         image: 100callstoeurop/otus-homework:latest
         command: ["sh", "-c", "yarn migration:create && yarn migration:run"]
+        env:
+        - name: PG_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: db-secret-credentials
+              key: PG_USERNAME
+        - name: PG_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-secret-credentials
+              key: PG_PASSWORD
+        - name: PG_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: db-secret-credentials
+              key: PG_DATABASE
+        - name: PORT
+          valueFrom:
+            configMapKeyRef:
+              name: otus-app-cm
+              key: PORT
+        - name: PG_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: otus-app-cm
+              key: PG_HOST
         volumeMounts:
         - name: postgresql-data
           mountPath: /data/volume
