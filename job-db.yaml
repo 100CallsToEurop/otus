@@ -1,0 +1,21 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: db-migration-job
+spec:
+  template:
+    spec:
+      containers:
+      - name: otus-app
+        image: 100callstoeurop/otus-homework:latest
+        command: ["sh", "-c", "yarn migration:create && yarn migration:run"]
+        envFrom:
+        - secretRef:
+            name: db-secret-credentials
+        volumeMounts:
+        - name: postgresql-data
+          mountPath: /data/volume
+      volumes:
+      - name: postgresql-data
+        persistentVolumeClaim:
+          claimName: postgresql-data-claim

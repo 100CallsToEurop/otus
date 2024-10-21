@@ -4,3 +4,4 @@ metadata:
   name: otus-app-cm
 data:
   PORT: "8000"
+  PG_HOST: "5432"
