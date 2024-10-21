@@ -5,6 +5,7 @@ metadata:
 spec:
   template:
     spec:
+      restartPolicy: Never
       containers:
       - name: otus-app
         image: 100callstoeurop/otus-homework:latest
