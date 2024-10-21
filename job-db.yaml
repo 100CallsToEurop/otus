@@ -6,7 +6,7 @@ spec:
   template:
     spec:
       completions: 1
-      backoffLimit: 0
+      backoffLimit: 1
       restartPolicy: Never
       containers:
       - name: otus-app
