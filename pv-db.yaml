@@ -1,15 +1,14 @@
 apiVersion: v1
-kind: PersistentVolume
+kind: PersistentVolume # Create a PV
 metadata:
-  name: persistent-volume-pv
+  name: postgresql-data # Sets PV's name
   labels:
-    type: local
-    app: my-database
+    type: local # Sets PV's type to local
 spec:
   storageClassName: manual
   capacity:
-    storage: 8Gi
+    storage: 10Gi # Sets PV Volume
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   hostPath:
-    path: "/data/db"
+    path: "/data/volume" # Sets the volume's path
