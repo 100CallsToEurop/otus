@@ -21,39 +21,42 @@ spec:
             cpu: "500m"
         ports:
         - containerPort: 8000
+        envFrom:
+        - configMapRef:
+            name: otus-app-cm
         env:
             - name: PORT
               valueFrom:
-                secretKeyRef:
-                  name: app-secret-credentials
+                configMapKeyRef:
+                  name: otus-app-cm
                   key: PORT
 
             - name: PG_PORT
               valueFrom:
                 secretKeyRef:
-                  name: app-secret-credentials
+                  name: db-secret-credentials
                   key: PG_PORT
             
             - name: PG_HOST
               valueFrom:
                 secretKeyRef:
-                  name: app-secret-credentials
+                  name: db-secret-credentials
                   key: PG_HOST
 
             - name: PG_DATABASE
               valueFrom:
                 secretKeyRef:
-                  name: app-secret-credentials
+                  name: db-secret-credentials
                   key: PG_DATABASE
 
             - name: PG_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: app-secret-credentials
+                  name: db-secret-credentials
                   key: PG_USERNAME
 
             - name: PG_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: app-secret-credentials
+                  name: db-secret-credentials
                   key: PG_PASSWORD
