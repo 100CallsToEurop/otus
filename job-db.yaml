@@ -3,10 +3,9 @@ kind: Job
 metadata:
   name: db-migration-job
 spec:
-  template:
-    completions: 1
-    backoffLimit: 1
-    spec:  
+  completions: 1
+  backoffLimit: 1
+  template:  
       restartPolicy: Never
       containers:
       - name: otus-app
