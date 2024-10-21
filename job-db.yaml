@@ -10,11 +10,6 @@ spec:
       - name: otus-app
         image: 100callstoeurop/otus-homework:latest
         command: ["sh", "-c", "yarn migration:create && yarn migration:run"]
-        envFrom:
-        - configMapRef:
-            name: otus-app-cm
-        - secretRef:
-            name: db-secret-credentials
         env:
             - name: PORT
               valueFrom:
@@ -24,8 +19,7 @@ spec:
 
             - name: PG_PORT
               valueFrom:
-                configMapKeyRef:
-                  name: otus-app-cm
+                configMapKeyRef:                  name: otus-app-cm
                   key: PG_PORT
             
             - name: PG_HOST
