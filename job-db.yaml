@@ -19,7 +19,8 @@ spec:
 
             - name: PG_PORT
               valueFrom:
-                configMapKeyRef:                  name: otus-app-cm
+                configMapKeyRef:
+                  name: otus-app-cm
                   key: PG_PORT
             
             - name: PG_HOST
