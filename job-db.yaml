@@ -11,7 +11,7 @@ spec:
       containers:
       - name: otus-app
         image: 100callstoeurop/otus-homework:latest
-        command: ["sh", "-c", "yarn migration:create && yarn migration:migrate"]
+        command: ["sh", "-c", "rm -f src/db/migrations/*.migration.ts && yarn migration:create && yarn migration:migrate"]
         env:
         - name: PG_USERNAME
           valueFrom:
