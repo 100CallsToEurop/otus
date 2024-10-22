@@ -14,7 +14,7 @@ spec:
         pathType: ImplementationSpecific
         backend:
           service:
-            name: otus-app
+            name: svc-app
             port:
               number: 80
       - path: /health
