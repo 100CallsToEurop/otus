@@ -24,14 +24,32 @@
 							}
 						},
 						"url": {
-							"raw": "http://arch.homework/user",
-							"protocol": "http",
+							"raw": "arch.homework/user",
 							"host": [
 								"arch",
 								"homework"
 							],
 							"path": [
 								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get user by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "arch.homework/user/2",
+							"host": [
+								"arch",
+								"homework"
+							],
+							"path": [
+								"user",
+								"2"
 							]
 						}
 					},
@@ -52,15 +70,33 @@
 							}
 						},
 						"url": {
-							"raw": "http://arch.homework/user/1",
-							"protocol": "http",
+							"raw": "arch.homework/user/2",
 							"host": [
 								"arch",
 								"homework"
 							],
 							"path": [
 								"user",
-								"1"
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get updated user by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "arch.homework/user/2",
+							"host": [
+								"arch",
+								"homework"
+							],
+							"path": [
+								"user",
+								"2"
 							]
 						}
 					},
@@ -72,35 +108,14 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://arch.homework/user/1",
-							"protocol": "http",
+							"raw": "arch.homework/user/2",
 							"host": [
 								"arch",
 								"homework"
 							],
 							"path": [
 								"user",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "get user by id",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://arch.homework/user/1",
-							"protocol": "http",
-							"host": [
-								"arch",
-								"homework"
-							],
-							"path": [
-								"user",
-								"1"
+								"2"
 							]
 						}
 					},
