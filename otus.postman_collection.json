@@ -42,14 +42,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "arch.homework/user/2",
+							"raw": "arch.homework/user/3",
 							"host": [
 								"arch",
 								"homework"
 							],
 							"path": [
 								"user",
-								"2"
+								"3"
 							]
 						}
 					},
@@ -70,14 +70,14 @@
 							}
 						},
 						"url": {
-							"raw": "arch.homework/user/2",
+							"raw": "arch.homework/user/3",
 							"host": [
 								"arch",
 								"homework"
 							],
 							"path": [
 								"user",
-								"2"
+								"3"
 							]
 						}
 					},
@@ -89,14 +89,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "arch.homework/user/2",
+							"raw": "arch.homework/user/3",
 							"host": [
 								"arch",
 								"homework"
 							],
 							"path": [
 								"user",
-								"2"
+								"3"
 							]
 						}
 					},
@@ -108,14 +108,14 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "arch.homework/user/2",
+							"raw": "arch.homework/user/3",
 							"host": [
 								"arch",
 								"homework"
 							],
 							"path": [
 								"user",
-								"2"
+								"3"
 							]
 						}
 					},
