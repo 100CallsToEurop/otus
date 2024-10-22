@@ -5,6 +5,7 @@ import { APP_FILTER } from '@nestjs/core';
 import { AllExceptionsFilter } from '@app/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeOrmConfigService } from '../db/config';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -15,7 +16,7 @@ import { TypeOrmConfigService } from '../db/config';
     TypeOrmModule.forRootAsync(TypeOrmConfigService()),
     UserModule,
   ],
-  controllers: [],
+  controllers: [AppController],
   providers: [
     {
       provide: APP_FILTER,
