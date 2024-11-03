@@ -29,6 +29,12 @@
       ],
       "@app/configs/*": [
         "libs/configs/src/*"
+      ],
+      "@app/providers": [
+        "libs/providers/src"
+      ],
+      "@app/providers/*": [
+        "libs/providers/src/*"
       ]
     }
   }
