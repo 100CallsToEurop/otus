@@ -13,20 +13,23 @@ export class MetricsMiddleware implements NestMiddleware {
   ) {}
 
   use(req: any, res: any, next: () => void) {
+    // Используем оригинальный URL, если route.path недоступен
+    const routePath = req.route?.path || req.originalUrl || req.url;
+
     const end = this.requestDuration.startTimer({
       method: req.method,
-      route: req.route.path,
+      route: routePath,
     });
 
     res.on('finish', () => {
       this.requestsCounter.inc({
         method: req.method,
-        route: req.route.path,
+        route: routePath,
         status: res.statusCode,
       });
 
       if (res.statusCode >= 500) {
-        this.errorsCounter.inc({ method: req.method, route: req.route.path });
+        this.errorsCounter.inc({ method: req.method, route: routePath });
       }
 
       end();

@@ -7,7 +7,7 @@ services:
     ports:
       - 9090:9090
     volumes:
-      - ./libs/providers/src/prometheus/prometheus-pull.yml:/etc/prometheus/prometheus.yml
+      - ./libs/providers/src/prometheus/prometheus-pull.yaml:/etc/prometheus/prometheus.yaml
     networks:
       - monitoring
 
