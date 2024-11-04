@@ -2,8 +2,9 @@ apiVersion: v1
 kind: Service
 metadata:
   name: svc-app
+  namespace: production
   labels:
-    app: otus-app
+    app: svc-app
 spec:
   selector:
     app: otus-app
@@ -11,4 +12,8 @@ spec:
   - protocol: TCP
     port: 80
     targetPort: 8000
+  - protocol: TCP
+    port: 9093
+    targetPort: 9093
+    name: metrics
   type: ClusterIP

@@ -1,38 +1,34 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
-import { Counter, Summary } from 'prom-client';
-import { InjectMetric } from '@willsoto/nestjs-prometheus';
+import { Request, Response, NextFunction } from 'express';
+import { Histogram, Counter } from 'prom-client';
 
 @Injectable()
 export class MetricsMiddleware implements NestMiddleware {
-  constructor(
-    @InjectMetric('http_requests_total')
-    private requestsCounter: Counter<string>,
-    @InjectMetric('http_errors_total') private errorsCounter: Counter<string>,
-    @InjectMetric('http_request_duration_seconds')
-    private requestDuration: Summary<string>,
-  ) {}
+  private readonly httpRequestDurationMicroseconds = new Histogram({
+    name: 'http_request_duration_seconds',
+    help: 'Duration of HTTP requests in seconds',
+    labelNames: ['method', 'route', 'status_code'],
+    buckets: [0.005, 0.01, 0.05, 0.1, 0.5, 1, 2, 5, 10],
+  });
 
-  use(req: any, res: any, next: () => void) {
-    // Используем оригинальный URL, если route.path недоступен
-    const routePath = req.route?.path || req.originalUrl || req.url;
+  private readonly httpRequestsTotal = new Counter({
+    name: 'http_requests_total',
+    help: 'Total number of HTTP requests',
+    labelNames: ['method', 'route', 'status_code'],
+  });
 
-    const end = this.requestDuration.startTimer({
-      method: req.method,
-      route: routePath,
-    });
-
+  use(req: Request, res: Response, next: NextFunction): void {
+    const end = this.httpRequestDurationMicroseconds.startTimer();
     res.on('finish', () => {
-      this.requestsCounter.inc({
+      const route = req.route ? req.route.path : 'unknown_route';
+      const labels = {
         method: req.method,
-        route: routePath,
-        status: res.statusCode,
-      });
+        route,
+        status_code: res.statusCode.toString(),
+      };
 
-      if (res.statusCode >= 500) {
-        this.errorsCounter.inc({ method: req.method, route: routePath });
-      }
-
-      end();
+      this.httpRequestsTotal.inc(labels);
+      end(labels);
     });
 
     next();

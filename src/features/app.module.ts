@@ -6,16 +6,16 @@ import { AllExceptionsFilter } from '@app/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeOrmConfigService } from '../db/config';
 import { AppController } from './app.controller';
-import {
-  makeCounterProvider,
-  makeSummaryProvider,
-  PrometheusModule,
-} from '@willsoto/nestjs-prometheus';
+import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 import { MetricsMiddleware } from '@app/common/middlewares';
 
 @Module({
   imports: [
-    PrometheusModule.register(),
+    PrometheusModule.register({
+      defaultMetrics: {
+        enabled: true,
+      },
+    }),
     ConfigModule.forRoot({
       envFilePath: '.env',
       isGlobal: true,
@@ -29,22 +29,6 @@ import { MetricsMiddleware } from '@app/common/middlewares';
       provide: APP_FILTER,
       useClass: AllExceptionsFilter,
     },
-    makeCounterProvider({
-      name: 'http_requests_total',
-      help: 'Total number of HTTP requests',
-      labelNames: ['method', 'route', 'status'],
-    }),
-    makeCounterProvider({
-      name: 'http_errors_total',
-      help: 'Total number of HTTP 500 errors',
-      labelNames: ['method', 'route'],
-    }),
-    makeSummaryProvider({
-      name: 'http_request_duration_seconds',
-      help: 'Duration of HTTP requests in seconds',
-      labelNames: ['method', 'route'],
-      percentiles: [0.5, 0.95, 0.99, 1.0],
-    }),
   ],
 })
 export class AppModule implements NestModule {
