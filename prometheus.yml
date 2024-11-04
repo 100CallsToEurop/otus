@@ -2,4 +2,4 @@ scrape_configs:
 - job_name: 'otus-app'
   scrape_interval: 15s
   static_configs:
-   - targets: ['192.168.0.106:8000']
+   - targets: ['otus-app:8000']
