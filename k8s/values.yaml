@@ -1,9 +1,23 @@
-auth:
-  username: "postgres"
-  password: "Deusmodus"
-  database: "postgres"
+prometheus:
+  pushgateway: 
+    enabled: false
+
+grafana:
+  service:
+    type: NodePort
+
+postgresql:
+  auth:
+    username: "postgres"
+    password: "Deusmodus"
+    database: "postgres"
 
 primary:
   persistence:
     enabled: true
     existingClaim: "postgresql-data-claim"
+
+ingress-nginx:
+  controller:
+    metrics:
+      enabled: true
