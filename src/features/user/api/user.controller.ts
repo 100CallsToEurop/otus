@@ -26,8 +26,8 @@ export class UserController {
 
   @HttpCode(201)
   @Post()
-  async createUser(@Body() createUser: CreateUserDto): Promise<void> {
-    await this.commandBus.execute(new CreateUserCommand(createUser));
+  async createUser(@Body() createUser: CreateUserDto): Promise<number> {
+    return await this.commandBus.execute(new CreateUserCommand(createUser));
   }
 
   @HttpCode(200)

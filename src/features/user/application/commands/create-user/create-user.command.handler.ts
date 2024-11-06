@@ -6,15 +6,16 @@ import { UserRepository } from '../../../infrastructure/repository';
 
 @CommandHandler(CreateUserCommand)
 export class CreateUserCommandHandler
-  implements ICommandHandler<CreateUserCommand, void>
+  implements ICommandHandler<CreateUserCommand, number>
 {
   private logger = new Logger(CreateUserCommandHandler.name);
   constructor(private readonly userRepository: UserRepository) {}
 
-  async execute({ createUser }: CreateUserCommand): Promise<void> {
+  async execute({ createUser }: CreateUserCommand): Promise<number> {
     this.logger.log(`Create user ${createUser.username}`);
     const newUser = UserEntity.create(createUser);
     newUser.plainToInstance();
-    await this.userRepository.save(newUser);
+    const user = await this.userRepository.save(newUser);
+    return user.id;
   }
 }
