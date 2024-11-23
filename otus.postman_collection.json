@@ -7,16 +7,50 @@
 	},
 	"item": [
 		{
-			"name": "user",
+			"name": "auth",
 			"item": [
 				{
-					"name": "create user",
+					"name": "registration user 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"  pm.response.to.have.status(201);",
+									"});",
+									"",
+									"let userId = pm.response.json().userId;",
+									"const body = JSON.parse(pm.request.body.raw)",
+									"let email = body.email",
+									"let password = body.password",
+									"",
+									"",
+									"pm.environment.set(\"USER_ID\", userId);",
+									"pm.environment.set(\"password\", password);",
+									"pm.environment.set(\"email\", email);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"username\": \"johndoe589999\",\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"email\": \"bestjohn@doe.com\",\n  \"phone\": \"+71002003040\"\n}",
+							"raw": "{\n    \"username\": \"{{$randomUserName}}\",\n    \"firstName\": \"{{$randomFirstName}}\",\n    \"lastName\": \"{{$randomLastName}}\",\n    \"email\": \"{{$randomEmail}}\",\n    \"phone\": \"{{$randomPhoneNumberExt}}\",\n    \"password\": \"{{$randomPassword}}\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -24,45 +58,150 @@
 							}
 						},
 						"url": {
-							"raw": "arch.homework/user",
+							"raw": "{{BASE_URL}}/api/auth/registration",
 							"host": [
-								"arch",
-								"homework"
+								"{{BASE_URL}}"
 							],
 							"path": [
-								"user"
+								"api",
+								"auth",
+								"registration"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "get user by id",
+					"name": "login user 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"  pm.response.to.have.status(200);",
+									"});",
+									"",
+									"let accessToken = pm.response.json().accessToken;",
+									"pm.environment.set(\"accessToken\", accessToken);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"{{email}}\",\n    \"password\": \"{{password}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/auth/login",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get profile user 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"  pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "arch.homework/user/1",
+							"raw": "{{BASE_URL}}/api/user/{{USER_ID}}/profile",
 							"host": [
-								"arch",
-								"homework"
+								"{{BASE_URL}}"
 							],
 							"path": [
+								"api",
 								"user",
-								"1"
+								"{{USER_ID}}",
+								"profile"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "update user by id",
+					"name": "update profile user 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"  pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"firstName\": \"John22\",\n  \"lastName\": \"Doe22\",\n  \"email\": \"bestjohn@doe.com\",\n  \"phone\": \"+71002003040\"\n}",
+							"raw": "{\n    \"firstName\": \"{{$randomFirstName}}\",\n    \"lastName\": \"{{$randomLastName}}\",\n    \"email\": \"{{$randomEmail}}\",\n    \"phone\": \"{{$randomPhoneNumberExt}}\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -70,58 +209,384 @@
 							}
 						},
 						"url": {
-							"raw": "arch.homework/user/1",
+							"raw": "{{BASE_URL}}/api/user/{{USER_ID}}/profile",
 							"host": [
-								"arch",
-								"homework"
+								"{{BASE_URL}}"
 							],
 							"path": [
+								"api",
 								"user",
-								"1"
+								"{{USER_ID}}",
+								"profile"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "get updated user by id",
+					"name": "get profile updated user 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"  pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "arch.homework/user/1",
+							"raw": "{{BASE_URL}}/api/user/{{USER_ID}}/profile",
 							"host": [
-								"arch",
-								"homework"
+								"{{BASE_URL}}"
 							],
 							"path": [
+								"api",
 								"user",
-								"1"
+								"{{USER_ID}}",
+								"profile"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "delete user by id",
+					"name": "logout user 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {",
+									"  pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
-						"method": "DELETE",
+						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "arch.homework/user/1",
+							"raw": "{{BASE_URL}}/api/auth/logout",
 							"host": [
-								"arch",
-								"homework"
+								"{{BASE_URL}}"
 							],
 							"path": [
+								"api",
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get profile user 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {",
+									"  pm.response.to.have.status(401);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/user/{{USER_ID}}/profile",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
 								"user",
-								"1"
+								"{{USER_ID}}",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "registration user 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"  pm.response.to.have.status(201);",
+									"});",
+									"",
+									"let userId = pm.response.json().userId;",
+									"const body = JSON.parse(pm.request.body.raw)",
+									"let email = body.email",
+									"let password = body.password",
+									"",
+									"",
+									"pm.environment.set(\"password\", password);",
+									"pm.environment.set(\"email\", email);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"{{$randomUserName}}\",\n    \"firstName\": \"{{$randomFirstName}}\",\n    \"lastName\": \"{{$randomLastName}}\",\n    \"email\": \"{{$randomEmail}}\",\n    \"phone\": \"{{$randomPhoneNumberExt}}\",\n    \"password\": \"{{$randomPassword}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/auth/registration",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"registration"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login user 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"  pm.response.to.have.status(200);",
+									"});",
+									"",
+									"let accessToken = pm.response.json().accessToken;",
+									"pm.environment.set(\"accessToken\", accessToken);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"{{email}}\",\n    \"password\": \"{{password}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/auth/login",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update profile of 1st user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"  pm.response.to.have.status(403);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"{{$randomFirstName}}\",\n    \"lastName\": \"{{$randomLastName}}\",\n    \"email\": \"{{$randomEmail}}\",\n    \"phone\": \"{{$randomPhoneNumberExt}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/user/{{USER_ID}}/profile",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"{{USER_ID}}",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get profile of 1st user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"  pm.response.to.have.status(403);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/user/{{USER_ID}}/profile",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"{{USER_ID}}",
+								"profile"
 							]
 						}
 					},
 					"response": []
 				}
 			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "BASE_URL",
+			"value": "http://localhost:8000",
+			"type": "string"
 		}
 	]
 }
