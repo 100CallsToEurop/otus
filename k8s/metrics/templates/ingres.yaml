@@ -7,14 +7,14 @@ spec:
     - host: arch.homework
       http:
         paths:
-          - path: /user
+          - path: /api/user
             pathType: Prefix
             backend:
               service:
                 name: svc-app
                 port:
                   number: 80
-          - path: /auth
+          - path: /api/auth
             pathType: Prefix
             backend:
               service:
