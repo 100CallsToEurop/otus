@@ -53,21 +53,21 @@ spec:
                   key: PG_HOST
             - name: AT_SECRET
               valueFrom:
-                configMapKeyRef:
+                secretKeyRef:
                   name: db-secret-credentials
                   key: AT_SECRET
             - name: RT_SECRET
               valueFrom:
-                configMapKeyRef:
+                secretKeyRef:
                   name: db-secret-credentials
                   key: RT_SECRET
             - name: AT_TIME
               valueFrom:
-                configMapKeyRef:
+                secretKeyRef:
                   name: db-secret-credentials
                   key: AT_TIME
             - name: RT_TIME
               valueFrom:
-                configMapKeyRef:
+                secretKeyRef:
                   name: db-secret-credentials
                   key: RT_TIME
