@@ -49,7 +49,7 @@ export class AuthController {
     };
   }
 
-  @HttpCode(204)
+  @HttpCode(201)
   @Post('registration')
   async registrationUser(
     @Body() registrationDto: RegistrationInputModel,

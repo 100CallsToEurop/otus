@@ -1,15 +1,11 @@
-import {
-  MaxLength,
-  IsString,
-  Matches,
-  IsOptional,
-  IsEmail,
-} from 'class-validator';
+import { Transform } from 'class-transformer';
+import { MaxLength, IsString, IsOptional, IsEmail } from 'class-validator';
 
 export class RegistrationInputModel {
   @IsOptional()
   @IsString()
   @IsEmail()
+  @Transform(({ value }) => value.toLowerCase())
   email: string;
   @IsString()
   password: string;
@@ -24,9 +20,6 @@ export class RegistrationInputModel {
   @IsString()
   lastName?: string;
   @IsOptional()
-  @Matches(/^\+[1-9]\d{1,14}$/, {
-    message: 'phone must be a valid phone number',
-  })
   @IsString()
   phone?: string;
 }
