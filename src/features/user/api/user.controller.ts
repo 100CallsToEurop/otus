@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  ForbiddenException,
   Get,
   HttpCode,
   Param,
@@ -9,34 +10,32 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateUserDto, UpdateUserDto } from './models/input';
-import { CreateUserCommand } from '../application/commands/create-user';
-import { UpdateUserCommand } from '../application/commands/update-user';
-import { DeleteUserCommand } from '../application/commands/delete-user';
-import { GetUserQuery } from '../application/queries/get-user';
 import { UserResponseDto } from './models/view';
+import { UserFacade } from '../application';
+import { GetCurrentUserId } from '@app/common/decorators';
 
 @Controller('user')
 export class UserController {
-  constructor(
-    private readonly commandBus: CommandBus,
-    private readonly queryBus: QueryBus,
-  ) {}
+  constructor(private readonly userFacade: UserFacade) {}
 
   @HttpCode(201)
   @Post()
   async createUser(@Body() createUser: CreateUserDto): Promise<number> {
-    return await this.commandBus.execute(new CreateUserCommand(createUser));
+    return await this.userFacade.commands.create(createUser);
   }
 
   @HttpCode(200)
-  @Put(':userId')
+  @Put(':userId/profile')
   async updateUser(
     @Param('userId', ParseIntPipe) userId: number,
+    @GetCurrentUserId() currentUserId: number,
     @Body() updateUser: UpdateUserDto,
   ): Promise<void> {
-    await this.commandBus.execute(new UpdateUserCommand(+userId, updateUser));
+    if (+userId !== currentUserId) {
+      throw new ForbiddenException('Access denied');
+    }
+    await this.userFacade.commands.update(+userId, updateUser);
   }
 
   @HttpCode(204)
@@ -44,14 +43,18 @@ export class UserController {
   async deleteUser(
     @Param('userId', ParseIntPipe) userId: number,
   ): Promise<void> {
-    await this.commandBus.execute(new DeleteUserCommand(+userId));
+    await this.userFacade.commands.delete(+userId);
   }
 
   @HttpCode(200)
-  @Get(':userId')
+  @Get(':userId/profile')
   async getUser(
     @Param('userId', ParseIntPipe) userId: number,
+    @GetCurrentUserId() currentUserId: number,
   ): Promise<UserResponseDto> {
-    return await this.queryBus.execute(new GetUserQuery(+userId));
+    if (+userId !== currentUserId) {
+      throw new ForbiddenException('Access denied');
+    }
+    return await this.userFacade.queries.get(+userId);
   }
 }

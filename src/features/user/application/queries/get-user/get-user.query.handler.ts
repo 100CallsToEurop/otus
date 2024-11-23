@@ -2,7 +2,7 @@ import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { GetUserQuery } from './get-user.query';
 import { UserRepository } from '../../../infrastructure/repository';
 import { Logger, NotFoundException } from '@nestjs/common';
-import { UserResponse } from '../../../domain/';
+import { UserResponse } from '../../../domain/user';
 
 @QueryHandler(GetUserQuery)
 export class GetUserQueryHandler

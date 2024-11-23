@@ -23,7 +23,7 @@ export class AllExceptionsFilter<T> implements ExceptionFilter {
     if (exception instanceof HttpException)
       return response.status(status).json({
         status,
-        message: exception['response']['message'][0],
+        message: exception['response']['message'],
       });
     response.status(status).json(this._response(status, request, exception));
   }

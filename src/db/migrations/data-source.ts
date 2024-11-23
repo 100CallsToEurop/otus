@@ -1,8 +1,11 @@
 import { ConfigService } from '@nestjs/config';
 import { config } from 'dotenv';
 import { join } from 'path';
-import { UserEntity } from '../../features/user/domain';
+import { UserEntity } from '../../features/user/domain/user';
 import { DataSource, DataSourceOptions } from 'typeorm';
+import { ProfileEntity } from '../../features/user/domain/profile';
+import { BadTokenEntity } from '../../features/auth/domain';
+import { SecurityDeviceEntity } from '../../features/security-device/domain';
 
 config({
   path: '.env',
@@ -17,7 +20,7 @@ const options = (): DataSourceOptions => {
     username: configService.get('PG_USERNAME'),
     password: configService.get('PG_PASSWORD'),
     database: configService.get('PG_DATABASE'),
-    entities: [UserEntity],
+    entities: [SecurityDeviceEntity, BadTokenEntity, UserEntity, ProfileEntity],
     logging: false,
     synchronize: false,
     migrations: [

@@ -10,9 +10,9 @@ export class UserResponse {
   constructor(user: IUser) {
     this.id = user.id;
     this.username = user.username;
-    this.firstName = user.firstName;
-    this.lastName = user.lastName;
+    this.firstName = user.profile.firstName;
+    this.lastName = user.profile.lastName;
     this.email = user.email;
-    this.phone = user.phone;
+    this.phone = user.profile.phone;
   }
 }

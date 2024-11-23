@@ -2,7 +2,7 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { UpdateUserCommand } from './update-user.command';
 import { Logger, NotFoundException } from '@nestjs/common';
 import { UserRepository } from '../../../infrastructure/repository';
-import { UserEntity } from 'src/features/user/domain';
+import { UserEntity } from '../../../../user/domain/user';
 
 @CommandHandler(UpdateUserCommand)
 export class UpdateUserCommandHandler

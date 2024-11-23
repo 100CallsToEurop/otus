@@ -1,13 +1,17 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { UserModule } from './user/user.module';
 import { ConfigModule } from '@nestjs/config';
-import { APP_FILTER } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { AllExceptionsFilter } from '@app/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeOrmConfigService } from '../db/config';
 import { AppController } from './app.controller';
 import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 import { MetricsMiddleware } from '@app/common/middlewares';
+import { AuthModule } from './auth/auth.module';
+import { JwtAuthGuard } from '@app/common/guards';
+import { AtStrategy } from '@app/common/strategies';
+import { SecurityDeviceModule } from './security-device/security-device.module';
 
 @Module({
   imports: [
@@ -22,9 +26,13 @@ import { MetricsMiddleware } from '@app/common/middlewares';
     }),
     TypeOrmModule.forRootAsync(TypeOrmConfigService()),
     UserModule,
+    AuthModule,
+    SecurityDeviceModule,
   ],
   controllers: [AppController],
   providers: [
+    AtStrategy,
+    { provide: APP_GUARD, useClass: JwtAuthGuard },
     {
       provide: APP_FILTER,
       useClass: AllExceptionsFilter,

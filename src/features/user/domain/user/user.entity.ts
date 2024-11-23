@@ -1,19 +1,24 @@
-import { IUser } from './user.interface';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import {
   IsEmail,
   IsNumber,
   IsOptional,
   IsString,
-  Matches,
   MaxLength,
   validateSync,
 } from 'class-validator';
-import { AggregateRoot } from '@nestjs/cqrs';
 import { Logger } from '@nestjs/common';
+import { IProfile, ProfileEntity } from '../profile';
+import { IUser } from './user.interface';
 
 @Entity('users')
-export class UserEntity extends AggregateRoot implements IUser {
+export class UserEntity implements IUser {
   private logger = new Logger(UserEntity.name);
   @IsOptional()
   @IsNumber()
@@ -26,37 +31,24 @@ export class UserEntity extends AggregateRoot implements IUser {
   username: string;
   @IsOptional()
   @IsString()
-  @Column({ name: 'first_name' })
-  firstName: string;
-  @IsOptional()
-  @IsString()
-  @Column({ name: 'last_name' })
-  lastName: string;
-  @IsOptional()
-  @IsString()
   @IsEmail()
   @Column({ name: 'email' })
   email: string;
-  @IsOptional()
-  @Matches(/^\+[1-9]\d{1,14}$/, {
-    message: 'phone must be a valid phone number',
-  })
+  @Column({ name: 'password_hash' })
   @IsString()
-  @Column({ name: 'phone' })
-  phone: string;
-
-  private constructor() {
-    super();
-  }
+  passwordHash: string;
+  @IsOptional()
+  @OneToOne(() => ProfileEntity, (profile) => profile.user, { cascade: true })
+  @JoinColumn()
+  profile: IProfile;
 
   static create(user: Partial<IUser>): IUser {
     const _user = new UserEntity();
     user?.id && (_user.id = user.id);
     _user.username = user.username;
-    _user.firstName = user.firstName;
-    _user.lastName = user.lastName;
     _user.email = user.email;
-    _user.phone = user.phone;
+    _user.passwordHash = user.passwordHash;
+    _user.profile = ProfileEntity.create(user);
     const error = validateSync(_user);
     if (!!error.length) {
       error.forEach((e) => _user.logger.error(e.constraints));
@@ -64,11 +56,9 @@ export class UserEntity extends AggregateRoot implements IUser {
     }
     return _user;
   }
-  update(user: Partial<IUser>): void {
-    this.firstName = user.firstName ?? this.firstName;
-    this.lastName = user.lastName ?? this.lastName;
-    this.email = user.email ?? this.email;
-    this.phone = user.phone ?? this.phone;
+  update(update: Partial<IUser & IProfile>): void {
+    this.email = update.email ?? this.email;
+    this.profile.update(update);
   }
 
   plainToInstance(): void {

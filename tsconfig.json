@@ -35,6 +35,12 @@
       ],
       "@app/providers/*": [
         "libs/providers/src/*"
+      ],
+      "@app/utils": [
+        "libs/utils/src"
+      ],
+      "@app/utils/*": [
+        "libs/utils/src/*"
       ]
     }
   }
