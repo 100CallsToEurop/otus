@@ -46,6 +46,10 @@ export class ProfileEntity implements IProfile {
     this.phone = profile.phone ?? this.phone;
   }
 
+  getFullName(): string {
+    return `${this.firstName} ${this.lastName}`;
+  }
+
   plainToInstance(): void {
     validateSync(this, { whitelist: true });
   }

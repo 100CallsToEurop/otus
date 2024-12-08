@@ -8,11 +8,13 @@ export class RegistrationUserEventHandler
   implements IEventHandler<RegistrationUserEvent>
 {
   constructor(@Inject('KAFKA_SERVICE') private readonly client: ClientKafka) {}
-  handle({ userId }: RegistrationUserEvent) {
+  handle({ userId, email, fullName }: RegistrationUserEvent) {
     this.client.emit(
       'user-created',
       JSON.stringify({
         userId,
+        email,
+        fullName,
       }),
     );
   }

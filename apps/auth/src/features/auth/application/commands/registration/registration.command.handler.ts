@@ -36,7 +36,13 @@ export class RegistrationCommandHandler
     const newUser = UserEntity.create({ ...registrationDto, passwordHash });
     await this.userRepository.save(newUser);
 
-    await this.eventBus.publish(new RegistrationUserEvent(newUser.id));
+    await this.eventBus.publish(
+      new RegistrationUserEvent(
+        newUser.id,
+        newUser.email,
+        newUser.profile.getFullName(),
+      ),
+    );
     return { userId: newUser.id };
   }
 }
