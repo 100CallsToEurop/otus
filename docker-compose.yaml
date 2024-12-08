@@ -16,7 +16,7 @@ services:
   billing:
     build: ./apps/billing
     container_name: billing
-    command: dist/apps/auth/billing
+    command: dist/apps/billing/main
     restart: unless-stopped
     environment:
       TZ: 'Europe/Moscow'
@@ -28,7 +28,7 @@ services:
   notification:
     build: ./apps/notification
     container_name: notification
-    command: dist/apps/auth/notification
+    command: dist/apps/notification/main
     restart: unless-stopped
     environment:
       TZ: 'Europe/Moscow'
@@ -40,7 +40,7 @@ services:
   order:
     build: ./apps/order
     container_name: order
-    command: dist/apps/auth/order
+    command: dist/apps/order/main
     restart: unless-stopped
     environment:
       TZ: 'Europe/Moscow'
