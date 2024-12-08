@@ -1,31 +1,69 @@
-version: '3.8'
+version: '3.9'
 
 services:
-  prometheus:
-    image: prom/prometheus:latest
+  auth:
+    build: ./app/auth
+    container_name: auth
+    command: dist/apps/auth/main
     restart: unless-stopped
-    ports:
-      - 9090:9090
-    volumes:
-      - ./libs/providers/src/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-    networks:
-      - monitoring
-
-  grafana:
-    image: grafana/grafana:latest
-    restart: unless-stopped
-    ports:
-      - 3000:3000
-    networks:
-      - monitoring
     environment:
-      - GF_SECURITY_ADMIN_PASSWORD=admin
+      TZ: 'Europe/Moscow'
+    env_file:
+      - './envs/.auth.env'
+    networks:
+      otus-net:
+
+  billing:
+    build: ./app/billing
+    container_name: billing
+    command: dist/apps/auth/billing
+    restart: unless-stopped
+    environment:
+      TZ: 'Europe/Moscow'
+    env_file:
+      - './envs/.billing.env'
+    networks:
+      otus-net:
+
+  notification:
+    build: ./app/notification
+    container_name: notification
+    command: dist/apps/auth/notification
+    restart: unless-stopped
+    environment:
+      TZ: 'Europe/Moscow'
+    env_file:
+      - './envs/.notification.env'
+    networks:
+      otus-net:
+
+  order:
+    build: ./app/order
+    container_name: order
+    command: dist/apps/auth/order
+    restart: unless-stopped
+    environment:
+      TZ: 'Europe/Moscow'
+    env_file:
+      - './envs/.order.env'
+    networks:
+      otus-net:
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx_product
+    ports:
+      - '8010:8010'
     volumes:
-      - grafana-storage:/var/lib/grafana
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - auth
+      - billing
+      - notification
+      - order
+    networks:
+      otus-net:
 
 networks:
-  monitoring:
-    driver: bridge
-
-volumes:
-  grafana-storage:
+  otus-net:
+    name: otus-net

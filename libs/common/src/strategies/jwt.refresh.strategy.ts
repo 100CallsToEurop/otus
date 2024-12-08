@@ -2,9 +2,9 @@ import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Request } from 'express';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { BadTokenEntity } from '../../../../src/features/auth/domain';
-import { BadTokenRepository } from '../../../../src/features/auth/infrastructure/repository';
-import { SecurityDevicesRepository } from '../../../../src/features/security-device/infrastructure/repository';
+import { BadTokenEntity } from '../../../../apps/auth/src/features/auth/domain';
+import { BadTokenRepository } from '../../../../apps/auth/src/features/auth/infrastructure/repository';
+import { SecurityDevicesRepository } from '../../../../apps/auth/src/features/security-device/infrastructure/repository';
 
 @Injectable()
 export class RtStrategy extends PassportStrategy(Strategy, 'refresh') {
