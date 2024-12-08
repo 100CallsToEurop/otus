@@ -7,8 +7,8 @@ RUN yarn build
 
 FROM node:22-alpine
 WORKDIR /usr/src/auth
-COPY ../../../package.json ./
-COPY ../../../tsconfig.build.json ./
+COPY apps/auth/package.json ./dist/apps/auth
+COPY  apps/auth/tsconfig.build.json ./dist/apps/auth
 RUN yarn install --only=prod --legacy-peer-deps
 RUN apk add --no-cache tzdata
 COPY --from=build /usr/src/auth/dist ./dist/apps/auth
