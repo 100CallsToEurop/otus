@@ -2,7 +2,9 @@ version: '3.8'
 
 services:
   auth:
-    build: ./apps/auth
+    build:
+      context: ./apps/auth
+      dockerfile: ./apps/Dockerfile
     container_name: auth
     command: dist/apps/auth/main
     restart: unless-stopped
