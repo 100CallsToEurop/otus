@@ -31,7 +31,6 @@ export class UserEntity implements IUser {
   wallet: IWallet;
 
   static create(user: Partial<IUser>): IUser {
-    console.log(user);
     const _user = new UserEntity();
     _user.id = user.id;
     _user.email = user.email;

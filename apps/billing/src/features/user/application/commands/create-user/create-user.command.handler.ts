@@ -12,7 +12,10 @@ export class CreateUserCommandHandler
   async execute({
     createUserDto,
   }: CreateUserCommand): Promise<{ userId: number }> {
-    const newProduct = UserEntity.create(createUserDto);
+    const newProduct = UserEntity.create({
+      ...createUserDto,
+      id: createUserDto.userId,
+    });
     const user = await this.userRepository.save(newProduct);
     return { userId: user.id };
   }
