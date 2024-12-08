@@ -4,7 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeOrmConfigService } from '../db/config';
 import { AllExceptionsFilter } from '@app/common';
 import { JwtAuthGuard } from '@app/common/guards';
-import { AtStrategy } from '@app/common/strategies';
+// import { AtStrategy } from '@app/common/strategies';
 import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD, APP_FILTER } from '@nestjs/core';
 import { ProductModule } from './product/product.module';
@@ -23,7 +23,7 @@ import { OrderModule } from './order/order.module';
   controllers: [],
   providers: [
     KafkaConfigService,
-    AtStrategy,
+    // AtStrategy,
     { provide: APP_GUARD, useClass: JwtAuthGuard },
     {
       provide: APP_FILTER,
