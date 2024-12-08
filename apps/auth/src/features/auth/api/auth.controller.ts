@@ -25,7 +25,6 @@ import {
 import { JwtAuthGuard, JwtAuthRefreshGuard } from '@app/common/guards';
 import { AuthFacade } from '../application';
 
-@Public()
 @Controller('auth')
 export class AuthController {
   private readonly logger = new Logger(AuthController.name);
@@ -50,7 +49,7 @@ export class AuthController {
       accessToken: tokens.accessToken,
     };
   }
-
+  @Public()
   @HttpCode(201)
   @Post('registration')
   async registrationUser(
@@ -66,7 +65,7 @@ export class AuthController {
     const accessToken = request.headers.authorization.split(' ')[1];
     return await this.authFacade.commands.validate(accessToken);
   }
-
+  @Public()
   @HttpCode(200)
   @Post('login')
   async loginUser(
@@ -82,7 +81,7 @@ export class AuthController {
     };
     return await this.buildResponseNewTokens(res, device);
   }
-
+  @Public()
   @UseGuards(JwtAuthRefreshGuard)
   @HttpCode(200)
   @Post('refresh-token')
@@ -94,7 +93,7 @@ export class AuthController {
   ): Promise<LoginSuccessViewModel> {
     return await this.buildResponseNewTokens(res, device);
   }
-
+  @Public()
   @UseGuards(JwtAuthRefreshGuard)
   @HttpCode(204)
   @Post('logout')
