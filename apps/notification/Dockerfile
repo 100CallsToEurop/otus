@@ -1,4 +1,4 @@
-FROM node:alpine As development
+FROM node:alpine as development
 WORKDIR /usr/src/app
 COPY package*.json ./
 RUN yarn install --network-timeout 540000000
