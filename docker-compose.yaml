@@ -1,8 +1,8 @@
-version: '3.9'
+version: '3.8'
 
 services:
   auth:
-    build: ./app/auth
+    build: ./apps/auth
     container_name: auth
     command: dist/apps/auth/main
     restart: unless-stopped
@@ -14,7 +14,7 @@ services:
       otus-net:
 
   billing:
-    build: ./app/billing
+    build: ./apps/billing
     container_name: billing
     command: dist/apps/auth/billing
     restart: unless-stopped
@@ -26,7 +26,7 @@ services:
       otus-net:
 
   notification:
-    build: ./app/notification
+    build: ./apps/notification
     container_name: notification
     command: dist/apps/auth/notification
     restart: unless-stopped
@@ -38,7 +38,7 @@ services:
       otus-net:
 
   order:
-    build: ./app/order
+    build: ./apps/order
     container_name: order
     command: dist/apps/auth/order
     restart: unless-stopped
