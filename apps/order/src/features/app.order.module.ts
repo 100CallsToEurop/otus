@@ -13,7 +13,7 @@ import { OrderModule } from './order/order.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: './envs/.order.env',
+      envFilePath: './apps/order/.env',
       isGlobal: true,
     }),
     TypeOrmModule.forRootAsync(TypeOrmConfigService()),

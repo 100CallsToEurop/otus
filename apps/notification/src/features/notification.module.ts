@@ -12,7 +12,7 @@ import { MessageModule } from './message/message.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: './envs/.notification.env',
+      envFilePath: './apps/notification/.env',
       isGlobal: true,
     }),
     TypeOrmModule.forRootAsync(TypeOrmConfigService()),

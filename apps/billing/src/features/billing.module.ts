@@ -12,7 +12,7 @@ import { UserModule } from './user/user.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: './envs/.billing.env',
+      envFilePath: './apps/billing/.env',
       isGlobal: true,
     }),
     TypeOrmModule.forRootAsync(TypeOrmConfigService()),

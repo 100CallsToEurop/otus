@@ -1,14 +1,17 @@
-FROM node:22-alpine as build
-WORKDIR /usr/src/auth
+FROM node:alpine As development
+WORKDIR /usr/src/app
 COPY package*.json ./
 RUN yarn install --network-timeout 540000000
-ADD . .
+COPY . .
 RUN yarn build auth
 
-FROM node:22-alpine
-WORKDIR /usr/src/auth
-COPY package.json ./dist/apps/auth
-COPY tsconfig.build.json ./dist/apps/auth
+FROM node:alpine as production
+WORKDIR /usr/src/app
+COPY package*.json ./
 RUN yarn install --only=prod --legacy-peer-deps
-RUN apk add --no-cache tzdata
-COPY --from=build /usr/src/auth/dist ./dist/apps/auth
+COPY . .
+COPY --from=development /usr/src/app/dist ./dist
+CMD ["node", "dist/apps/auth/main"]
+
+
+

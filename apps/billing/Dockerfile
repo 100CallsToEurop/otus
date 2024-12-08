@@ -1,14 +1,14 @@
-FROM node:22-alpine as build
-WORKDIR /usr/src/billing
+FROM node:alpine As development
+WORKDIR /usr/src/app
 COPY package*.json ./
 RUN yarn install --network-timeout 540000000
-ADD . .
+COPY . .
 RUN yarn build billing
 
-FROM node:22-alpine
-WORKDIR /usr/src/billing
-COPY package.json ./
-COPY tsconfig.build.json ./
+FROM node:alpine as production
+WORKDIR /usr/src/app
+COPY package*.json ./
 RUN yarn install --only=prod --legacy-peer-deps
-RUN apk add --no-cache tzdata
-COPY --from=build /usr/src/billing/dist ./dist/billing/auth
+COPY . .
+COPY --from=development /usr/src/app/dist ./dist
+CMD ["node", "dist/apps/billing/main"]

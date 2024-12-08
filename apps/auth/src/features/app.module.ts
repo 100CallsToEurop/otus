@@ -22,7 +22,7 @@ import { KafkaConfigService } from '@app/providers/kafka/config';
       },
     }),
     ConfigModule.forRoot({
-      envFilePath: './envs/.auth.env',
+      envFilePath: './apps/auth/.env',
       isGlobal: true,
     }),
     TypeOrmModule.forRootAsync(TypeOrmConfigService()),
