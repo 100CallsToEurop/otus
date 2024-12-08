@@ -11,7 +11,7 @@ import { UserBillingFacade } from '../application';
 import { UserViewModel } from './models/views';
 import { AddFundsDto } from './models/input';
 
-@Controller('billing')
+@Controller('billings')
 export class BillingController {
   constructor(private readonly billingFacade: UserBillingFacade) {}
 

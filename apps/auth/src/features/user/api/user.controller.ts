@@ -15,7 +15,7 @@ import { UserResponseDto } from './models/view';
 import { UserFacade } from '../application';
 import { GetCurrentUserId } from '@app/common/decorators';
 
-@Controller('user')
+@Controller('users')
 export class UserController {
   constructor(private readonly userFacade: UserFacade) {}
 
