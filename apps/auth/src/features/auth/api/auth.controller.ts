@@ -59,6 +59,7 @@ export class AuthController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @HttpCode(200)
   @Post('validate')
   async validate(@Req() request: Request): Promise<boolean> {
     const accessToken = request.headers.authorization.split(' ')[1];
