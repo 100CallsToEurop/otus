@@ -3,7 +3,7 @@ WORKDIR /usr/src/notification
 COPY package*.json ./
 RUN yarn install --network-timeout 540000000
 ADD . .
-RUN yarn build
+RUN yarn build notification
 
 FROM node:22-alpine
 WORKDIR /usr/src/notification
