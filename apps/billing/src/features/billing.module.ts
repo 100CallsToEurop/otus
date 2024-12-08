@@ -22,7 +22,7 @@ import { UserModule } from './user/user.module';
   providers: [
     KafkaConfigService,
     // AtStrategy,
-    { provide: APP_GUARD, useClass: JwtAuthGuard },
+    // { provide: APP_GUARD, useClass: JwtAuthGuard },
     {
       provide: APP_FILTER,
       useClass: AllExceptionsFilter,
