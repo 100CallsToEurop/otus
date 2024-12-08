@@ -8,7 +8,7 @@ import { BadTokenEntity } from '../../features/auth/domain';
 import { SecurityDeviceEntity } from '../../features/security-device/domain';
 
 config({
-  path: 'envs/.auth.env',
+  path: './apps/auth/.env',
 });
 const configService = new ConfigService();
 

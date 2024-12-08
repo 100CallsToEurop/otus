@@ -6,7 +6,7 @@ import { WalletEntity } from '../../features/user/domain/wallet';
 import { UserEntity } from '../../features/user/domain/user';
 
 config({
-  path: 'envs/.billing.env',
+  path: './apps/billing/.env',
 });
 const configService = new ConfigService();
 

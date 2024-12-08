@@ -5,7 +5,7 @@ import { DataSource, DataSourceOptions } from 'typeorm';
 import { MessageEntity } from '../../features/message/domain';
 
 config({
-  path: 'envs/.notification.env',
+  path: './apps/notification/.env',
 });
 const configService = new ConfigService();
 

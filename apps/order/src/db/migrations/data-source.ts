@@ -6,7 +6,7 @@ import { ProductEntity } from '../../features/product/domain';
 import { OrderEntity } from '../../features/order/domain';
 
 config({
-  path: 'envs/.order.env',
+  path: './apps/order/.env',
 });
 const configService = new ConfigService();
 
