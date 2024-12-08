@@ -19,6 +19,6 @@ export class MessageEventController implements OnModuleInit {
 
   @EventPattern('notification-message')
   async createMessage(payload: any) {
-    await this.messageFacade.commands.createMessage(JSON.parse(payload));
+    await this.messageFacade.commands.createMessage(payload);
   }
 }

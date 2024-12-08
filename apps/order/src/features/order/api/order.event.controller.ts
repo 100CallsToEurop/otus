@@ -19,6 +19,6 @@ export class OrderEventController implements OnModuleInit {
 
   @EventPattern('payment-confirmation')
   async PaymentConfirmation(payload: any) {
-    await this.orderFacade.commands.paymentConfirmation(JSON.parse(payload));
+    await this.orderFacade.commands.paymentConfirmation(payload);
   }
 }
