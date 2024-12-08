@@ -31,7 +31,7 @@ export class BillingController {
     @Param('userId', ParseIntPipe) userId: number,
     @Req() request: Request,
   ): Promise<UserViewModel> {
-    console.log(request);
+    console.log(request['user']);
     return this.billingFacade.queries.getUserInfo(userId);
   }
 }
