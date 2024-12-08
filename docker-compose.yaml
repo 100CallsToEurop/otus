@@ -2,50 +2,62 @@ version: '3.8'
 
 services:
   auth:
-    build: ./apps/auth
+    build:
+      context: .
+      dockerfile: ./apps/auth/Dockerfile
+      target: development
     container_name: auth
-    command: dist/apps/auth/main
+    command: yarn start-auth:dev
     restart: unless-stopped
     environment:
       TZ: 'Europe/Moscow'
     env_file:
-      - './envs/.auth.env'
+      - './apps/auth/.env'
     networks:
       otus-net:
 
   billing:
-    build: ./apps/billing
+    build:
+      context: .
+      dockerfile: ./apps/billing/Dockerfile
+      target: development
     container_name: billing
-    command: dist/apps/billing/main
+    command: yarn start-billing:dev
     restart: unless-stopped
     environment:
       TZ: 'Europe/Moscow'
     env_file:
-      - './envs/.billing.env'
+      - './apps/billing/.env'
     networks:
       otus-net:
 
   notification:
-    build: ./apps/notification
+    build:
+      context: .
+      dockerfile: ./apps/notification/Dockerfile
+      target: development
     container_name: notification
-    command: dist/apps/notification/main
+    command: yarn start-notification:dev
     restart: unless-stopped
     environment:
       TZ: 'Europe/Moscow'
     env_file:
-      - './envs/.notification.env'
+      - './apps/notification/.env'
     networks:
       otus-net:
 
   order:
-    build: ./apps/order
+    build:
+      context: .
+      dockerfile: ./apps/order/Dockerfile
+      target: development
     container_name: order
-    command: dist/apps/order/main
+    command: yarn start-order:dev
     restart: unless-stopped
     environment:
       TZ: 'Europe/Moscow'
     env_file:
-      - './envs/.order.env'
+      - './apps/order/.env'
     networks:
       otus-net:
 
