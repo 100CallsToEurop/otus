@@ -20,6 +20,7 @@ export class AtStrategy extends PassportStrategy(Strategy, 'jwt') {
       payload.userId,
       payload.deviceId,
     );
+    console.log(lastSession)
     if (!lastSession) {
       throw new UnauthorizedException('Unauthorized');
     }
