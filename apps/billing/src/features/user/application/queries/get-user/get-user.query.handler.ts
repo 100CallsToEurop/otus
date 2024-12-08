@@ -10,7 +10,6 @@ export class GetUserQueryHandler
 {
   constructor(private readonly userRepository: UserRepository) {}
   async execute({ userId }: GetUserQuery): Promise<UserResponse> {
-    console.log(userId);
     const user = await this.userRepository.getUser(userId);
     if (!user) {
       throw new NotFoundException('User not found');

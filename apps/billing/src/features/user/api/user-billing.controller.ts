@@ -6,10 +6,12 @@ import {
   Param,
   ParseIntPipe,
   Put,
+  Req,
 } from '@nestjs/common';
 import { UserBillingFacade } from '../application';
 import { UserViewModel } from './models/views';
 import { AddFundsDto } from './models/input';
+import { Request } from 'express';
 
 @Controller('billings')
 export class BillingController {
@@ -27,7 +29,9 @@ export class BillingController {
   @Get(':userId')
   async getUserInfo(
     @Param('userId', ParseIntPipe) userId: number,
+    @Req() request: Request,
   ): Promise<UserViewModel> {
+    console.log(request['user']);
     return this.billingFacade.queries.getUserInfo(userId);
   }
 }
