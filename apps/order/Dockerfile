@@ -8,7 +8,7 @@ RUN yarn build
 FROM node:22-alpine
 WORKDIR /usr/src/order
 COPY package.json ./
-COPY tsconfig.build.json ./
+COPY ./apps/order/tsconfig.build.json ./
 RUN yarn install --only=prod --legacy-peer-deps
 RUN apk add --no-cache tzdata
 COPY --from=build /usr/src/order/dist ./dist/order/auth
