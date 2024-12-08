@@ -19,6 +19,7 @@ export class BillingEventController implements OnModuleInit {
 
   @EventPattern('user-created')
   async createUser(payload: any): Promise<void> {
+    console.log(payload)
     await this.productFacade.commands.createUser(JSON.parse(payload));
   }
 

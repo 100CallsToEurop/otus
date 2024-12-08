@@ -10,7 +10,7 @@ import {
 import { Logger } from '@nestjs/common';
 import { IWallet, WalletEntity } from '../wallet';
 
-@Entity('products')
+@Entity('users')
 export class UserEntity implements IUser {
   private logger = new Logger(UserEntity.name);
   @IsOptional()
