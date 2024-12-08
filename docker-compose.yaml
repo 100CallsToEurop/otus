@@ -79,3 +79,7 @@ services:
 networks:
   otus-net:
     name: otus-net
+    driver: bridge
+    ipam:
+     config:
+       - subnet: 172.19.0.0/16
