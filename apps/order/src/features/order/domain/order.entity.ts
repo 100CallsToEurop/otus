@@ -2,7 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  OneToMany,
+  ManyToMany,
   PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -47,7 +47,7 @@ export class OrderEntity implements IOrder {
   updatedAt: Date;
 
   @IsOptional()
-  @OneToMany(() => ProductEntity, (product) => product.order, { cascade: true })
+  @ManyToMany(() => ProductEntity, (product) => product.orders)
   products: IProduct[];
 
   static create(userId: number): IOrder {

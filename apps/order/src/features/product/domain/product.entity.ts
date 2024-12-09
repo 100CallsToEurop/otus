@@ -1,4 +1,10 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { IProduct } from './product.interface';
 import {
   IsOptional,
@@ -26,10 +32,9 @@ export class ProductEntity implements IProduct {
   @Min(0)
   @Column({ name: 'price', type: 'int' })
   price: number;
-  @ManyToOne(() => OrderEntity, (order) => order.products, {
-    onDelete: 'CASCADE',
-  })
-  order: IOrder;
+  @ManyToMany(() => OrderEntity, (order) => order.products)
+  @JoinTable()
+  orders: IOrder[];
 
   static create(product: Partial<IProduct>): IProduct {
     const _product = new ProductEntity();
