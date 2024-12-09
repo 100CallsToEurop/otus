@@ -33,10 +33,10 @@ export class WalletEntity implements IWallet {
   }
 
   addFunds(amount: number): void {
-    this.balance += amount;
+    this.balance += parseFloat(amount.toFixed(2));
   }
   deductFunds(amount: number): void {
-    this.balance -= amount;
+    this.balance -= parseFloat(amount.toFixed(2));
   }
   getFunds(): number {
     return this.balance;
