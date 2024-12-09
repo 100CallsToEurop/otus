@@ -7,7 +7,7 @@ export class MessageController {
   constructor(private readonly messageFacade: MessageFacade) {}
 
   @Get()
-  async getProducts(
+  async getMessage(
     @Param('userId', ParseIntPipe) userId: number,
   ): Promise<MessageViewModel[]> {
     return this.messageFacade.queries.getMessages(userId);
