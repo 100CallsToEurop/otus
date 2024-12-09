@@ -21,8 +21,8 @@ import { MessageModule } from './message/message.module';
   controllers: [],
   providers: [
     KafkaConfigService,
-    JwtStrategy,
-    { provide: APP_GUARD, useClass: JwtAuthGuard },
+    // JwtStrategy,
+    // { provide: APP_GUARD, useClass: JwtAuthGuard },
     {
       provide: APP_FILTER,
       useClass: AllExceptionsFilter,

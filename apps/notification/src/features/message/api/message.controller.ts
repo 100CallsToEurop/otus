@@ -10,7 +10,6 @@ export class MessageController {
   async getProducts(
     @Param('userId', ParseIntPipe) userId: number,
   ): Promise<MessageViewModel[]> {
-    console.log(1)
     return this.messageFacade.queries.getMessages(userId);
   }
 }
