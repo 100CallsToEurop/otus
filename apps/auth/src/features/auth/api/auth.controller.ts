@@ -63,11 +63,11 @@ export class AuthController {
   @Get('validation')
   async validate(
     @Req() request: Request,
-    // @Res() response: Response,
+    @Res() response: Response,
   ): Promise<boolean> {
     console.log(request['user']);
     const accessToken = request.headers.authorization.split(' ')[1];
-    // response.set('X-User-Id', request['user']['userId']);
+    response.set('user', request['user']['userId']);
     return await this.authFacade.commands.validate(accessToken);
   }
   @Public()
