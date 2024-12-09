@@ -22,7 +22,7 @@ import { JwtStrategy } from '@app/common/strategies';
   providers: [
     KafkaConfigService,
     JwtStrategy,
-    { provide: APP_GUARD, useClass: JwtAuthGuard },
+    // { provide: APP_GUARD, useClass: JwtAuthGuard },
     {
       provide: APP_FILTER,
       useClass: AllExceptionsFilter,
