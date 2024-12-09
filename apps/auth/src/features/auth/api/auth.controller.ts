@@ -61,13 +61,9 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @HttpCode(200)
   @Get('validation')
-  async validate(
-    @Req() request: Request,
-    @Res() response: Response,
-  ): Promise<boolean> {
+  async validate(@Req() request: Request): Promise<boolean> {
     console.log(request['user']);
     const accessToken = request.headers.authorization.split(' ')[1];
-    response.set('X-User-Id', request['user']['userId']);
     return await this.authFacade.commands.validate(accessToken);
   }
   @Public()
