@@ -18,6 +18,7 @@ export class AddFundsCommandHandler
     if (!user) {
       throw new NotFoundException('User not found');
     }
+    console.log(typeof amount)
     user.addWalletFunds(amount);
     console.log(user);
     await this.userRepository.save(user);

@@ -37,7 +37,7 @@ export class OrderEntity implements IOrder {
   status: STATUS_ORDER;
   @IsNumber()
   @Min(0)
-  @Column({ name: 'price', type: 'numeric', precision: 10, scale: 2 })
+  @Column({ name: 'price', type: 'decimal', precision: 10, scale: 2 })
   totalPrice: number;
   @IsDate()
   @CreateDateColumn()
