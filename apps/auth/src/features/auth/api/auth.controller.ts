@@ -63,7 +63,7 @@ export class AuthController {
   @Get('validation')
   async validate(
     @Req() request: Request,
-    @Res() response: Response,
+    // @Res() response: Response,
   ): Promise<boolean> {
     console.log(request['user']);
     const accessToken = request.headers.authorization.split(' ')[1];

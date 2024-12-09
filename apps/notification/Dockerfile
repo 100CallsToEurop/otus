@@ -1,11 +1,11 @@
-FROM node:alpine as development
+FROM node:alpine AS development
 WORKDIR /usr/src/app
 COPY package*.json ./
 RUN yarn install --network-timeout 540000000
 COPY . .
 RUN yarn build notification
 
-FROM node:alpine as production
+FROM node:alpine AS production
 WORKDIR /usr/src/app
 COPY package*.json ./
 RUN yarn install --only=prod --legacy-peer-deps
