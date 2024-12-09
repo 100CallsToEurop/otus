@@ -21,6 +21,7 @@ export class OrderAdapter implements OrderRepository {
   async getAll(userId: number): Promise<IOrder[]> {
     return await this.orderRepository.find({
       where: { userId },
+      relations: { products: true },
     });
   }
 }
