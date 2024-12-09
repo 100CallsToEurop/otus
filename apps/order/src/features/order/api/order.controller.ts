@@ -22,6 +22,14 @@ export class OrderController {
     return this.orderFacade.commands.createOrder({ userId, productIds });
   }
 
+  @Post(':userId/order/:orderId/pay')
+  async payOrder(
+    @Param('userId', ParseIntPipe) userId: number,
+    @Param('orderId', ParseIntPipe) orderId: number,
+  ): Promise<{ orderId: number }> {
+    return this.orderFacade.commands.payOrder(userId, orderId);
+  }
+
   @Get(':userId')
   async getOrders(
     @Param('userId', ParseIntPipe) userId: number,
