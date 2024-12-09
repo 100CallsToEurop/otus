@@ -19,11 +19,11 @@ export class UserEntity implements IUser {
   id: number;
   @IsString()
   @Column({ name: 'email' })
-  fullName: string;
+  email: string;
   @IsString()
   @IsEmail()
   @Column({ name: 'full_name' })
-  email: string;
+  fullName: string;
   @OneToOne(() => WalletEntity, (wallet) => wallet.user, {
     cascade: true,
   })
