@@ -9,5 +9,5 @@ export class PaymentConfirmationDto {
   orderId: number;
   @IsNotEmpty()
   @IsBoolean()
-  status: boolean;
+  result: boolean;
 }

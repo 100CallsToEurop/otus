@@ -10,10 +10,10 @@ export class PaymentConfirmationCommandHandler
   constructor(private readonly orderRepository: OrderRepository) {}
 
   async execute({
-    paymentConfirmationDto: { orderId, status },
+    paymentConfirmationDto: { orderId, result },
   }: PaymentConfirmationCommand): Promise<void> {
     const order = await this.orderRepository.getById(orderId);
-    const status_order = status
+    const status_order = result
       ? STATUS_ORDER.COMPLETED
       : STATUS_ORDER.CANCELLED;
     order.setStatus(status_order);

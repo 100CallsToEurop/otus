@@ -20,7 +20,6 @@ export class OrderEventController implements OnModuleInit {
 
   @EventPattern('payment-confirmation')
   async PaymentConfirmation(@Payload() payload: PaymentConfirmationDto) {
-    console.log(payload)
     await this.orderFacade.commands.paymentConfirmation(payload);
   }
 }
