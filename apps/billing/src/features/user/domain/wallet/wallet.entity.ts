@@ -14,7 +14,7 @@ export class WalletEntity implements IWallet {
 
   @IsNumber()
   @Min(0)
-  @Column({ name: 'balance', type: 'decimal' })
+  @Column({ name: 'balance', type: 'int' })
   balance: number;
   @OneToOne(() => UserEntity, (user) => user.wallet, {
     onDelete: 'CASCADE',
@@ -33,10 +33,10 @@ export class WalletEntity implements IWallet {
   }
 
   addFunds(amount: number): void {
-    this.balance += parseFloat(amount.toFixed(2));
+    this.balance += amount;
   }
   deductFunds(amount: number): void {
-    this.balance -= parseFloat(amount.toFixed(2));
+    this.balance -= amount;
   }
   getFunds(): number {
     return this.balance;

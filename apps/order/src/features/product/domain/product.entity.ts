@@ -24,7 +24,7 @@ export class ProductEntity implements IProduct {
   name: string;
   @IsNumber()
   @Min(0)
-  @Column({ name: 'price', type: 'decimal', precision: 10, scale: 2 })
+  @Column({ name: 'price', type: 'int' })
   price: number;
   @ManyToOne(() => OrderEntity, (order) => order.products, {
     onDelete: 'CASCADE',
