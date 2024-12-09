@@ -16,6 +16,7 @@ export class AtStrategy extends PassportStrategy(Strategy, 'jwt') {
     });
   }
   async validate(payload: any) {
+    console.log(2)
     const lastSession = await this.securityDevicesRepository.getCurrentDevice(
       payload.userId,
       payload.deviceId,
