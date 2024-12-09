@@ -1,6 +1,7 @@
 import { Controller, Inject, OnModuleInit } from '@nestjs/common';
 import { OrderFacade } from '../application';
-import { ClientKafka, EventPattern } from '@nestjs/microservices';
+import { ClientKafka, EventPattern, Payload } from '@nestjs/microservices';
+import { PaymentConfirmationDto } from './models/input';
 
 @Controller()
 export class OrderEventController implements OnModuleInit {
@@ -18,7 +19,7 @@ export class OrderEventController implements OnModuleInit {
   }
 
   @EventPattern('payment-confirmation')
-  async PaymentConfirmation(payload: any) {
+  async PaymentConfirmation(@Payload() payload: PaymentConfirmationDto) {
     await this.orderFacade.commands.paymentConfirmation(payload);
   }
 }

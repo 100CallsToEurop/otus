@@ -1,6 +1,7 @@
 import { Controller, Inject, OnModuleInit } from '@nestjs/common';
 import { UserBillingFacade } from '../application';
-import { ClientKafka, EventPattern } from '@nestjs/microservices';
+import { ClientKafka, EventPattern, Payload } from '@nestjs/microservices';
+import { CreateUserDto, DeductFundsDto } from './models/input';
 
 @Controller()
 export class BillingEventController implements OnModuleInit {
@@ -18,12 +19,12 @@ export class BillingEventController implements OnModuleInit {
   }
 
   @EventPattern('user-created')
-  async createUser(payload: any): Promise<void> {
+  async createUser(@Payload() payload: CreateUserDto): Promise<void> {
     await this.productFacade.commands.createUser(payload);
   }
 
   @EventPattern('deduct-funds')
-  async deductFunds(payload: any): Promise<void> {
+  async deductFunds(@Payload() payload: DeductFundsDto): Promise<void> {
     await this.productFacade.commands.deductFunds(payload);
   }
 }

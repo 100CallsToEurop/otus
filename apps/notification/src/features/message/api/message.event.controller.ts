@@ -1,6 +1,7 @@
 import { Controller, Inject, OnModuleInit } from '@nestjs/common';
 import { MessageFacade } from '../application';
-import { ClientKafka, EventPattern } from '@nestjs/microservices';
+import { ClientKafka, EventPattern, Payload } from '@nestjs/microservices';
+import { CreateMessageDto } from './models/input';
 
 @Controller()
 export class MessageEventController implements OnModuleInit {
@@ -18,7 +19,7 @@ export class MessageEventController implements OnModuleInit {
   }
 
   @EventPattern('notification-message')
-  async createMessage(payload: any) {
+  async createMessage(@Payload() payload: CreateMessageDto) {
     await this.messageFacade.commands.createMessage(payload);
   }
 }
