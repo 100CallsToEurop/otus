@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
   Param,
   ParseIntPipe,
   Post,
@@ -22,6 +23,7 @@ export class OrderController {
     return this.orderFacade.commands.createOrder({ userId, productIds });
   }
 
+  @HttpCode(200)
   @Post(':userId/order/:orderId/pay')
   async payOrder(
     @Param('userId', ParseIntPipe) userId: number,

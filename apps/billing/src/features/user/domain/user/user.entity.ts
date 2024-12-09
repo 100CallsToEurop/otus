@@ -52,7 +52,7 @@ export class UserEntity implements IUser {
   }
   deductWalletFunds(amount: number): boolean {
     if (amount <= 0) {
-      return;
+      return false;
     }
     const walletFunds = this.wallet.getFunds();
     if (amount > walletFunds) return false;
