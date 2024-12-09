@@ -62,7 +62,6 @@ export class AuthController {
   @HttpCode(200)
   @Get('validation')
   async validate(@Req() request: Request): Promise<boolean> {
-    console.log(111)
     const accessToken = request.headers.authorization.split(' ')[1];
     return await this.authFacade.commands.validate(accessToken);
   }
