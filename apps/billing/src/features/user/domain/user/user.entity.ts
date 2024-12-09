@@ -18,10 +18,10 @@ export class UserEntity implements IUser {
   @PrimaryColumn()
   id: number;
   @IsString()
+  @IsEmail()
   @Column({ name: 'email' })
   email: string;
   @IsString()
-  @IsEmail()
   @Column({ name: 'full_name' })
   fullName: string;
   @OneToOne(() => WalletEntity, (wallet) => wallet.user, {
