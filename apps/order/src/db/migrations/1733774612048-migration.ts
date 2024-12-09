@@ -1,10 +1,10 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class Migration1733772096574 implements MigrationInterface {
-    name = 'Migration1733772096574'
+export class Migration1733774612048 implements MigrationInterface {
+    name = 'Migration1733774612048'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`CREATE TYPE "public"."orders_status_enum" AS ENUM('Ожидание', 'Готов', 'Отменен')`);
+        await queryRunner.query(`CREATE TYPE "public"."orders_status_enum" AS ENUM('Собран', 'Ожидание', 'Готов', 'Отменен')`);
         await queryRunner.query(`CREATE TABLE "orders" ("id" integer NOT NULL, "userId" integer NOT NULL, "status" "public"."orders_status_enum" NOT NULL, "price" integer NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_710e2d4957aa5878dfe94e4ac2f" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "products" ("id" SERIAL NOT NULL, "product_name" character varying NOT NULL, "price" integer NOT NULL, CONSTRAINT "PK_0806c755e0aca124e67c0cf6d7d" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "products_orders_orders" ("productsId" integer NOT NULL, "ordersId" integer NOT NULL, CONSTRAINT "PK_521097f34854748e92f9733ff09" PRIMARY KEY ("productsId", "ordersId"))`);

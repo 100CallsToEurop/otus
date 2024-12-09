@@ -11,6 +11,7 @@ import { OrderAdapter } from './infrastructure/adapter';
 import { OrderRepository } from './infrastructure/repository';
 import { ClientsModule } from '@nestjs/microservices';
 import { clientConfig } from '@app/providers/kafka/config';
+import { ORDER_EVENT_HANDLERS } from './application/events';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { clientConfig } from '@app/providers/kafka/config';
   controllers: [OrderController, OrderEventController],
   providers: [
     ...ORDER_COMMAND_HANDLERS,
+    ...ORDER_EVENT_HANDLERS,
     ...ORDER_QUERY_HANDLERS,
     {
       provide: OrderFacade,

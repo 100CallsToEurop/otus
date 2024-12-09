@@ -18,6 +18,10 @@ export class OrderAdapter implements OrderRepository {
     return await this.orderRepository.findOneBy({ id: orderId });
   }
 
+  async getByUser(userId: number, orderId: number): Promise<IOrder | null> {
+    return await this.orderRepository.findOneBy({ id: orderId, userId });
+  }
+
   async getAll(userId: number): Promise<IOrder[]> {
     return await this.orderRepository.find({
       where: { userId },

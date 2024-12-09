@@ -54,7 +54,7 @@ export class OrderEntity implements IOrder {
     const _order = new OrderEntity();
     _order.id = randomInt(1000);
     _order.userId = userId;
-    _order.status = STATUS_ORDER.PENDING;
+    _order.status = STATUS_ORDER.COMPLETE;
     _order.totalPrice = 0;
     _order.createdAt = new Date();
     _order.updatedAt = new Date();
