@@ -13,11 +13,13 @@ export class AddFundsCommandHandler
     userId,
     amount,
   }: AddFundsCommand): Promise<{ userId: number }> {
+    console.log(userId, amount);
     const user = await this.userRepository.getUser(userId);
     if (!user) {
       throw new NotFoundException('User not found');
     }
     user.addWalletFunds(amount);
+    console.log(user);
     await this.userRepository.save(user);
     return { userId: user.id };
   }
