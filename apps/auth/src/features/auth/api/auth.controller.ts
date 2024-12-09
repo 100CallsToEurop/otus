@@ -67,7 +67,7 @@ export class AuthController {
   ): Promise<boolean> {
     console.log(request['user']);
     const accessToken = request.headers.authorization.split(' ')[1];
-    response.set('user', request['user']['userId']);
+    response.set('X-User-Id', request['user']['userId']);
     return await this.authFacade.commands.validate(accessToken);
   }
   @Public()
