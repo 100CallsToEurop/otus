@@ -13,6 +13,7 @@ export class PaymentConfirmationCommandHandler
     paymentConfirmationDto: { orderId, status },
   }: PaymentConfirmationCommand): Promise<void> {
     const order = await this.orderRepository.getById(orderId);
+    console.log(status)
     const status_order = status
       ? STATUS_ORDER.COMPLETED
       : STATUS_ORDER.CANCELLED;
