@@ -46,13 +46,13 @@ export class UserEntity implements IUser {
 
   addWalletFunds(amount: number): void {
     if (amount <= 0) {
-      throw new Error('Amount must be positive.');
+      return;
     }
     return this.wallet.addFunds(amount);
   }
   deductWalletFunds(amount: number): boolean {
     if (amount <= 0) {
-      throw new Error('Amount must be positive.');
+      return;
     }
     const walletFunds = this.wallet.getFunds();
     if (amount > walletFunds) return false;
