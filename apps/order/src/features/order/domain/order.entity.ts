@@ -52,7 +52,7 @@ export class OrderEntity implements IOrder {
 
   static create(userId: number): IOrder {
     const _order = new OrderEntity();
-    _order.id = randomInt(7);
+    _order.id = randomInt(1000);
     _order.userId = userId;
     _order.status = STATUS_ORDER.PENDING;
     _order.totalPrice = 0;

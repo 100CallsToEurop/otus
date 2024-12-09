@@ -3,7 +3,7 @@ import { ProductRepository } from '../repository';
 import { IProduct } from '../../domain/product.interface';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ProductEntity } from '../../domain/product.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 
 @Injectable()
 export class ProductAdapter implements ProductRepository {
@@ -19,7 +19,8 @@ export class ProductAdapter implements ProductRepository {
     return await this.productRepository.findOneBy({ name });
   }
 
-  async getAll(): Promise<IProduct[]> {
-    return await this.productRepository.find();
+  async getAll(productIds?: number[]): Promise<IProduct[]> {
+    const condition = productIds ? { where: { id: In(productIds) } } : {};
+    return await this.productRepository.find(condition);
   }
 }
