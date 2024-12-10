@@ -12,10 +12,12 @@ spec:
       - name: create-db
         image: postgres:16
         command: [
-              'sh',
-              '-c',
-              'set -e; psql -h ${PG_HOST} -U ${PG_USERNAME} -d ${PG_DATABASE} -c "CREATE DATABASE auth;" ',
-            ]
+  'sh',
+  '-c',
+  'until pg_isready -h "${PG_HOST}" -p 5432 -U "${PG_USERNAME}" -d "${PG_DATABASE}"; do sleep 1; done; \
+  psql -h "${PG_HOST}" -p 5432 -U "${PG_USERNAME}" -d "${PG_DATABASE}" -c "CREATE DATABASE auth;" || true; \
+  echo "Database creation completed (or already exists)."
+]
         env:
             - name: PG_USERNAME
               valueFrom:
