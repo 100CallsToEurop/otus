@@ -34,21 +34,8 @@ kafka:
   brokers:
     listeners:
       client:
-        protocol: SASL
+        protocol: PLAINTEXT 
       interbroker:
-        protocol: TLS
-    sasl:
-      client:
-        users:
-          - brokerUser: brokerPassword
-      zookeeper:
-        user: zookeeperUser
-        password: zookeeperPassword
+        protocol: PLAINTEXT
   zookeeper:
     enabled: true
-    auth:
-      enabled: true
-      serverUsers:
-        - zookeeperUser: zookeeperPassword
-      clientUser: zookeeperUser
-      clientPassword: zookeeperPassword
