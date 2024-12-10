@@ -14,7 +14,7 @@ spec:
     spec:
       initContainers:
         - name: create-databases
-          image: busybox
+          image: postgres:16
           command: ['sh', '-c']
           env:
             - name: PG_USERNAME
@@ -35,7 +35,11 @@ spec:
           args:
             - |
               #!/bin/sh
-              psql -h "${PG_HOST}" -U "${PG_USERNAME}" -c "CREATE DATABASE auth ENCODING 'UTF8'"
+              set -ex 
+              until psql -h "${PG_HOST}" -U postgres -d postgres -c "CREATE DATABASE auth ENCODING 'UTF8'" ; do
+                  sleep 5
+                  echo "Retrying to create database..."
+              done
       containers:
         - name: auth
           image: 100callstoeurop/otus-app_auth
