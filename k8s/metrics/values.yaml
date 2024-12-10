@@ -11,9 +11,6 @@ postgresql:
     username: "postgres"
     password: "Deusmodus"
     database: "postgres"
-  image:
-    repository: postgresql
-    tag: "16.1.1" 
   
 primary:
   persistence:
