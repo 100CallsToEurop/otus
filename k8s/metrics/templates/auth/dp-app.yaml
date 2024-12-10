@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: auth
+  template:
+    metadata:
+      labels:
+        app: auth
+    spec:
+      containers:
+        - name: auth
+          image: 100callstoeurop/otus-app_auth
+          ports:
+            - containerPort: 8000
+          env:
+            - name: PG_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: auth-secret-credentials
+                  key: PG_USERNAME
+            - name: PG_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: auth-secret-credentials
+                  key: PG_PASSWORD
+            - name: PG_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: auth-secret-credentials
+                  key: PG_DATABASE
+            - name: AT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: auth-secret-credentials
+                  key: AT_SECRET
+            - name: AT_TIME
+              valueFrom:
+                secretKeyRef:
+                  name: auth-secret-credentials
+                  key: AT_TIME
+            - name: RT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: auth-secret-credentials
+                  key: RT_SECRET
+            - name: RT_TIME
+              valueFrom:
+                secretKeyRef:
+                  name: auth-secret-credentials
+                  key: RT_TIME
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: auth-cm
+                  key: PORT
+            - name: PG_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: auth-cm
+                  key: PG_HOST
+            - name: KAFKA_BROKER
+              valueFrom:
+                configMapKeyRef:
+                  name: auth-cm
+                  key: KAFKA_BROKER
+            - name: KAFKA_GROUP_ID
+              valueFrom:
+                configMapKeyRef:
+                  name: auth-cm
+                  key: KAFKA_GROUP_ID
+            - name: KAFKA_CLIENT_ID
+              valueFrom:
+                configMapKeyRef:
+                  name: auth-cm
+                  key: KAFKA_CLIENT_ID
+            - name: KAFKA_IS_ONLY_PRODUCER
+              valueFrom:
+                configMapKeyRef:
+                  name: auth-cm
+                  key: KAFKA_IS_ONLY_PRODUCER

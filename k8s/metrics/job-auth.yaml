@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: db-migration-job
+  name: auth-migration-job
 spec:
   completions: 1
   backoffLimit: 0
@@ -9,34 +9,34 @@ spec:
     spec:
       restartPolicy: Never
       containers:
-      - name: otus-app
-        image: 100callstoeurop/otus-homework:latest
-        command: ["sh", "-c", "yarn migration:migrate"]
+      - name: auth
+        image: 100callstoeurop/otus-app_auth
+        command: ["sh", "-c", "yarn migration-auth:migrate"]
         env:
         - name: PG_USERNAME
           valueFrom:
             secretKeyRef:
-              name: db-secret-credentials
+              name: auth-secret-credentials
               key: PG_USERNAME
         - name: PG_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: db-secret-credentials
+              name: auth-secret-credentials
               key: PG_PASSWORD
         - name: PG_DATABASE
           valueFrom:
             secretKeyRef:
-              name: db-secret-credentials
+              name: auth-secret-credentials
               key: PG_DATABASE
         - name: PORT
           valueFrom:
             configMapKeyRef:
-              name: otus-app-cm
+              name: auth-cm
               key: PORT
         - name: PG_HOST
           valueFrom:
             configMapKeyRef:
-              name: otus-app-cm
+              name: auth-cm
               key: PG_HOST
         volumeMounts:
         - name: postgresql-data

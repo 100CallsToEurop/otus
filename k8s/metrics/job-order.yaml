@@ -1,0 +1,47 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: order-migration-job
+spec:
+  completions: 1
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: orders
+        image: 100callstoeurop/otus-app_order
+        command: ["sh", "-c", "yarn migration:migrate"]
+        env:
+        - name: PG_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: order-secret-credentials
+              key: PG_USERNAME
+        - name: PG_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: order-secret-credentials
+              key: PG_PASSWORD
+        - name: PG_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: order-secret-credentials
+              key: PG_DATABASE
+        - name: PORT
+          valueFrom:
+            configMapKeyRef:
+              name: order-cm
+              key: PORT
+        - name: PG_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: order-cm
+              key: PG_HOST
+        volumeMounts:
+        - name: postgresql-data
+          mountPath: /data/volume
+      volumes:
+      - name: postgresql-data
+        persistentVolumeClaim:
+          claimName: postgresql-data-claim

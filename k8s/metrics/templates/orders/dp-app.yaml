@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orders
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: orders
+  template:
+    metadata:
+      labels:
+        app: orders
+    spec:
+      containers:
+        - name: orders
+          image: 100callstoeurop/otus-app_order
+          ports:
+            - containerPort: 8003
+          env:
+            - name: PG_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: order-secret-credentials
+                  key: PG_USERNAME
+            - name: PG_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: order-secret-credentials
+                  key: PG_PASSWORD
+            - name: PG_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: order-secret-credentials
+                  key: PG_DATABASE
+            - name: AT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: order-secret-credentials
+                  key: AT_SECRET
+            - name: AT_TIME
+              valueFrom:
+                secretKeyRef:
+                  name: order-secret-credentials
+                  key: AT_TIME
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: order-cm
+                  key: PORT
+            - name: PG_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: order-cm
+                  key: PG_HOST
+            - name: KAFKA_BROKER
+              valueFrom:
+                configMapKeyRef:
+                  name: order-cm
+                  key: KAFKA_BROKER
+            - name: KAFKA_GROUP_ID
+              valueFrom:
+                configMapKeyRef:
+                  name: order-cm
+                  key: KAFKA_GROUP_ID
+            - name: KAFKA_CLIENT_ID
+              valueFrom:
+                configMapKeyRef:
+                  name: order-cm
+                  key: KAFKA_CLIENT_ID
+            - name: KAFKA_IS_ONLY_PRODUCER
+              valueFrom:
+                configMapKeyRef:
+                  name: order-cm
+                  key: KAFKA_IS_ONLY_PRODUCER
