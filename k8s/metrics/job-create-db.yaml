@@ -11,15 +11,29 @@ spec:
       containers:
       - name: create-db
         image: postgres:16
-        command: ["sh", "-c", "set -e; psql -h ${PG_HOST} -U postgres -d postgres -W -c \"CREATE DATABASE auth;\" "] 
+        command: [
+              'sh',
+              '-c',
+              'set -e; psql -h ${PG_HOST} -U ${PG_USERNAME} -d ${PG_DATABASE} -c "CREATE DATABASE auth;" ',
+            ]
         env:
-        - name: PG_HOST
-          valueFrom:
-            configMapKeyRef:
-              name: auth-cm
-              key: PG_HOST
-        - name: PG_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: auth-secret-credentials
-              key: PG_PASSWORD
+            - name: PG_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: auth-secret-credentials
+                  key: PG_USERNAME
+            - name: PG_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: auth-secret-credentials
+                  key: PG_PASSWORD
+            - name: PG_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: auth-secret-credentials
+                  key: PG_DATABASE
+            - name: PG_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: auth-cm
+                  key: PG_HOST
