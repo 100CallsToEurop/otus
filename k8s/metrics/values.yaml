@@ -30,8 +30,7 @@ kafka:
   persistence:
     enabled: true
     size: 100Gi
-    storageClass: fast-ssd
-    replicaCount: 0
+    replicaCount: 1
   brokers:
     listeners:
       client:
