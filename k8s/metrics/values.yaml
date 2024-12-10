@@ -10,8 +10,8 @@ postgresql:
   auth:
     username: "postgres"
     password: "Deusmodus"
-    database: "postgres"
-
+    database: ["auth", "billing", "notification", "order"]
+  
 primary:
   persistence:
     enabled: true
