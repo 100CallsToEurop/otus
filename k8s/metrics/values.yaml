@@ -29,8 +29,30 @@ ingress-nginx:
 kafka:
   persistence:
     enabled: true
-    size: 10Gi
-    storageClass: standard
-    replicaCount: 3
-    zookeeper:
-       enabled: true
+    size: 100Gi
+    storageClass: fast-ssd
+    replicaCount: 2
+  brokers:
+    listeners:
+      client:
+        protocol: SASL
+      interbroker:
+        protocol: TLS
+    tls:
+      existingSecret: kafka-jks
+      password: jksPassword
+    sasl:
+      client:
+        users:
+          - brokerUser: brokerPassword
+      zookeeper:
+        user: zookeeperUser
+        password: zookeeperPassword
+  zookeeper:
+    enabled: true
+    auth:
+      enabled: true
+      serverUsers:
+        - zookeeperUser: zookeeperPassword
+      clientUser: zookeeperUser
+      clientPassword: zookeeperPassword
