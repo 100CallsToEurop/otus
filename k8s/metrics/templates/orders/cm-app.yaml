@@ -6,7 +6,7 @@ data:
   PORT: '8003'
   PG_PORT: '5432'
   PG_HOST: 'metrics-postgresql'
-  KAFKA_BROKER: 'metrics-kafka-controller'
+  KAFKA_BROKER: 'metrics-kafka-broker'
   KAFKA_GROUP_ID: 'order'
   KAFKA_CLIENT_ID: '4'
   KAFKA_IS_ONLY_PRODUCER: 'false'
