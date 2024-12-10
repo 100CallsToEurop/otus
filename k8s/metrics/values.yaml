@@ -37,9 +37,6 @@ kafka:
         protocol: SASL
       interbroker:
         protocol: TLS
-    tls:
-      existingSecret: kafka-jks
-      password: jksPassword
     sasl:
       client:
         users:
