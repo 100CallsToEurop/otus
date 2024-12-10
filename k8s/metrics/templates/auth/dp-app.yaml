@@ -14,6 +14,7 @@ spec:
     spec:
       initContainers:
         - name: create-databases
+          image: 'postgresql'
           command: ['sh', '-c']
           env:
             - name: PG_USERNAME
