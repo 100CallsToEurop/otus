@@ -8,5 +8,5 @@ data:
   PG_HOST: 'metrics-postgresql'
   KAFKA_BROKER: 'metrics-kafka'
   KAFKA_GROUP_ID: 'order'
-  KAFKA_CLIENT_ID: 4
-  KAFKA_IS_ONLY_PRODUCER: false
+  KAFKA_CLIENT_ID: '4'
+  KAFKA_IS_ONLY_PRODUCER: 'false'
