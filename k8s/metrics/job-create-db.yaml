@@ -11,7 +11,7 @@ spec:
       containers:
       - name: create-db
         image: postgres:16
-        command: ["sh", "-c", "set -e; psql -h ${PG_HOST} -p 5432 -U postgres -d postgres -c \"CREATE DATABASE auth;\" "] 
+        command: ["sh", "-c", "set -e; psql -h ${PG_HOST} -p 5432 -U postgres -d postgres -c \"CREATE DATABASE auth;\" ", "--password=PG_PASSWORD"] 
         env:
         - name: PG_HOST
           valueFrom:
