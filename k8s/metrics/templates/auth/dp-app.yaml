@@ -14,7 +14,7 @@ spec:
     spec:
       initContainers:
         - name: create-databases
-          image: 'postgresql:16.1.1'
+          image: busybox
           command: ['sh', '-c']
           env:
             - name: PG_USERNAME
