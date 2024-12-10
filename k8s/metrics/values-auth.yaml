@@ -1,0 +1,10 @@
+postgresql:
+  auth:
+    username: "postgres"
+    password: "Deusmodus"
+    database: "auth"
+  
+primary:
+  persistence:
+    enabled: true
+    existingClaim: "postgresql-data-claim"
