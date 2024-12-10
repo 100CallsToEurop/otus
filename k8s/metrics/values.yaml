@@ -27,7 +27,23 @@ ingress-nginx:
           prometheus.io/scrape: "true"
 
 kafka:
-  config:
-    listeners: PLAINTEXT://0.0.0.0:9093
+  externalAccess:
+    enabled: true
+    broker:
+      service:
+        type: LoadBalancer
+        ports:
+          external: 9094
+    controller:
+      service:
+        type: LoadBalancer
+        containerPorts:
+          external: 9094
+    autoDiscovery:
+      enabled: true
+  serviceAccount:
+    create: true
+  rbac:
+    create: true
 
 
