@@ -26,29 +26,26 @@ ingress-nginx:
           prometheus.io/port: "10254"
           prometheus.io/scrape: "true"
 
-replicas: 1
-zookeeper:
-  replicas: 1
-  persistence:
-    enabled: true
-  resources:
-    requests:
-      cpu: 100m
-      memory: 256Mi
-    limits:
-      cpu: 200m
-      memory: 512Mi
 kafka:
-  persistence:
+  enabled: true
+  controller:
+    replicaCount: 0
+    automountServiceAccountToken: true
+  broker:
+    replicaCount: 2
+    persistence:
+      size: 1Gi
+    automountServiceAccountToken: true
+  kraft:
+    enabled: false
+  zookeeper:
     enabled: true
-  resources:
-    requests:
-      cpu: 500m
-      memory: 1Gi
-    limits:
-      cpu: 1000m
-      memory: 2Gi
-  config:
-    listeners: PLAINTEXT://0.0.0.0:9092 # Слушатель, доступный извне
-    advertised.listeners: PLAINTEXT://$(KAFKA_HOST):9092 # Слушатель для внутреннего использования
-    auto.create.topics.enable: true
+    persistence:
+      size: 1Gi
+  listeners:
+    client:
+      protocol: PLAINTEXT
+    controller:
+      protocol: PLAINTEXT
+    interbroker:
+      protocol: PLAINTEXT
