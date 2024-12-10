@@ -27,11 +27,3 @@ ingress-nginx:
           prometheus.io/scrape: "true"
 
 
-kafka:
-  persistence:
-    enabled: true
-    size: 10Gi
-    storageClass: standard
-    replicaCount: 3
-  zookeeper:
-    enabled: true
