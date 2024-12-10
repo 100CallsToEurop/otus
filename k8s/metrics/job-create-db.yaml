@@ -1,4 +1,4 @@
-apiVersion: batch/v1
+apiVersion: batch/v1 
 kind: Job
 metadata:
   name: create-db-job
@@ -9,39 +9,12 @@ spec:
     spec:
       restartPolicy: Never
       containers:
-      - name: auth
+      - name: create-db
         image: postgres:16
-        command: ["psql", "-h", "$(PG_HOST)", "-U", "$(PG_USERNAME)", "-d", "postgres", "-c", "CREATE DATABASE auth;"]
+        command: ["sh", "-c", "set -e; psql -h ${PG_HOST} -p 5432 -U postgres -d postgres -c \"CREATE DATABASE auth;\" "] 
         env:
-        - name: PG_USERNAME
-          valueFrom:
-            secretKeyRef:
-              name: auth-secret-credentials
-              key: PG_USERNAME
-        - name: PG_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: auth-secret-credentials
-              key: PG_PASSWORD
-        - name: PG_DATABASE
-          valueFrom:
-            secretKeyRef:
-              name: auth-secret-credentials
-              key: PG_DATABASE
-        - name: PORT
-          valueFrom:
-            configMapKeyRef:
-              name: auth-cm
-              key: PORT
         - name: PG_HOST
           valueFrom:
             configMapKeyRef:
               name: auth-cm
               key: PG_HOST
-        volumeMounts:
-        - name: postgresql-data
-          mountPath: /data/volume
-      volumes:
-      - name: postgresql-data
-        persistentVolumeClaim:
-          claimName: postgresql-data-claim
