@@ -31,7 +31,7 @@ kafka:
     enabled: true
     size: 100Gi
     storageClass: fast-ssd
-    replicaCount: 2
+    replicaCount: 0
   brokers:
     listeners:
       client:
