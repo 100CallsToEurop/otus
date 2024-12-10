@@ -26,4 +26,8 @@ ingress-nginx:
           prometheus.io/port: "10254"
           prometheus.io/scrape: "true"
 
+kafka:
+  config:
+    listeners: PLAINTEXT://0.0.0.0:9093
+
 
