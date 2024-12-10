@@ -12,34 +12,6 @@ spec:
       labels:
         app: auth
     spec:
-      initContainers:
-        - name: create-databases
-          image: postgres:16
-          command: ['sh', '-c']
-          env:
-            - name: PG_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: auth-secret-credentials
-                  key: PG_USERNAME
-            - name: PG_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: auth-secret-credentials
-                  key: PG_PASSWORD
-            - name: PG_HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: auth-cm
-                  key: PG_HOST
-          args:
-            - |
-              #!/bin/sh
-              set -ex 
-              until psql -h "${PG_HOST}" -U postgres -d postgres -c "CREATE DATABASE auth ENCODING 'UTF8'" ; do
-                  sleep 5
-                  echo "Retrying to create database..."
-              done
       containers:
         - name: auth
           image: 100callstoeurop/otus-app_auth
