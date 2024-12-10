@@ -10,7 +10,16 @@ postgresql:
   auth:
     username: "postgres"
     password: "Deusmodus"
-    database: ["auth", "billing", "notification", "order"]
+    database: "postgres"
+  databases:
+    - name: auth
+      encoding: UTF8
+    - name: billing
+      encoding: UTF8
+    - name: notification
+      encoding: UTF8
+    - name: order
+      encoding: UTF8
   
 primary:
   persistence:
