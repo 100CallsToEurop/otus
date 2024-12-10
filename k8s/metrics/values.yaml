@@ -26,15 +26,12 @@ ingress-nginx:
           prometheus.io/port: "10254"
           prometheus.io/scrape: "true"
 
-replicaCount: 1 # Один брокер Kafka (недостаточно для продакшна!)
-persistence:
-  enabled: false # Данные НЕ сохраняются при перезапуске!  Для продакшна ОБЯЗАТЕЛЬНО включить!
-zookeeper:
-  replicaCount: 1 # Одна реплика ZooKeeper (недостаточно для продакшна!)
-  persistence:
-    enabled: false # Данные ZooKeeper НЕ сохраняются при перезапуске! Для продакшна ОБЯЗАТЕЛЬНО включить!
+
 kafka:
-  config:
-    listeners: PLAINTEXT://0.0.0.0:9092
-    advertised.listeners: PLAINTEXT://$(KAFKA_HOST):9092
-    auto.create.topics.enable: true
+  persistence:
+    enabled: true
+    size: 10Gi
+    storageClass: standard
+    replicaCount: 3
+  zookeeper:
+    enabled: true
