@@ -11,7 +11,7 @@ spec:
       containers:
       - name: orders
         image: 100callstoeurop/otus-app_order
-        command: ["sh", "-c", "yarn migration:migrate"]
+        command: ["sh", "-c", "yarn migration-order:migrate"]
         env:
         - name: PG_USERNAME
           valueFrom:

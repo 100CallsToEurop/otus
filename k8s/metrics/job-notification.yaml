@@ -11,7 +11,7 @@ spec:
       containers:
       - name: notifications
         image: 100callstoeurop/otus-app_notification
-        command: ["sh", "-c", "yarn migration:migrate"]
+        command: ["sh", "-c", "yarn migration-notification:migrate"]
         env:
         - name: PG_USERNAME
           valueFrom:
