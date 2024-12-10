@@ -27,6 +27,9 @@ ingress-nginx:
           prometheus.io/scrape: "true"
 
 kafka:
+  config:
+    listeners: PLAINTEXT://0.0.0.0:9092  
+    advertised.listeners: PLAINTEXT://$(KAFKA_HOST):9092
   persistence:
     enabled: true
     replicaCount: 3
