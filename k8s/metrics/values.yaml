@@ -30,7 +30,7 @@ replicas: 1
 zookeeper:
   replicas: 1
   persistence:
-    enabled: false # Включите, если хотите хранить данные ZooKeeper
+    enabled: true
   resources:
     requests:
       cpu: 100m
@@ -40,7 +40,7 @@ zookeeper:
       memory: 512Mi
 kafka:
   persistence:
-    enabled: false # Включите, если хотите хранить данные Kafka
+    enabled: true
   resources:
     requests:
       cpu: 500m
