@@ -3,8 +3,8 @@ import { letterOfHappiness } from './letter-of-happiness';
 import { letterOfGrief } from './letter-of-grief';
 import { Inject } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
-import { FundsOperationEvent } from '../../../domain/user/events';
-import { UserRepository } from '../../../infrastructure/repository';
+import { FundsOperationEvent } from '../../../domain/billing/events';
+import { BillingRepository } from '../../../infrastructure/repository';
 
 @EventsHandler(FundsOperationEvent)
 export class SendNotificationEventHandler
@@ -12,7 +12,7 @@ export class SendNotificationEventHandler
 {
   constructor(
     @Inject('KAFKA_SERVICE') private readonly client: ClientKafka,
-    private readonly userRepository: UserRepository,
+    private readonly userRepository: BillingRepository,
   ) {}
   async handle({ userId, orderId, result }: FundsOperationEvent) {
     const user = await this.userRepository.getUser(userId);

@@ -1,5 +1,5 @@
 import { EventsHandler, IEventHandler } from '@nestjs/cqrs';
-import { FundsOperationEvent } from '../../../domain/user/events';
+import { FundsOperationEvent } from '../../../domain/billing/events';
 import { Inject } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
 

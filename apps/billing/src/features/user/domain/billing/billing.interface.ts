@@ -1,6 +1,6 @@
 import { IWallet } from '../wallet';
 
-export interface IUser {
+export interface IBilling {
   id: number;
   email: string;
   fullName: string;

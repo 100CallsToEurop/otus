@@ -1,12 +1,12 @@
-import { IUser } from './user.interface';
+import { IBilling } from './billing.interface';
 
-export class UserResponse {
+export class BillingResponse {
   id: number;
   email: string;
   fullName: string;
   balance: number;
 
-  constructor(user: IUser) {
+  constructor(user: IBilling) {
     this.id = user.id;
     this.email = user.email;
     this.fullName = user.fullName;

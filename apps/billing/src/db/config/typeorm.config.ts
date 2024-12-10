@@ -1,7 +1,7 @@
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModuleAsyncOptions } from '@nestjs/typeorm';
 import { WalletEntity } from '../../features/user/domain/wallet';
-import { UserEntity } from '../../features/user/domain/user';
+import { BillingEntity } from '../../features/user/domain/billing';
 
 export const TypeOrmConfigService = (): TypeOrmModuleAsyncOptions => ({
   useFactory: (configService: ConfigService) => ({
@@ -11,7 +11,7 @@ export const TypeOrmConfigService = (): TypeOrmModuleAsyncOptions => ({
     username: configService.get('PG_USERNAME'),
     password: configService.get('PG_PASSWORD'),
     database: configService.get('PG_DATABASE'),
-    entities: [UserEntity, WalletEntity],
+    entities: [BillingEntity, WalletEntity],
   }),
   inject: [ConfigService],
   imports: [ConfigModule],

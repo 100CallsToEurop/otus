@@ -1,7 +1,7 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { CreateUserCommand } from './create-user.command';
 import { BillingRepository } from '../../../infrastructure/repository';
 import { BillingEntity } from '../../../domain/billing';
+import { CreateUserCommand } from '../create-user';
 
 @CommandHandler(CreateUserCommand)
 export class CreateUserCommandHandler
@@ -12,10 +12,7 @@ export class CreateUserCommandHandler
   async execute({
     createUserDto,
   }: CreateUserCommand): Promise<{ userId: number }> {
-    const newProduct = BillingEntity.create({
-      ...createUserDto,
-      id: createUserDto.userId,
-    });
+    const newProduct = BillingEntity.create(createUserDto);
     const user = await this.userRepository.save(newProduct);
     return { userId: user.id };
   }

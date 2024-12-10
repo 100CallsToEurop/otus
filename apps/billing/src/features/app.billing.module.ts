@@ -7,7 +7,7 @@ import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD, APP_FILTER } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeOrmConfigService } from '../db/config';
-import { UserModule } from './user/user.module';
+import { BillingModule } from './user/billing.module';
 
 @Module({
   imports: [
@@ -16,7 +16,7 @@ import { UserModule } from './user/user.module';
       isGlobal: true,
     }),
     TypeOrmModule.forRootAsync(TypeOrmConfigService()),
-    UserModule,
+    BillingModule,
   ],
   controllers: [],
   providers: [
@@ -29,4 +29,4 @@ import { UserModule } from './user/user.module';
     },
   ],
 })
-export class BillingModule {}
+export class AppBillingModule {}

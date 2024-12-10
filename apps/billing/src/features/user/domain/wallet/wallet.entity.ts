@@ -2,7 +2,7 @@ import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { IWallet } from './wallet.interface';
 import { IsOptional, IsNumber, validateSync, Min } from 'class-validator';
 import { Logger } from '@nestjs/common';
-import { IUser, UserEntity } from '../user';
+import { IBilling, BillingEntity } from '../billing';
 
 @Entity('wallets')
 export class WalletEntity implements IWallet {
@@ -16,10 +16,10 @@ export class WalletEntity implements IWallet {
   @Min(0)
   @Column({ name: 'balance', type: 'int' })
   balance: number;
-  @OneToOne(() => UserEntity, (user) => user.wallet, {
+  @OneToOne(() => BillingEntity, (user) => user.wallet, {
     onDelete: 'CASCADE',
   })
-  user: IUser;
+  user: IBilling;
 
   static create(): IWallet {
     const _wallet = new WalletEntity();

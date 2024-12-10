@@ -3,7 +3,7 @@ import { config } from 'dotenv';
 import { join } from 'path';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { WalletEntity } from '../../features/user/domain/wallet';
-import { UserEntity } from '../../features/user/domain/user';
+import { BillingEntity } from '../../features/user/domain/billing';
 
 config({
   path: './apps/billing/.env',
@@ -18,7 +18,7 @@ const options = (): DataSourceOptions => {
     username: configService.get('PG_USERNAME'),
     password: configService.get('PG_PASSWORD'),
     database: configService.get('PG_DATABASE'),
-    entities: [UserEntity, WalletEntity],
+    entities: [BillingEntity, WalletEntity],
     logging: false,
     synchronize: false,
     migrations: [

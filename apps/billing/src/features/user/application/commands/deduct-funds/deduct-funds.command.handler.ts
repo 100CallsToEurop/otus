@@ -1,7 +1,7 @@
 import { CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs';
 import { DeductFundsCommand } from './deduct-funds.command';
-import { UserRepository } from '../../../infrastructure/repository';
-import { FundsOperationEvent } from '../../../domain/user/events';
+import { BillingRepository } from '../../../infrastructure/repository';
+import { FundsOperationEvent } from '../../../domain/billing/events';
 
 @CommandHandler(DeductFundsCommand)
 export class DeductFundsCommandHandler
@@ -9,7 +9,7 @@ export class DeductFundsCommandHandler
 {
   constructor(
     private readonly eventBus: EventBus,
-    private readonly userRepository: UserRepository,
+    private readonly userRepository: BillingRepository,
   ) {}
 
   async execute({

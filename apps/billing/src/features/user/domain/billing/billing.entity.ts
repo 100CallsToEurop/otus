@@ -1,5 +1,5 @@
 import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from 'typeorm';
-import { IUser } from './user.interface';
+import { IBilling } from './billing.interface';
 import {
   IsOptional,
   IsNumber,
@@ -10,9 +10,9 @@ import {
 import { Logger } from '@nestjs/common';
 import { IWallet, WalletEntity } from '../wallet';
 
-@Entity('users')
-export class UserEntity implements IUser {
-  private logger = new Logger(UserEntity.name);
+@Entity('billing')
+export class BillingEntity implements IBilling {
+  private logger = new Logger(BillingEntity.name);
   @IsOptional()
   @IsNumber()
   @PrimaryColumn()
@@ -30,8 +30,8 @@ export class UserEntity implements IUser {
   @JoinColumn()
   wallet: IWallet;
 
-  static create(user: Partial<IUser>): IUser {
-    const _user = new UserEntity();
+  static create(user: Partial<IBilling>): IBilling {
+    const _user = new BillingEntity();
     _user.id = user.id;
     _user.email = user.email;
     _user.fullName = user.fullName;

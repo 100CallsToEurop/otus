@@ -1,11 +1,11 @@
 import { NestFactory } from '@nestjs/core';
-import { BillingModule } from './features/billing.module';
+import { AppBillingModule } from './features/app.billing.module';
 import { configApp } from './config';
 import { ConfigService } from '@nestjs/config';
 import { KafkaConfigService } from '@app/providers/kafka/config';
 
 async function bootstrap() {
-  const app = await NestFactory.create(BillingModule);
+  const app = await NestFactory.create(AppBillingModule);
 
   const kafkaClient = app.get(KafkaConfigService);
   await app.connectMicroservice(kafkaClient.createKafkaOptions());
