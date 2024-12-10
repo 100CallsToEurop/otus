@@ -14,7 +14,7 @@ spec:
     spec:
       initContainers:
         - name: create-databases
-          image: 'postgresql'
+          image: '{{ .Values.postgresql.image.repository }}:{{ .Values.postgresql.image.tag }}'
           command: ['sh', '-c']
           env:
             - name: PG_USERNAME
