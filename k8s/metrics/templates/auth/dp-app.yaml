@@ -27,11 +27,6 @@ spec:
                 secretKeyRef:
                   name: auth-secret-credentials
                   key: PG_USERNAME
-             - name: PG_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: auth-secret-credentials
-                  key: PG_USERNAME
             - name: PG_PASSWORD
               valueFrom:
                 secretKeyRef:
