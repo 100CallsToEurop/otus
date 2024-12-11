@@ -31,12 +31,12 @@ spec:
         - name: PORT
           valueFrom:
             configMapKeyRef:
-              name: notification-c
+              name: notification-cm
               key: PORT
         - name: PG_HOST
           valueFrom:
             configMapKeyRef:
-              name: notification-c
+              name: notification-cm
               key: PG_HOST
         volumeMounts:
         - name: postgresql-data
