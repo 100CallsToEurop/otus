@@ -1,4 +1,3 @@
-import { KafkaConfigService } from '@app/providers/kafka/config';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeOrmConfigService } from '../db/config';
@@ -22,7 +21,6 @@ import { OrderModule } from './order/order.module';
   ],
   controllers: [],
   providers: [
-    KafkaConfigService,
     JwtStrategy,
     { provide: APP_GUARD, useClass: JwtAuthGuard },
     {

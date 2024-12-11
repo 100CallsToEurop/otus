@@ -1,25 +1,20 @@
-import { Controller, Inject, OnModuleInit } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { OrderFacade } from '../application';
-import { ClientKafka, EventPattern, Payload } from '@nestjs/microservices';
-import { PaymentConfirmationDto } from './models/input';
+import { RabbitSubscribe } from '@golevelup/nestjs-rabbitmq';
+import { PaymentConfirmationContract } from '@app/amqp-contracts/queues/billing/payment-confirmation.contract';
+import { Public } from '@app/common/decorators';
 
+@Public()
 @Controller()
-export class OrderEventController implements OnModuleInit {
-  constructor(
-    @Inject('KAFKA_SERVICE') private readonly client: ClientKafka,
-    private readonly orderFacade: OrderFacade,
-  ) {}
+export class OrderEventController {
+  constructor(private readonly orderFacade: OrderFacade) {}
 
-  onModuleInit() {
-    const requestPatterns = ['payment-confirmation'];
-
-    requestPatterns.forEach((pattern) => {
-      this.client.subscribeToResponseOf(pattern);
-    });
-  }
-
-  @EventPattern('payment-confirmation')
-  async PaymentConfirmation(@Payload() payload: PaymentConfirmationDto) {
+  @RabbitSubscribe({
+    exchange: PaymentConfirmationContract.queue.exchange.name,
+    routingKey: PaymentConfirmationContract.queue.routingKey,
+    queue: PaymentConfirmationContract.queue.queue,
+  })
+  async PaymentConfirmation( payload: PaymentConfirmationContract.request) {
     await this.orderFacade.commands.paymentConfirmation(payload);
   }
 }

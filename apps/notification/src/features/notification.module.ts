@@ -1,5 +1,4 @@
 import { AllExceptionsFilter } from '@app/common';
-import { KafkaConfigService } from '@app/providers/kafka/config';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_FILTER, APP_GUARD } from '@nestjs/core';
@@ -20,7 +19,6 @@ import { JwtStrategy } from '@app/common/strategies';
   ],
   controllers: [],
   providers: [
-    KafkaConfigService,
     JwtStrategy,
     // { provide: APP_GUARD, useClass: JwtAuthGuard },
     {

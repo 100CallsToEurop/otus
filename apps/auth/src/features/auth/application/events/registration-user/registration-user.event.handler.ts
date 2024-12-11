@@ -1,21 +1,18 @@
 import { EventsHandler, IEventHandler } from '@nestjs/cqrs';
 import { RegistrationUserEvent } from '../../../domain/events';
-import { Inject } from '@nestjs/common';
-import { ClientKafka } from '@nestjs/microservices';
+import { AmqpConnection } from '@golevelup/nestjs-rabbitmq';
+import { RegistrationUserContract } from '@app/amqp-contracts/queues/auth';
 
 @EventsHandler(RegistrationUserEvent)
 export class RegistrationUserEventHandler
   implements IEventHandler<RegistrationUserEvent>
 {
-  constructor(@Inject('KAFKA_SERVICE') private readonly client: ClientKafka) {}
+  constructor(private readonly amqpConnection: AmqpConnection) {}
   handle({ userId, email, fullName }: RegistrationUserEvent) {
-    this.client.emit(
-      'user-created',
-      JSON.stringify({
-        userId,
-        email,
-        fullName,
-      }),
+    this.amqpConnection.publish(
+      RegistrationUserContract.queue.exchange.name,
+      RegistrationUserContract.queue.routingKey,
+      { userId, email, fullName },
     );
   }
 }

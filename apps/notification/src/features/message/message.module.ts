@@ -8,15 +8,10 @@ import { MESSAGE_QUERY_HANDLERS } from './application/queries';
 import { MessageEntity } from './domain';
 import { MessageAdapter } from './infrastructure/adapter';
 import { MessageRepository } from './infrastructure/repository';
-import { clientConfig } from '@app/providers/kafka/config';
-import { ClientsModule } from '@nestjs/microservices';
+import { AmqpModule } from '@app/providers/amqp';
 
 @Module({
-  imports: [
-    ClientsModule.registerAsync([clientConfig()]),
-    CqrsModule,
-    TypeOrmModule.forFeature([MessageEntity]),
-  ],
+  imports: [CqrsModule, TypeOrmModule.forFeature([MessageEntity]), AmqpModule],
   controllers: [MessageController, MessageEventController],
   providers: [
     ...MESSAGE_COMMAND_HANDLERS,

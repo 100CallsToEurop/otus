@@ -1,7 +1,5 @@
-import { clientConfig } from '@app/providers/kafka/config';
 import { Module } from '@nestjs/common';
 import { CommandBus, CqrsModule, EventBus, QueryBus } from '@nestjs/cqrs';
-import { ClientsModule } from '@nestjs/microservices';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BillingController, BillingEventController } from './api';
 import { BillingEntity } from './domain/billing';
@@ -12,12 +10,13 @@ import { BILLING_EVENT_HANDLERS } from './application/events';
 import { BILLING_QUERY_HANDLERS } from './application/queries';
 import { BillingAdapter } from './infrastructure/adapter';
 import { BillingRepository } from './infrastructure/repository';
+import { AmqpModule } from '@app/providers/amqp';
 
 @Module({
   imports: [
-    ClientsModule.registerAsync([clientConfig()]),
     CqrsModule,
     TypeOrmModule.forFeature([BillingEntity, WalletEntity]),
+    AmqpModule,
   ],
   controllers: [BillingController, BillingEventController],
   providers: [

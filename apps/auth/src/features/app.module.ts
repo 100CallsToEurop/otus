@@ -12,7 +12,6 @@ import { AuthModule } from './auth/auth.module';
 import { JwtAuthGuard } from '@app/common/guards';
 import { AtStrategy } from '@app/common/strategies';
 import { SecurityDeviceModule } from './security-device/security-device.module';
-import { KafkaConfigService } from '@app/providers/kafka/config';
 
 @Module({
   imports: [
@@ -32,7 +31,6 @@ import { KafkaConfigService } from '@app/providers/kafka/config';
   ],
   controllers: [AppController],
   providers: [
-    KafkaConfigService,
     AtStrategy,
     { provide: APP_GUARD, useClass: JwtAuthGuard },
     {

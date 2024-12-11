@@ -13,18 +13,17 @@ import { AuthController } from './api';
 import { BadTokenEntity } from './domain';
 import { SecurityDeviceModule } from '../security-device/security-device.module';
 import { AUTH_EVENT_HANDLERS } from './application/events';
-import { clientConfig } from '@app/providers/kafka/config';
-import { ClientsModule } from '@nestjs/microservices';
 import { AtStrategy } from '@app/common/strategies';
+import { AmqpModule } from '@app/providers/amqp';
 
 @Module({
   imports: [
     CqrsModule,
-    ClientsModule.registerAsync([clientConfig()]),
     TypeOrmModule.forFeature([BadTokenEntity]),
     UserModule,
     SecurityDeviceModule,
     JwtModule,
+    AmqpModule,
   ],
   controllers: [AuthController],
   providers: [

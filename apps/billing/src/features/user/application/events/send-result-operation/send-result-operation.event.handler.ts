@@ -1,18 +1,22 @@
 import { EventsHandler, IEventHandler } from '@nestjs/cqrs';
 import { FundsOperationEvent } from '../../../domain/billing/events';
-import { Inject } from '@nestjs/common';
-import { ClientKafka } from '@nestjs/microservices';
+import { AmqpConnection } from '@golevelup/nestjs-rabbitmq';
+import { PaymentConfirmationContract } from '@app/amqp-contracts/queues/billing/payment-confirmation.contract';
 
 @EventsHandler(FundsOperationEvent)
 export class SendResultOperationEventHandler
   implements IEventHandler<FundsOperationEvent>
 {
-  constructor(@Inject('KAFKA_SERVICE') private readonly client: ClientKafka) {}
+  constructor(private readonly amqpConnection: AmqpConnection) {}
   async handle({ orderId, result }: FundsOperationEvent) {
-    const payload = JSON.stringify({
+    const payload = {
       orderId,
       result,
-    });
-    this.client.emit('payment-confirmation', payload);
+    };
+    this.amqpConnection.publish(
+      PaymentConfirmationContract.queue.exchange.name,
+      PaymentConfirmationContract.queue.routingKey,
+      payload,
+    );
   }
 }

@@ -9,16 +9,15 @@ import { ORDER_COMMAND_HANDLERS } from './application/commands';
 import { ORDER_QUERY_HANDLERS } from './application/queries';
 import { OrderAdapter } from './infrastructure/adapter';
 import { OrderRepository } from './infrastructure/repository';
-import { ClientsModule } from '@nestjs/microservices';
-import { clientConfig } from '@app/providers/kafka/config';
 import { ORDER_EVENT_HANDLERS } from './application/events';
+import { AmqpModule } from '@app/providers/amqp';
 
 @Module({
   imports: [
-    ClientsModule.registerAsync([clientConfig()]),
     CqrsModule,
     TypeOrmModule.forFeature([OrderEntity]),
     ProductModule,
+    AmqpModule,
   ],
   controllers: [OrderController, OrderEventController],
   providers: [

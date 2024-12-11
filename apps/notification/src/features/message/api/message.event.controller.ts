@@ -1,25 +1,20 @@
-import { Controller, Inject, OnModuleInit } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { MessageFacade } from '../application';
-import { ClientKafka, EventPattern, Payload } from '@nestjs/microservices';
-import { CreateMessageDto } from './models/input';
+import { RabbitSubscribe } from '@golevelup/nestjs-rabbitmq';
+import { NotificationMessageContract } from '@app/amqp-contracts/queues/billing';
+import { Public } from '@app/common/decorators';
 
+@Public()
 @Controller()
-export class MessageEventController implements OnModuleInit {
-  constructor(
-    @Inject('KAFKA_SERVICE') private readonly client: ClientKafka,
-    private readonly messageFacade: MessageFacade,
-  ) {}
+export class MessageEventController {
+  constructor(private readonly messageFacade: MessageFacade) {}
 
-  onModuleInit() {
-    const requestPatterns = ['notification-message'];
-
-    requestPatterns.forEach((pattern) => {
-      this.client.subscribeToResponseOf(pattern);
-    });
-  }
-
-  @EventPattern('notification-message')
-  async createMessage(@Payload() payload: CreateMessageDto) {
+  @RabbitSubscribe({
+    exchange: NotificationMessageContract.queue.exchange.name,
+    routingKey: NotificationMessageContract.queue.routingKey,
+    queue: NotificationMessageContract.queue.queue,
+  })
+  async createMessage(payload: NotificationMessageContract.request) {
     await this.messageFacade.commands.createMessage(payload);
   }
 }

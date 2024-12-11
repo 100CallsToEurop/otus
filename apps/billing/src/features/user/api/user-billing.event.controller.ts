@@ -1,30 +1,34 @@
-import { Controller, Inject, OnModuleInit } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { UserBillingFacade } from '../application';
-import { ClientKafka, EventPattern, Payload } from '@nestjs/microservices';
-import { CreateUserDto, DeductFundsDto } from './models/input';
+import { RabbitSubscribe } from '@golevelup/nestjs-rabbitmq';
+import { RegistrationUserContract } from '@app/amqp-contracts/queues/auth';
+import { DeductFundsContract } from '@app/amqp-contracts/queues/order';
+import { Public } from '@app/common/decorators';
 
+@Public()
 @Controller()
-export class BillingEventController implements OnModuleInit {
-  constructor(
-    @Inject('KAFKA_SERVICE') private readonly client: ClientKafka,
-    private readonly productFacade: UserBillingFacade,
-  ) {}
+export class BillingEventController {
+  constructor(private readonly productFacade: UserBillingFacade) {}
 
-  onModuleInit() {
-    const requestPatterns = ['user-created', 'deduct-funds'];
-
-    requestPatterns.forEach((pattern) => {
-      this.client.subscribeToResponseOf(pattern);
-    });
+  @RabbitSubscribe({
+    exchange: RegistrationUserContract.queue.exchange.name,
+    routingKey: RegistrationUserContract.queue.routingKey,
+    queue: RegistrationUserContract.queue.queue,
+  })
+  async createUser(payload: RegistrationUserContract.request): Promise<void> {
+    try {
+      await this.productFacade.commands.createUser(payload);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
-  @EventPattern('user-created')
-  async createUser(@Payload() payload: CreateUserDto): Promise<void> {
-    await this.productFacade.commands.createUser(payload);
-  }
-
-  @EventPattern('deduct-funds')
-  async deductFunds(@Payload() payload: DeductFundsDto): Promise<void> {
+  @RabbitSubscribe({
+    exchange: DeductFundsContract.queue.exchange.name,
+    routingKey: DeductFundsContract.queue.routingKey,
+    queue: DeductFundsContract.queue.queue,
+  })
+  async deductFunds(payload: DeductFundsContract.request): Promise<void> {
     await this.productFacade.commands.deductFunds(payload);
   }
 }
