@@ -26,7 +26,6 @@ ingress-nginx:
           prometheus.io/port: "10254"
           prometheus.io/scrape: "true"
 
-kafka:
   externalAccess:
     enabled: true
     broker:
@@ -39,6 +38,11 @@ kafka:
         type: LoadBalancer
         containerPorts:
           external: 9094
+
+rabbitmq:
+  auth:
+    username: "admin"
+    password: "admin"
 
 
 
