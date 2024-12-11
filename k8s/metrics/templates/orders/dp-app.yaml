@@ -48,6 +48,11 @@ spec:
                 configMapKeyRef:
                   name: order-cm
                   key: PORT
+            - name: PG_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: order-cm
+                  key: PG_HOST
             - name: AMQP_URI
               valueFrom:
                 configMapKeyRef:
