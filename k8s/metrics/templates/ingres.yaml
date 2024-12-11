@@ -42,4 +42,11 @@ spec:
                 name: orders
                 port:
                   number: 80
+          - path: /api/products
+            pathType: Prefix
+            backend:
+              service:
+                name: orders
+                port:
+                  number: 80
   ingressClassName: nginx
