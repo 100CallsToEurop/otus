@@ -9,7 +9,7 @@ spec:
     spec:
       restartPolicy: Never
       containers:
-      - name: notifications
+      - name: notifications-job
         image: 100callstoeurop/otus-app_notification
         command: ["sh", "-c", "yarn migration-notification:migrate"]
         env:
