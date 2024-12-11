@@ -6,7 +6,4 @@ data:
   PORT: '8001'
   PG_PORT: '5432'
   PG_HOST: 'metrics-postgresql'
-  KAFKA_BROKER: 'metrics-kafka-controller'
-  KAFKA_GROUP_ID: 'billing'
-  KAFKA_CLIENT_ID: '2'
-  KAFKA_IS_ONLY_PRODUCER: 'false'
+  AMQP_URI: 'amqp://admin:admin@192.168.0.69:5672'

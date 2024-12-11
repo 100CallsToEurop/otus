@@ -48,28 +48,8 @@ spec:
                 configMapKeyRef:
                   name: order-cm
                   key: PORT
-            - name: PG_HOST
+            - name: AMQP_URI
               valueFrom:
                 configMapKeyRef:
                   name: order-cm
-                  key: PG_HOST
-            - name: KAFKA_BROKER
-              valueFrom:
-                configMapKeyRef:
-                  name: order-cm
-                  key: KAFKA_BROKER
-            - name: KAFKA_GROUP_ID
-              valueFrom:
-                configMapKeyRef:
-                  name: order-cm
-                  key: KAFKA_GROUP_ID
-            - name: KAFKA_CLIENT_ID
-              valueFrom:
-                configMapKeyRef:
-                  name: order-cm
-                  key: KAFKA_CLIENT_ID
-            - name: KAFKA_IS_ONLY_PRODUCER
-              valueFrom:
-                configMapKeyRef:
-                  name: order-cm
-                  key: KAFKA_IS_ONLY_PRODUCER
+                  key: AMQP_URI
