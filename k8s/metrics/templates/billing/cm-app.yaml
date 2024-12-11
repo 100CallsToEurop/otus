@@ -6,4 +6,4 @@ data:
   PORT: '8001'
   PG_PORT: '5432'
   PG_HOST: 'metrics-postgresql'
-  AMQP_URI: 'amqp://admin:admin@192.168.0.69:5672'
+  AMQP_URI: 'amqp://admin:admin@metrics-rabbitmq:5672'
