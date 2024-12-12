@@ -23,15 +23,6 @@ version: 0.1.0
 # It is recommended to use it with quotes.
 appVersion: "1.16.0"
 dependencies:
-  - name: prometheus
-    version: '25.29.0'
-    repository: 'https://prometheus-community.github.io/helm-charts' 
-  - name: grafana
-    version: '8.5.11'
-    repository: 'https://grafana.github.io/helm-charts'
-  - name: rabbitmq
-    version: '15.0.5'
+  - name: postgresql
+    version: '16.1.1'
     repository: 'https://charts.bitnami.com/bitnami'
-  - name: ingress-nginx
-    version: '4.11.3'
-    repository: 'https://kubernetes.github.io/ingress-nginx'
