@@ -1,13 +1,41 @@
 Команды установки приложения
 
-В charts.yaml прописаны репозитории (prometheus, grafana, postgresql, ingress-nginx, rabbitmq)
+k8s:
 
-1. sudo helm dependency update
-2. sudo helm install metrics .
-3. После запуска всех pods применить:
+1. папка metrics
+   В charts.yaml прописаны репозитории (prometheus, grafana, ingress-nginx, rabbitmq)
+   1) sudo helm dependency update
+   2) sudo helm install metrics .
+
+1. папка auth
+   В charts.yaml прописаны репозитории (postgresql)
+   1) sudo helm dependency update
+   2) sudo helm install auth .
+   3) После запуска pod-a с postgresql:
    - sudo kubectl apply -f job-auth.yaml - для миграций в сервис авторизации
+
+2. папка billing
+   В charts.yaml прописаны репозитории (postgresql)
+   1) sudo helm dependency update
+   2) sudo helm install billing .
+   3) После запуска pod-a с postgresql:
+   - sudo kubectl apply -f job-billing.yaml - для миграций в сервис биллинга
+
+3. папка notification
+   В charts.yaml прописаны репозитории (postgresql)
+   1) sudo helm dependency update
+   2) sudo helm install notification .
+   3) После запуска pod-a с postgresql:
+   - sudo kubectl apply -f job-auth.yaml - для миграций в сервис авторизации   
    - sudo kubectl apply -f job-billing.yaml - для миграций в сервис биллинга
    - sudo kubectl apply -f job-notification.yaml - для миграций в сервис уведомлений
+   - sudo kubectl apply -f job-order.yaml - для миграций в сервис заказов
+  
+4. папка order
+   В charts.yaml прописаны репозитории (postgresql)
+   1) sudo helm dependency update
+   2) sudo helm install notification .
+   3) После запуска pod-a с order:
    - sudo kubectl apply -f job-order.yaml - для миграций в сервис заказов
   
 
