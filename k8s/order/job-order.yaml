@@ -39,9 +39,9 @@ spec:
               name: order-cm
               key: PG_HOST
         volumeMounts:
-        - name: postgresql-data
-          mountPath: /data/volume
+        - name: postgresql-order-data
+          mountPath: /data/volume/order
       volumes:
-      - name: postgresql-data
+      - name: postgresql-order-data
         persistentVolumeClaim:
-          claimName: postgresql-data-claim
+          claimName: postgresql-order-data-claim

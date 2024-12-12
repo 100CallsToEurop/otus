@@ -39,9 +39,9 @@ spec:
               name: notification-cm
               key: PG_HOST
         volumeMounts:
-        - name: postgresql-data
-          mountPath: /data/volume
+        - name: postgresql-notification-data
+          mountPath: /data/volume/notification
       volumes:
-      - name: postgresql-data
+      - name: postgresql-notification-data
         persistentVolumeClaim:
-          claimName: postgresql-data-claim
+          claimName: postgresql-notification-data-claim

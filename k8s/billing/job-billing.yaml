@@ -39,9 +39,9 @@ spec:
               name: billing-cm
               key: PG_HOST
         volumeMounts:
-        - name: postgresql-data
-          mountPath: /data/volume
+        - name: postgresql-billing-data
+          mountPath: /data/volume/billing
       volumes:
-      - name: postgresql-data
+      - name: postgresql-billing-data
         persistentVolumeClaim:
-          claimName: postgresql-data-claim
+          claimName: postgresql-billing-data-claim

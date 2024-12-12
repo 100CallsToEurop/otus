@@ -7,4 +7,4 @@ postgresql:
 primary:
   persistence:
     enabled: true
-    existingClaim: "postgresql-data-claim"
+    existingClaim: "postgresql-order-data-claim"

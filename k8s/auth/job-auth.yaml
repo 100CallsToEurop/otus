@@ -39,9 +39,9 @@ spec:
               name: auth-cm
               key: PG_HOST
         volumeMounts:
-        - name: postgresql-data
-          mountPath: /data/volume
+        - name: postgresql-auth-data
+          mountPath: /data/volume/auth
       volumes:
-      - name: postgresql-data
+      - name: postgresql-auth-data
         persistentVolumeClaim:
-          claimName: postgresql-data-claim
+          claimName: postgresql-auth-data-claim
