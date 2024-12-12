@@ -44,4 +44,4 @@ spec:
       volumes:
       - name: postgresql-order-data
         persistentVolumeClaim:
-          claimName: order-postgresql-0
+          claimName: data-order-postgresql-0

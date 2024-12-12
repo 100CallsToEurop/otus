@@ -44,4 +44,4 @@ spec:
       volumes:
       - name: postgresql-notification-data
         persistentVolumeClaim:
-          claimName: notification-postgresql-0
+          claimName: data-notification-postgresql-0
