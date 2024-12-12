@@ -5,5 +5,5 @@ metadata:
 data:
   PORT: '8002'
   PG_PORT: '5432'
-  PG_HOST: 'metrics-postgresql'
+  PG_HOST: 'notification-postgresql'
   AMQP_URI: 'amqp://admin:admin@metrics-rabbitmq:5672'
