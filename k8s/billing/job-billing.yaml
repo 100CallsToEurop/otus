@@ -44,4 +44,4 @@ spec:
       volumes:
       - name: postgresql-billing-data
         persistentVolumeClaim:
-          claimName: postgresql-billing-data-claim
+          claimName: billing-postgresql-0
