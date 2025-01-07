@@ -1,0 +1,47 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: delivery-migration-job
+spec:
+  completions: 1
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: deliveries
+        image: 100callstoeurop/otus-app_delivery
+        command: ["sh", "-c", "yarn migration-delivery:migrate"]
+        env:
+        - name: PG_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: delivery-secret-credentials
+              key: PG_USERNAME
+        - name: PG_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: delivery-secret-credentials
+              key: PG_PASSWORD
+        - name: PG_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: delivery-secret-credentials
+              key: PG_DATABASE
+        - name: PORT
+          valueFrom:
+            configMapKeyRef:
+              name: delivery-cm
+              key: PORT
+        - name: PG_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: delivery-cm
+              key: PG_HOST
+        volumeMounts:
+        - name: postgresql-delivery-data
+          mountPath: /data/volume/delivery
+      volumes:
+      - name: postgresql-delivery-data
+        persistentVolumeClaim:
+          claimName: data-delivery-postgresql-0

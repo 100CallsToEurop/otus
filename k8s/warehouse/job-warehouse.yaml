@@ -1,0 +1,47 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: warehouse-migration-job
+spec:
+  completions: 1
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: warehouses
+        image: 100callstoeurop/otus-app_warehouse
+        command: ["sh", "-c", "yarn migration-warehouse:migrate"]
+        env:
+        - name: PG_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: warehouse-secret-credentials
+              key: PG_USERNAME
+        - name: PG_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: warehouse-secret-credentials
+              key: PG_PASSWORD
+        - name: PG_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: warehouse-secret-credentials
+              key: PG_DATABASE
+        - name: PORT
+          valueFrom:
+            configMapKeyRef:
+              name: warehouse-cm
+              key: PORT
+        - name: PG_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: warehouse-cm
+              key: PG_HOST
+        volumeMounts:
+        - name: postgresql-warehouse-data
+          mountPath: /data/volume/warehouse
+      volumes:
+      - name: postgresql-warehouse-data
+        persistentVolumeClaim:
+          claimName: data-warehouse-postgresql-0

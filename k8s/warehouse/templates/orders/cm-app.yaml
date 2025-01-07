@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: warehouse-cm
+data:
+  PORT: '8005'
+  PG_PORT: '5432'
+  PG_HOST: 'warehouse-postgresql'
+  AMQP_URI: 'amqp://admin:admin@metrics-rabbitmq:5672'
