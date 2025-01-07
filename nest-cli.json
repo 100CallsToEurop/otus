@@ -97,6 +97,42 @@
       "compilerOptions": {
         "tsConfigPath": "libs/amqp-contracts/tsconfig.lib.json"
       }
+    },
+    "payment": {
+      "type": "application",
+      "root": "apps/payment",
+      "entryFile": "main",
+      "sourceRoot": "apps/payment/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/payment/tsconfig.app.json"
+      }
+    },
+    "delivery": {
+      "type": "application",
+      "root": "apps/delivery",
+      "entryFile": "main",
+      "sourceRoot": "apps/delivery/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/delivery/tsconfig.app.json"
+      }
+    },
+    "warehouse": {
+      "type": "application",
+      "root": "apps/warehouse",
+      "entryFile": "main",
+      "sourceRoot": "apps/warehouse/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/warehouse/tsconfig.app.json"
+      }
+    },
+    "consts": {
+      "type": "library",
+      "root": "libs/consts",
+      "entryFile": "index",
+      "sourceRoot": "libs/consts/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/consts/tsconfig.lib.json"
+      }
     }
   },
   "monorepo": true,

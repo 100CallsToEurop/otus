@@ -13,6 +13,8 @@
     "start-billing:dev": "nest start billing --watch",
     "start-order:dev": "nest start order --watch",
     "start-notification:dev": "nest start notification --watch",
+    "start-warehouse:dev": "nest start warehouse --watch",
+    "start-delivery:dev": "nest start delivery --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/apps/homework-01/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
@@ -36,7 +38,15 @@
     "typeorm-notification": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli -d apps/notification/src/db/migrations/data-source.ts",
     "migration-notification:create": "yarn typeorm-notification migration:generate apps/notification/src/db/migrations/migration",
     "migration-notification:migrate": "yarn typeorm-notification migration:run",
-    "migration-notification:drop": "yarn typeorm-notification schema:drop"
+    "migration-notification:drop": "yarn typeorm-notification schema:drop",
+    "typeorm-warehouse": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli -d apps/warehouse/src/db/migrations/data-source.ts",
+    "migration-warehouse:create": "yarn typeorm-warehouse migration:generate apps/warehouse/src/db/migrations/migration",
+    "migration-warehouse:migrate": "yarn typeorm-warehouse migration:run",
+    "migration-warehouse:drop": "yarn typeorm-warehouse schema:drop",
+    "typeorm-delivery": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli -d apps/delivery/src/db/migrations/data-source.ts",
+    "migration-delivery:create": "yarn typeorm-delivery migration:generate apps/delivery/src/db/migrations/migration",
+    "migration-delivery:migrate": "yarn typeorm-delivery migration:run",
+    "migration-delivery:drop": "yarn typeorm-delivery schema:drop"
   },
   "dependencies": {
     "@golevelup/nestjs-rabbitmq": "^5.6.1",
@@ -54,6 +64,7 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "cookie-parser": "^1.4.7",
+    "date-fns": "^4.1.0",
     "newman": "^6.2.1",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
@@ -115,7 +126,8 @@
       "^@app/configs(|/.*)$": "<rootDir>/libs/configs/src/$1",
       "^@app/providers(|/.*)$": "<rootDir>/libs/providers/src/$1",
       "^@app/utils(|/.*)$": "<rootDir>/libs/utils/src/$1",
-      "^@app/amqp-contracts(|/.*)$": "<rootDir>/libs/amqp-contracts/src/$1"
+      "^@app/amqp-contracts(|/.*)$": "<rootDir>/libs/amqp-contracts/src/$1",
+      "^@app/consts(|/.*)$": "<rootDir>/libs/consts/src/$1"
     }
   }
 }

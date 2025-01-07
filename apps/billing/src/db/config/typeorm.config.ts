@@ -1,7 +1,8 @@
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModuleAsyncOptions } from '@nestjs/typeorm';
-import { WalletEntity } from '../../features/user/domain/wallet';
-import { BillingEntity } from '../../features/user/domain/billing';
+import { WalletEntity } from '../../features/billing/domain/wallet';
+import { BillingEntity } from '../../features/billing/domain/billing';
+import { HistoryEntity } from '../../features/billing/domain/history';
 
 export const TypeOrmConfigService = (): TypeOrmModuleAsyncOptions => ({
   useFactory: (configService: ConfigService) => ({
@@ -11,7 +12,7 @@ export const TypeOrmConfigService = (): TypeOrmModuleAsyncOptions => ({
     username: configService.get('PG_USERNAME'),
     password: configService.get('PG_PASSWORD'),
     database: configService.get('PG_DATABASE'),
-    entities: [BillingEntity, WalletEntity],
+    entities: [BillingEntity, WalletEntity, HistoryEntity],
   }),
   inject: [ConfigService],
   imports: [ConfigModule],

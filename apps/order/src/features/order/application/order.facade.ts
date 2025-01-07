@@ -4,13 +4,17 @@ import {
   CreateOrderCommandHandler,
   CreateOrderDto,
 } from './commands/create-order';
-import { GetOrdersQuery, GetOrdersQueryHandler } from './queries/get-orders';
+import { GetOrderQuery, GetOrderQueryHandler } from './queries/get-order';
 import {
-  PaymentConfirmationCommand,
-  PaymentConfirmationCommandHandler,
-  PaymentConfirmationDto,
-} from './commands/payment-confirmation';
-import { PayOrderCommand, PayOrderCommandHandler } from './commands/pay-order';
+  PlaceOrderCommand,
+  PlaceOrderCommandHandler,
+  PlaceOrderDto,
+} from './commands/place-order';
+import {
+  UpdateViewOrderCommand,
+  UpdateViewOrderCommandHandler,
+  UpdateViewOrderDto,
+} from './commands/update-view-order';
 
 export class OrderFacade {
   constructor(
@@ -22,13 +26,11 @@ export class OrderFacade {
   commands = {
     createOrder: (createOrderDto: CreateOrderDto) =>
       this.createOrder(createOrderDto),
-    paymentConfirmation: (paymentConfirmationDto: PaymentConfirmationDto) =>
-      this.paymentConfirmation(paymentConfirmationDto),
-    payOrder: (userId: number, orderId: number) =>
-      this.payOrder(userId, orderId),
+    updateViewOrder: (dto: UpdateViewOrderDto) => this.updateViewOrder(dto),
+    placeOrder: (dto: PlaceOrderDto) => this.placeOrder(dto),
   };
   queries = {
-    getOrders: (userId: number) => this.getOrders(userId),
+    getOrder: (userId: number) => this.getOrder(userId),
   };
 
   private createOrder(createProductDto: CreateOrderDto) {
@@ -38,24 +40,24 @@ export class OrderFacade {
     >(new CreateOrderCommand(createProductDto));
   }
 
-  private payOrder(userId: number, orderId: number) {
+  private placeOrder(dto: PlaceOrderDto) {
     return this.commandBus.execute<
-      PayOrderCommand,
-      Awaited<ReturnType<PayOrderCommandHandler['execute']>>
-    >(new PayOrderCommand(userId, orderId));
+      PlaceOrderCommand,
+      Awaited<ReturnType<PlaceOrderCommandHandler['execute']>>
+    >(new PlaceOrderCommand(dto));
   }
 
-  private paymentConfirmation(paymentConfirmationDto: PaymentConfirmationDto) {
+  private updateViewOrder(dto: UpdateViewOrderDto) {
     return this.commandBus.execute<
-      PaymentConfirmationCommand,
-      Awaited<ReturnType<PaymentConfirmationCommandHandler['execute']>>
-    >(new PaymentConfirmationCommand(paymentConfirmationDto));
+      UpdateViewOrderCommand,
+      Awaited<ReturnType<UpdateViewOrderCommandHandler['execute']>>
+    >(new UpdateViewOrderCommand(dto));
   }
 
-  private getOrders(userId: number) {
+  private getOrder(orderId: number) {
     return this.queryBus.execute<
-      GetOrdersQuery,
-      Awaited<ReturnType<GetOrdersQueryHandler['execute']>>
-    >(new GetOrdersQuery(userId));
+      GetOrderQuery,
+      Awaited<ReturnType<GetOrderQueryHandler['execute']>>
+    >(new GetOrderQuery(orderId));
   }
 }

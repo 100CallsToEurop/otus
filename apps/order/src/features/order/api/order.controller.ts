@@ -2,7 +2,6 @@ import {
   Body,
   Controller,
   Get,
-  HttpCode,
   Param,
   ParseIntPipe,
   Post,
@@ -18,24 +17,18 @@ export class OrderController {
   @Post(':userId')
   async createOrder(
     @Param('userId', ParseIntPipe) userId: number,
-    @Body() { productIds }: CreateOrderDto,
+    @Body() dto: CreateOrderDto,
   ): Promise<{ orderId: number }> {
-    return this.orderFacade.commands.createOrder({ userId, productIds });
+    return this.orderFacade.commands.createOrder({
+      userId,
+      ...dto,
+    });
   }
 
-  @HttpCode(200)
-  @Post(':userId/order/:orderId/pay')
-  async payOrder(
-    @Param('userId', ParseIntPipe) userId: number,
-    @Param('orderId', ParseIntPipe) orderId: number,
-  ): Promise<{ orderId: number }> {
-    return this.orderFacade.commands.payOrder(userId, orderId);
-  }
-
-  @Get(':userId')
+  @Get(':orderId')
   async getOrders(
-    @Param('userId', ParseIntPipe) userId: number,
-  ): Promise<OrderViewModel[]> {
-    return this.orderFacade.queries.getOrders(userId);
+    @Param('orderId', ParseIntPipe) orderId: number,
+  ): Promise<OrderViewModel> {
+    return this.orderFacade.queries.getOrder(orderId);
   }
 }

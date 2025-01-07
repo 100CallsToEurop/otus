@@ -1,4 +1,6 @@
 export type CreateOrderDto = {
   userId: number;
-  productIds: number[];
+  itemsIds: number[];
+  totalPrice: number;
+  deliveryDate: Date;
 };

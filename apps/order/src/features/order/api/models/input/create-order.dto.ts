@@ -1,6 +1,12 @@
-import { IsArray } from 'class-validator';
+import { IsArray, IsDate, IsNumber } from 'class-validator';
 
 export class CreateOrderDto {
   @IsArray()
-  productIds: number[];
+  itemsIds: number[];
+
+  @IsNumber()
+  totalPrice: number;
+
+  @IsDate()
+  deliveryDate: Date;
 }

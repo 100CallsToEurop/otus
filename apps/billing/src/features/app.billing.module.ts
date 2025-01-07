@@ -6,7 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD, APP_FILTER } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeOrmConfigService } from '../db/config';
-import { BillingModule } from './user/billing.module';
+import { BillingModule } from './billing/billing.module';
 
 @Module({
   imports: [

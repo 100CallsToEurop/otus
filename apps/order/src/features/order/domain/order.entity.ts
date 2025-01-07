@@ -2,11 +2,9 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  ManyToMany,
   PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { IProduct, ProductEntity } from '../../product/domain';
 import { IOrder } from './order.interface';
 import {
   IsOptional,
@@ -16,10 +14,11 @@ import {
   IsDate,
   Min,
   validateSync,
+  IsArray,
 } from 'class-validator';
-import { STATUS_ORDER } from '../../../const';
 import { Logger } from '@nestjs/common';
 import { randomInt } from 'crypto';
+import { STATUS_ORDER } from '@app/consts';
 
 @Entity('orders')
 export class OrderEntity implements IOrder {
@@ -37,7 +36,7 @@ export class OrderEntity implements IOrder {
   status: STATUS_ORDER;
   @IsNumber()
   @Min(0)
-  @Column({ name: 'price', type: 'int' })
+  @Column({ name: 'total_price', type: 'int' })
   totalPrice: number;
   @IsDate()
   @CreateDateColumn()
@@ -45,20 +44,29 @@ export class OrderEntity implements IOrder {
   @IsDate()
   @UpdateDateColumn()
   updatedAt: Date;
+  @IsArray()
+  @IsNumber({}, { each: true })
+  @Column({ type: 'int', array: true })
+  items: number[];
+  @IsDate()
+  @Column({ name: 'delivery_date' })
+  deliveryDate: Date;
 
-  @IsOptional()
-  @ManyToMany(() => ProductEntity, (product) => product.orders)
-  products: IProduct[];
-
-  static create(userId: number): IOrder {
+  static create(
+    userId: number,
+    totalPrice: number,
+    deliveryTime: Date,
+  ): IOrder {
     const _order = new OrderEntity();
     _order.id = randomInt(1000);
     _order.userId = userId;
-    _order.status = STATUS_ORDER.COMPLETE;
-    _order.totalPrice = 0;
+    _order.status = STATUS_ORDER.PENDING;
+    _order.totalPrice = totalPrice;
     _order.createdAt = new Date();
     _order.updatedAt = new Date();
-    _order.products = [];
+    _order.deliveryDate = deliveryTime;
+    _order.items = [];
+
     const error = validateSync(_order);
     if (!!error.length) {
       error.forEach((e) => _order.logger.error(e.constraints));
@@ -67,13 +75,13 @@ export class OrderEntity implements IOrder {
     return _order;
   }
 
-  addProducts(products: IProduct[]): void {
-    this.totalPrice = products.reduce((sum, product) => sum + product.price, 0);
-    this.products = products;
+  addItemsIds(itemsIds: number[]): void {
+    this.items.push(...itemsIds);
   }
 
   setStatus(status: STATUS_ORDER): void {
     this.status = status;
+    this.updatedAt = new Date();
   }
 
   plainToInstance(): void {

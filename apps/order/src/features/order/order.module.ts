@@ -2,21 +2,23 @@ import { Module } from '@nestjs/common';
 import { CommandBus, CqrsModule, EventBus, QueryBus } from '@nestjs/cqrs';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { OrderEntity } from './domain';
-import { ProductModule } from '../product/product.module';
 import { OrderController, OrderEventController } from './api';
 import { OrderFacade, orderFacadeFactory } from './application';
 import { ORDER_COMMAND_HANDLERS } from './application/commands';
 import { ORDER_QUERY_HANDLERS } from './application/queries';
-import { OrderAdapter } from './infrastructure/adapter';
-import { OrderRepository } from './infrastructure/repository';
+import { OrderAdapter, OrderViewAdapter } from './infrastructure/adapter';
+import {
+  OrderRepository,
+  OrderViewRepository,
+} from './infrastructure/repository';
 import { ORDER_EVENT_HANDLERS } from './application/events';
 import { AmqpModule } from '@app/providers/amqp';
+import { OrderViewEntity } from './domain/view';
 
 @Module({
   imports: [
     CqrsModule,
-    TypeOrmModule.forFeature([OrderEntity]),
-    ProductModule,
+    TypeOrmModule.forFeature([OrderEntity, OrderViewEntity]),
     AmqpModule,
   ],
   controllers: [OrderController, OrderEventController],
@@ -32,6 +34,10 @@ import { AmqpModule } from '@app/providers/amqp';
     {
       provide: OrderRepository,
       useClass: OrderAdapter,
+    },
+    {
+      provide: OrderViewRepository,
+      useClass: OrderViewAdapter,
     },
   ],
   exports: [],
