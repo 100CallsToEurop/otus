@@ -7,40 +7,72 @@ k8s:
    1) sudo helm dependency update
    2) sudo helm install metrics .
 
-1. папка auth
+2. папка auth
    В charts.yaml прописаны репозитории (postgresql)
    1) sudo helm dependency update
    2) sudo helm install auth .
-   3) После запуска pod-a с postgresql:
-   - sudo kubectl apply -f job-auth.yaml - для миграций в сервис авторизации
 
-2. папка billing
+3. папка billing
    В charts.yaml прописаны репозитории (postgresql)
    1) sudo helm dependency update
    2) sudo helm install billing .
-   3) После запуска pod-a с postgresql:
-   - sudo kubectl apply -f job-billing.yaml - для миграций в сервис биллинга
 
-3. папка notification
-   В charts.yaml прописаны репозитории (postgresql)
-   1) sudo helm dependency update
-   2) sudo helm install notification .
-   3) После запуска pod-a с postgresql:
-   - sudo kubectl apply -f job-auth.yaml - для миграций в сервис авторизации   
-   - sudo kubectl apply -f job-billing.yaml - для миграций в сервис биллинга
-   - sudo kubectl apply -f job-notification.yaml - для миграций в сервис уведомлений
-   - sudo kubectl apply -f job-order.yaml - для миграций в сервис заказов
-  
 4. папка order
    В charts.yaml прописаны репозитории (postgresql)
    1) sudo helm dependency update
-   2) sudo helm install notification .
-   3) После запуска pod-a с order:
-   - sudo kubectl apply -f job-order.yaml - для миграций в сервис заказов
+   2) sudo helm install order .
+  
+5. папка delivery
+   В charts.yaml прописаны репозитории (postgresql)
+   1) sudo helm dependency update
+   2) sudo helm install delivery .
+      
+6. папка warehouse
+   В charts.yaml прописаны репозитории (postgresql)
+   1) sudo helm dependency update
+   2) sudo helm install warehouse .
+
+7. Применить jobs для миграций:
+   - sudo kubectl apply -f ./auth/job-auth.yaml
+   - sudo kubectl apply -f ./auth/job-billing.yaml
+   - sudo kubectl apply -f ./auth/job-order.yaml
+   - sudo kubectl apply -f ./auth/job-delivery.yaml
+   - sudo kubectl apply -f ./auth/job-warehouse.yaml
   
 
-Описание архитектурного решения и схема взаимодействия сервисов
+Описание того, какой паттерн для реализации распределенной транзакции использовался
 
-![image](https://github.com/user-attachments/assets/7bfa2bed-eb9b-4fcd-89ff-8491e28d9ef1)
+Для решения был выбран паттерн "Saga" с реализацией "Оркестратор".
 
-Для решения был выбран подход с асинхронным общением между микросервисами. Для лющения был выбран брокер rabbitMq
+В качестве "Оркестратора" выступает сервис "order", который управляет шагами саги.
+
+В качестве сервиса оплаты был выбран сервис "billing", который управляет "Кошельком" пользователя, который пополняется отдельно.
+
+Сценарий:
+1. Пользователь регистрируется
+2. Пользователь авторизуется
+3. У пользователя создается "Кошелек"
+4. Пользователь пополняет кошелек
+5. Создаются несколько товаров
+6. Создается курьер
+7. Пользователь выбирает из списка товары
+8. Пользователь оформляет заказ
+   Заказ принимает статус "Ожидание" и как только начинается сага, статус принимает статус "Ожидание оплаты"
+9. Заказ сперва списывает деньги и принимает статус "Ожидание резервирования товаров"
+   В случае неудачи, списание средств не происходит, заказ принимает статус "Отменен" и видно причину отмены (Не удалось списать средства)
+   Сага не выполняется
+10. Выполняется резервация товаров и заказ принимает статус "Ожидание резервирования курьера"
+   В случае неудачи, резервация товаров не происходит, заказ принимает статус "Отменен" и видно причину отмены (Не удалось зарезервировать товары)
+   Происходит "компенсационное действие" по возврату списанных средств.
+   Сага не выполняется
+11. Выполняется резервация курьера и заказ принимает статус "Готов"
+   В случае неудачи, резервация курьера не происходит, заказ принимает статус "Отменен" и видно причину отмены (Не удалось зарезервировать курьера)
+   Происходит "компенсационное действие" по возврату списанных средств
+   Происходит "компенсационное действие" по отмену зарезервированных товаров
+   Сага не выполняется
+
+
+![Снимок экрана 2025-01-08 в 14 26 23](https://github.com/user-attachments/assets/e78bf3ba-16de-4d99-9ed8-7c22b024ff52)
+
+
+
