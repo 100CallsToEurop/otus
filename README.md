@@ -34,10 +34,10 @@ k8s:
 
 7. Применить jobs для миграций:
    - sudo kubectl apply -f ./auth/job-auth.yaml
-   - sudo kubectl apply -f ./auth/job-billing.yaml
-   - sudo kubectl apply -f ./auth/job-order.yaml
-   - sudo kubectl apply -f ./auth/job-delivery.yaml
-   - sudo kubectl apply -f ./auth/job-warehouse.yaml
+   - sudo kubectl apply -f ./billing/job-billing.yaml
+   - sudo kubectl apply -f ./order/job-order.yaml
+   - sudo kubectl apply -f ./delivery/job-delivery.yaml
+   - sudo kubectl apply -f ./warehouse/job-warehouse.yaml
   
 
 Описание того, какой паттерн для реализации распределенной транзакции использовался
