@@ -38,7 +38,7 @@ spec:
                 port:
                   number: 80
           - path: /api/users/([0-9]+)/orders(/.*)?$
-            pathType: Prefix
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: orders
