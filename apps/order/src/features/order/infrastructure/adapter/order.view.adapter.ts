@@ -14,7 +14,20 @@ export class OrderViewAdapter implements OrderViewRepository {
     return await this.orderRepository.save(order);
   }
 
-  async getOrder(orderId: number): Promise<IOrderView> {
-    return await this.orderRepository.findOneBy({ id: orderId });
+  async getOrder(userId: number, orderId: number): Promise<IOrderView> {
+    return await this.orderRepository.findOneBy({ userId, orderId });
+  }
+
+  async getOrderForUpdate(
+    orderId: number,
+    transactionId: string,
+  ): Promise<IOrderView> {
+    return await this.orderRepository.findOneBy({ orderId, transactionId });
+  }
+
+  async getByUserId(userId: number): Promise<[IOrderView[], number]> {
+    return await this.orderRepository.findAndCount({
+      where: { userId },
+    });
   }
 }

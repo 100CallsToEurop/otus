@@ -18,51 +18,55 @@ export class PlaceOrderCommandHandler
     private readonly amqpConnection: AmqpConnection,
   ) {}
 
-  private async reserveProductFailed(orderId: number) {
+  private async reserveProductFailed(orderId: number, transactionId: string) {
     await this.amqpConnection.publish(
       CancelPaymentConfirmationContract.queue.exchange.name,
       CancelPaymentConfirmationContract.queue.routingKey,
       {
         orderId,
+        transactionId,
       },
     );
   }
 
-  private async reserveCourierFailed(orderId: number) {
-    await this.reserveProductFailed(orderId);
+  private async reserveCourierFailed(orderId: number, transactionId: string) {
+    await this.reserveProductFailed(orderId, transactionId);
     await this.amqpConnection.publish(
       CancelProductReservedContract.queue.exchange.name,
       CancelProductReservedContract.queue.routingKey,
       {
         orderId,
+        transactionId,
       },
     );
   }
 
-  private async saveViewOrder(orderId: number, status: STATUS_ORDER) {
+  private async saveViewOrder(
+    orderId: number,
+    transactionId: string,
+    status: STATUS_ORDER,
+  ) {
     await this.eventBus.publish(
-      new UpdateViewOrderStatusEvent(orderId, status),
+      new UpdateViewOrderStatusEvent(orderId, transactionId, status),
     );
   }
 
   async execute({
-    placeOrderDto: { orderId, status, completed },
+    placeOrderDto: { orderId, transactionId, status, completed },
   }: PlaceOrderCommand): Promise<void> {
-    const order = await this.orderRepository.getById(orderId);
+    const order = await this.orderRepository.getById(orderId, transactionId);
 
     if (!completed) {
       order.setStatus(STATUS_ORDER.CANCELED);
       await this.orderRepository.save(order);
       if (status === STATUS_ORDER.WAITING_FOR_RESERVE_PRODUCTS)
-        await this.reserveProductFailed(orderId);
+        await this.reserveProductFailed(orderId, transactionId);
       if (status === STATUS_ORDER.WAITING_FOR_RESERVE_COURIER)
-        await this.reserveCourierFailed(orderId);
+        await this.reserveCourierFailed(orderId, transactionId);
       return;
     }
-
     const saga = new PlaceOrderSaga(order, this.amqpConnection);
     let orderSaga;
-
     switch (status) {
       case STATUS_ORDER.WAITING_FOR_PAYMENT:
         saga.setState(STATUS_ORDER.WAITING_FOR_RESERVE_PRODUCTS);
@@ -75,7 +79,11 @@ export class PlaceOrderCommandHandler
       case STATUS_ORDER.WAITING_FOR_RESERVE_COURIER:
         saga.setState(STATUS_ORDER.COMPLETED);
         orderSaga = await saga.getState().finished();
-        await this.saveViewOrder(orderId, STATUS_ORDER.COMPLETED);
+        await this.saveViewOrder(
+          orderId,
+          transactionId,
+          STATUS_ORDER.COMPLETED,
+        );
         break;
     }
     await this.orderRepository.save(orderSaga);

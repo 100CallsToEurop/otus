@@ -33,11 +33,15 @@ export class ProductAdapter implements ProductRepository {
     return await this.productRepository.find(condition);
   }
 
-  async getAllByOrderId(orderId: number): Promise<IProduct[]> {
+  async getAllByOrderId(
+    orderId: number,
+    transactionId: string,
+  ): Promise<IProduct[]> {
     return await this.productRepository.find({
       where: {
         reservedProducts: {
           orderId,
+          transactionId,
         },
       },
       relations: { reservedProducts: true },

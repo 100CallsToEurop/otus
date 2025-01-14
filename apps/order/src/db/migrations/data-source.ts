@@ -4,6 +4,7 @@ import { join } from 'path';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { OrderEntity } from '../../features/order/domain';
 import { OrderViewEntity } from '../../features/order/domain/view';
+import { IdempotentEntity } from '../../features/idempotent/domain';
 
 config({
   path: './apps/order/.env',
@@ -18,7 +19,7 @@ const options = (): DataSourceOptions => {
     username: configService.get('PG_USERNAME'),
     password: configService.get('PG_PASSWORD'),
     database: configService.get('PG_DATABASE'),
-    entities: [OrderEntity, OrderViewEntity],
+    entities: [OrderEntity, OrderViewEntity, IdempotentEntity],
     logging: false,
     synchronize: false,
     migrations: [

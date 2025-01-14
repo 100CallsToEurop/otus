@@ -12,14 +12,16 @@ export class SendResultOperationEventHandler
   implements IEventHandler<FundsOperationEvent>
 {
   constructor(private readonly amqpConnection: AmqpConnection) {}
-  async handle({ orderId, result }: FundsOperationEvent) {
+  async handle({ orderId, transactionId, result }: FundsOperationEvent) {
     const payload = {
       orderId,
+      transactionId,
       status: STATUS_ORDER.WAITING_FOR_PAYMENT,
       completed: result,
     };
     const updatePayload = {
       orderId,
+      transactionId,
       status: result ? STATUS_ORDER.WAITING_FOR_PAYMENT : STATUS_ORDER.CANCELED,
       transactionMessage: result ? '' : 'Не удалось списать средства',
     };

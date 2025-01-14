@@ -7,6 +7,6 @@ export interface IProduct {
   quantity: number;
   reservedProducts: IReservedProduct[];
 
-  addReservedProduct(orderId: number): boolean;
+  addReservedProduct(orderId: number, transactionId: string): boolean;
   plainToInstance(): void;
 }

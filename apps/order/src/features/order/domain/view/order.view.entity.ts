@@ -14,6 +14,7 @@ import {
   Min,
   validateSync,
   IsArray,
+  IsUUID,
 } from 'class-validator';
 import { Logger } from '@nestjs/common';
 import { STATUS_ORDER } from '@app/consts';
@@ -30,6 +31,13 @@ export class OrderViewEntity implements IOrderView {
   @IsNumber()
   @Column()
   userId: number;
+  @IsNumber()
+  @Column()
+  orderId: number;
+  @IsString()
+  @IsUUID()
+  @Column({ type: 'uuid', name: 'transaction_id' })
+  transactionId: string;
   @IsEnum(STATUS_ORDER)
   @IsString()
   @Column({ type: 'enum', enum: STATUS_ORDER })
@@ -61,7 +69,9 @@ export class OrderViewEntity implements IOrderView {
   static create(order: Partial<IOrder>): IOrderView {
     const _order = new OrderViewEntity();
     _order.id = order.id;
+    _order.orderId = order.orderId;
     _order.userId = order.userId;
+    _order.transactionId = order.transactionId;
     _order.status = STATUS_ORDER.PENDING;
     _order.totalPrice = order.totalPrice;
     _order.createdAt = new Date();

@@ -10,14 +10,21 @@ import { STATUS_ORDER } from '@app/consts';
 @EventsHandler(ReservedEvent)
 export class ReservedEventHandler implements IEventHandler<ReservedEvent> {
   constructor(private readonly amqpConnection: AmqpConnection) {}
-  async handle({ orderId, reserved, courierFullName }: ReservedEvent) {
+  async handle({
+    orderId,
+    transactionId,
+    reserved,
+    courierFullName,
+  }: ReservedEvent) {
     const payload = {
       orderId,
+      transactionId,
       status: STATUS_ORDER.WAITING_FOR_RESERVE_COURIER,
       completed: reserved,
     };
     const updatePayload = {
       orderId,
+      transactionId,
       status: reserved
         ? STATUS_ORDER.WAITING_FOR_RESERVE_COURIER
         : STATUS_ORDER.CANCELED,

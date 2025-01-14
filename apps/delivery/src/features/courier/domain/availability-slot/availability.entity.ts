@@ -1,6 +1,13 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { IAvailabilitySlot } from './availability.interface';
-import { IsOptional, IsNumber, IsDate, validateSync } from 'class-validator';
+import {
+  IsOptional,
+  IsNumber,
+  IsDate,
+  validateSync,
+  IsString,
+  IsUUID,
+} from 'class-validator';
 import { Logger } from '@nestjs/common';
 import { CourierEntity, ICourier } from '../courier';
 
@@ -14,6 +21,10 @@ export class AvailabilitySlotEntity implements IAvailabilitySlot {
   @IsNumber()
   @Column()
   orderId: number;
+  @IsString()
+  @IsUUID()
+  @Column({ type: 'uuid', name: 'transaction_id' })
+  transactionId: string;
   @IsDate()
   @Column({ name: 'date' })
   date: Date;
@@ -26,6 +37,7 @@ export class AvailabilitySlotEntity implements IAvailabilitySlot {
   static create(slot: Partial<IAvailabilitySlot>): IAvailabilitySlot {
     const _availabilitySlot = new AvailabilitySlotEntity();
     _availabilitySlot.orderId = slot.orderId;
+    _availabilitySlot.transactionId = slot.transactionId;
     _availabilitySlot.date = new Date(slot.date);
     const error = validateSync(_availabilitySlot);
     if (!!error.length) {

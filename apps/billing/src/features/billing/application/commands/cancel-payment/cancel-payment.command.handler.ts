@@ -9,11 +9,14 @@ export class CancelPaymentCommandHandler
   constructor(private readonly userRepository: BillingRepository) {}
 
   async execute({
-    cancelPaymentDto: { orderId },
+    cancelPaymentDto: { orderId, transactionId },
   }: CancelPaymentCommand): Promise<void> {
-    const user = await this.userRepository.getUserByOrderId(orderId);
+    const user = await this.userRepository.getUserByTransactionId(
+      orderId,
+      transactionId,
+    );
     if (!user) return;
-    user.cancelTransaction(orderId);
+    user.cancelTransaction(orderId, transactionId);
     await this.userRepository.save(user);
   }
 }

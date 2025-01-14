@@ -15,7 +15,8 @@ export class PlaceOrderSagaPaymentOrder extends PlaceOrderSagaState {
       DeductFundsContract.queue.routingKey,
       {
         userId: this.saga.order.userId,
-        orderId: this.saga.order.id,
+        orderId: this.saga.order.orderId,
+        transactionId: this.saga.order.transactionId,
         amount: this.saga.order.totalPrice,
       },
     );

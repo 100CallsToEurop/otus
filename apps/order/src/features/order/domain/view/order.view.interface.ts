@@ -3,6 +3,8 @@ import { STATUS_ORDER } from '@app/consts';
 export interface IOrderView {
   id: number;
   userId: number;
+  orderId: number;
+  transactionId: string;
   items: Record<string, any>[];
   status: STATUS_ORDER;
   totalPrice: number;

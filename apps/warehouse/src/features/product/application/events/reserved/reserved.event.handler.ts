@@ -11,14 +11,16 @@ import { ProductResponse } from '../../../domain/product';
 @EventsHandler(ReservedEvent)
 export class ReservedEventHandler implements IEventHandler<ReservedEvent> {
   constructor(private readonly amqpConnection: AmqpConnection) {}
-  async handle({ orderId, reserved, items }: ReservedEvent) {
+  async handle({ orderId, transactionId, reserved, items }: ReservedEvent) {
     const payload = {
       orderId,
+      transactionId,
       status: STATUS_ORDER.WAITING_FOR_RESERVE_PRODUCTS,
       completed: reserved,
     };
     const updatePayload = {
       orderId,
+      transactionId,
       status: reserved
         ? STATUS_ORDER.WAITING_FOR_RESERVE_PRODUCTS
         : STATUS_ORDER.CANCELED,

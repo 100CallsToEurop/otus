@@ -15,6 +15,7 @@ import {
   UpdateViewOrderCommandHandler,
   UpdateViewOrderDto,
 } from './commands/update-view-order';
+import { GetOrdersQuery, GetOrdersQueryHandler } from './queries/get-orders';
 
 export class OrderFacade {
   constructor(
@@ -30,7 +31,9 @@ export class OrderFacade {
     placeOrder: (dto: PlaceOrderDto) => this.placeOrder(dto),
   };
   queries = {
-    getOrder: (userId: number) => this.getOrder(userId),
+    getOrder: (userId: number, orderId: number) =>
+      this.getOrder(userId, orderId),
+    getOrders: (userId: number) => this.getOrders(userId),
   };
 
   private createOrder(createProductDto: CreateOrderDto) {
@@ -54,10 +57,17 @@ export class OrderFacade {
     >(new UpdateViewOrderCommand(dto));
   }
 
-  private getOrder(orderId: number) {
+  private getOrder(userId: number, orderId: number) {
     return this.queryBus.execute<
       GetOrderQuery,
       Awaited<ReturnType<GetOrderQueryHandler['execute']>>
-    >(new GetOrderQuery(orderId));
+    >(new GetOrderQuery(userId, orderId));
+  }
+
+  private getOrders(userId: number) {
+    return this.queryBus.execute<
+      GetOrdersQuery,
+      Awaited<ReturnType<GetOrdersQueryHandler['execute']>>
+    >(new GetOrdersQuery(userId));
   }
 }

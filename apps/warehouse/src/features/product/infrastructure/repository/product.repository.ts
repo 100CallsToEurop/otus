@@ -5,6 +5,9 @@ export abstract class ProductRepository {
   abstract saveMany(products: IProduct[]): Promise<void>;
   abstract getByName(name: string): Promise<IProduct | null>;
   abstract getAll(productIds?: number[]): Promise<IProduct[]>;
-  abstract getAllByOrderId(orderId: number): Promise<IProduct[]>;
+  abstract getAllByOrderId(
+    orderId: number,
+    transactionId: string,
+  ): Promise<IProduct[]>;
   abstract deleteReservedProduct(ids: number[]): Promise<void>;
 }

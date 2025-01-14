@@ -16,21 +16,23 @@ export class ReserveCourierCommandHandler
   ) {}
 
   async execute({
-    reserveCourier: { orderId, deliveryDate },
+    reserveCourier: { orderId, transactionId, deliveryDate },
   }: ReserveCourierCommand): Promise<void> {
     const courier = await this.courierRepository.getFreeCourier(deliveryDate);
 
     await sleep(1000);
 
     if (!courier) {
-      await this.eventBus.publish(new ReservedEvent(orderId, false));
+      await this.eventBus.publish(
+        new ReservedEvent(orderId, transactionId, false),
+      );
       return;
     }
-    courier.addSlot(orderId, deliveryDate);
+    courier.addSlot(orderId, transactionId, deliveryDate);
     courier.plainToInstance();
     await this.courierRepository.save(courier);
     await this.eventBus.publish(
-      new ReservedEvent(orderId, true, courier.fullName),
+      new ReservedEvent(orderId, transactionId, true, courier.fullName),
     );
   }
 }

@@ -2,6 +2,7 @@ import {
   IsDate,
   IsNumber,
   IsOptional,
+  IsString,
   Min,
   validateSync,
 } from 'class-validator';
@@ -26,6 +27,9 @@ export class HistoryEntity implements IHistory {
   @IsNumber()
   @Column()
   orderId: number;
+  @IsString()
+  @Column({ type: 'uuid', name: 'transaction_id' })
+  transactionId: string;
   @IsNumber()
   @Min(0)
   @Column({ name: 'balance', type: 'int' })
@@ -46,6 +50,7 @@ export class HistoryEntity implements IHistory {
   static create(history: Partial<IHistory>): IHistory {
     const _history = new HistoryEntity();
     _history.orderId = history.orderId;
+    _history.transactionId = history.transactionId;
     _history.balance = history.balance;
     _history.withdrawalAmount = history.withdrawalAmount;
     _history.transactionDate = new Date();

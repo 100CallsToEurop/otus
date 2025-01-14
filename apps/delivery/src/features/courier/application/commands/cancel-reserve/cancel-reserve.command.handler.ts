@@ -11,11 +11,14 @@ export class CancelReserveCourierCommandHandler
   constructor(private readonly courierRepository: CourierRepository) {}
 
   async execute({
-    cancelReserveCourier: { orderId },
+    cancelReserveCourier: { orderId, transactionId },
   }: CancelReserveCourierCommand): Promise<void> {
-    const courier = await this.courierRepository.getCourierByOrderId(orderId);
+    const courier = await this.courierRepository.getCourierByOrderId(
+      orderId,
+      transactionId,
+    );
     if (!courier) return;
-    courier.deleteSlot(orderId);
+    courier.deleteSlot(orderId, transactionId);
     await this.courierRepository.save(courier);
   }
 }

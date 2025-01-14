@@ -52,11 +52,16 @@ export class ProductEntity implements IProduct {
     return _product;
   }
 
-  addReservedProduct(orderId: number): boolean {
+  addReservedProduct(orderId: number, transactionId: string): boolean {
     if (this.quantity <= 0) return false;
     this.quantity -= 1;
     this.reservedProducts.push(
-      ReservedProductEntity.create({ orderId, price: this.price, quantity: 1 }),
+      ReservedProductEntity.create({
+        orderId,
+        transactionId,
+        price: this.price,
+        quantity: 1,
+      }),
     );
     return true;
   }

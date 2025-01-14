@@ -11,10 +11,13 @@ export class CancelReserveProductCommandHandler
   constructor(private readonly productRepository: ProductRepository) {}
 
   async execute({
-    cancelReserveProduct: { orderId },
+    cancelReserveProduct: { orderId, transactionId },
   }: CancelReserveProductCommand): Promise<void> {
     const ids = [];
-    const products = await this.productRepository.getAllByOrderId(orderId);
+    const products = await this.productRepository.getAllByOrderId(
+      orderId,
+      transactionId,
+    );
     if (!products.length) return;
     products.forEach((product) => {
       product.quantity += 1;

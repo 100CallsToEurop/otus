@@ -1,8 +1,9 @@
 import { STATUS_ORDER } from '@app/consts';
 
 export class OrderViewModel {
-  id: number;
+  orderId: number;
   userId: number;
+  transactionId: string;
   status: STATUS_ORDER;
   totalPrice: number;
   items: Record<string, any>[];

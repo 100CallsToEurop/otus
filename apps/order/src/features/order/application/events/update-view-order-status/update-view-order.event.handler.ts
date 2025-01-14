@@ -8,8 +8,15 @@ export class UpdateViewOrderEventHandler
 {
   constructor(private readonly orderViewRepository: OrderViewRepository) {}
 
-  async handle({ orderId, status }: UpdateViewOrderStatusEvent): Promise<void> {
-    const order = await this.orderViewRepository.getOrder(orderId);
+  async handle({
+    orderId,
+    transactionId,
+    status,
+  }: UpdateViewOrderStatusEvent): Promise<void> {
+    const order = await this.orderViewRepository.getOrderForUpdate(
+      orderId,
+      transactionId,
+    );
     order.status = status;
     order.plainToInstance();
     await this.orderViewRepository.save(order);

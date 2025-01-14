@@ -14,12 +14,14 @@ import {
 import { ORDER_EVENT_HANDLERS } from './application/events';
 import { AmqpModule } from '@app/providers/amqp';
 import { OrderViewEntity } from './domain/view';
+import { IdempotentModule } from '../idempotent/idempotent.module';
 
 @Module({
   imports: [
     CqrsModule,
     TypeOrmModule.forFeature([OrderEntity, OrderViewEntity]),
     AmqpModule,
+    IdempotentModule,
   ],
   controllers: [OrderController, OrderEventController],
   providers: [

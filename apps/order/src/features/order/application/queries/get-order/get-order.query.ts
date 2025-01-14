@@ -1,3 +1,6 @@
 export class GetOrderQuery {
-  constructor(public orderId: number) {}
+  constructor(
+    public userId: number,
+    public orderId: number,
+  ) {}
 }

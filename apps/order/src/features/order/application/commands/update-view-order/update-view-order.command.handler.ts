@@ -9,9 +9,12 @@ export class UpdateViewOrderCommandHandler
   constructor(private readonly orderViewRepository: OrderViewRepository) {}
 
   async execute({
-    orderDto: { orderId, ...updateOrder },
+    orderDto: { orderId, transactionId, ...updateOrder },
   }: UpdateViewOrderCommand): Promise<void> {
-    const order = await this.orderViewRepository.getOrder(orderId);
+    const order = await this.orderViewRepository.getOrderForUpdate(
+      orderId,
+      transactionId,
+    );
     order.update(updateOrder);
     await this.orderViewRepository.save(order);
   }

@@ -10,6 +10,7 @@ export class PlaceOrderSagaCanceled extends PlaceOrderSagaState {
       PlaceOrderContract.queue.routingKey,
       {
         orderId: this.saga.order.id,
+        transactionId: this.saga.order.transactionId,
         status: STATUS_ORDER.PENDING,
       },
     );

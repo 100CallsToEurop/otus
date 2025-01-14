@@ -2,7 +2,9 @@ import { STATUS_ORDER } from '@app/consts';
 
 export interface IOrder {
   id: number;
+  orderId: number;
   userId: number;
+  transactionId: string;
   items: number[];
   status: STATUS_ORDER;
   totalPrice: number;

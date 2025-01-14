@@ -7,6 +7,7 @@ import { JwtStrategy } from '@app/common/strategies';
 import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD, APP_FILTER } from '@nestjs/core';
 import { OrderModule } from './order/order.module';
+import { IdempotentModule } from './idempotent/idempotent.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { OrderModule } from './order/order.module';
     }),
     TypeOrmModule.forRootAsync(TypeOrmConfigService()),
     OrderModule,
+    IdempotentModule,
   ],
   controllers: [],
   providers: [

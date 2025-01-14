@@ -5,7 +5,7 @@ export interface ICourier {
   fullName: string;
   availabilitySlots: IAvailabilitySlot[];
 
-  addSlot(orderId: number, date: Date): void;
-  deleteSlot(orderId: number): void;
+  addSlot(orderId: number, transactionId: string, date: Date): void;
+  deleteSlot(orderId: number, transactionId: string): void;
   plainToInstance(): void;
 }

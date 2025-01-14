@@ -28,7 +28,7 @@ export class PlaceOrderSagaStarted extends PlaceOrderSagaState {
     //   CancelPlaceOrderContract.queue.exchange.name,
     //   CancelPlaceOrderContract.queue.routingKey,
     //   {
-    //     orderId: this.saga.order.id,
+    //     orderId: this.saga.order.orderId,
     //   },
     // );
     this.saga.order.status = STATUS_ORDER.CANCELED;

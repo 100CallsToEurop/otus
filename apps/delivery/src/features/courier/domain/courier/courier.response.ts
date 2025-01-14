@@ -3,10 +3,12 @@ import { ICourier } from './courier.interface';
 
 export class AvailabilitySlot {
   orderId: number;
+  transactionId: string;
   date: Date;
 
   constructor(slot: IAvailabilitySlot) {
     this.orderId = slot.orderId;
+    this.transactionId = slot.transactionId;
     this.date = slot.date;
   }
 }

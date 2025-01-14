@@ -65,7 +65,11 @@ export class BillingEntity implements IBilling {
     }
     return this.wallet.addFunds(amount);
   }
-  deductWalletFunds(orderId: number, amount: number): boolean {
+  deductWalletFunds(
+    orderId: number,
+    transactionId: string,
+    amount: number,
+  ): boolean {
     if (amount <= 0) {
       return false;
     }
@@ -74,6 +78,7 @@ export class BillingEntity implements IBilling {
     this.wallet.deductFunds(amount);
     const history = HistoryEntity.create({
       orderId,
+      transactionId,
       balance: this.wallet.getFunds(),
       withdrawalAmount: -amount,
     });
@@ -85,11 +90,14 @@ export class BillingEntity implements IBilling {
     return this.wallet.getFunds();
   }
 
-  cancelTransaction(orderId: number): void {
-    const history = this.histories.find((h) => h.orderId === orderId);
+  cancelTransaction(orderId: number, transactionId: string): void {
+    const history = this.histories.find(
+      (h) => h.transactionId === transactionId,
+    );
     this.wallet.addFunds(history.withdrawalAmount * -1);
     const newHistory = HistoryEntity.create({
       orderId,
+      transactionId,
       balance: this.wallet.getFunds(),
       withdrawalAmount: history.withdrawalAmount * -1,
     });

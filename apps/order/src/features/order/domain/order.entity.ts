@@ -15,10 +15,11 @@ import {
   Min,
   validateSync,
   IsArray,
+  IsUUID,
 } from 'class-validator';
 import { Logger } from '@nestjs/common';
-import { randomInt } from 'crypto';
 import { STATUS_ORDER } from '@app/consts';
+import { randomInt, randomUUID } from 'crypto';
 
 @Entity('orders')
 export class OrderEntity implements IOrder {
@@ -30,6 +31,13 @@ export class OrderEntity implements IOrder {
   @IsNumber()
   @Column()
   userId: number;
+  @IsNumber()
+  @Column()
+  orderId: number;
+  @IsString()
+  @IsUUID()
+  @Column({ type: 'uuid', name: 'transaction_id' })
+  transactionId: string;
   @IsEnum(STATUS_ORDER)
   @IsString()
   @Column({ type: 'enum', enum: STATUS_ORDER })
@@ -54,12 +62,15 @@ export class OrderEntity implements IOrder {
 
   static create(
     userId: number,
+    orderId: number,
     totalPrice: number,
     deliveryTime: Date,
   ): IOrder {
     const _order = new OrderEntity();
-    _order.id = randomInt(1000);
+    _order.id = randomInt(100);
+    _order.orderId = orderId;
     _order.userId = userId;
+    _order.transactionId = randomUUID();
     _order.status = STATUS_ORDER.PENDING;
     _order.totalPrice = totalPrice;
     _order.createdAt = new Date();

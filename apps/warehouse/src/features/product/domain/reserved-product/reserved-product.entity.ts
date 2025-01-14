@@ -1,5 +1,12 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { IsOptional, IsNumber, Min, validateSync } from 'class-validator';
+import {
+  IsOptional,
+  IsNumber,
+  Min,
+  validateSync,
+  IsString,
+  IsUUID,
+} from 'class-validator';
 import { Logger } from '@nestjs/common';
 import { IReservedProduct } from './reserved-product.interface';
 import { IProduct, ProductEntity } from '../product';
@@ -14,6 +21,10 @@ export class ReservedProductEntity implements IReservedProduct {
   @IsNumber()
   @Column()
   orderId: number;
+  @IsString()
+  @IsUUID()
+  @Column({ type: 'uuid', name: 'transaction_id' })
+  transactionId: string;
   @IsNumber()
   @Min(0)
   @Column()
@@ -32,6 +43,7 @@ export class ReservedProductEntity implements IReservedProduct {
     const _product = new ReservedProductEntity();
     product?.id && (_product.id = product.id);
     _product.orderId = product.orderId;
+    _product.transactionId = product.transactionId;
     _product.quantity = product.quantity;
     _product.price = product.price;
     const error = validateSync(_product);

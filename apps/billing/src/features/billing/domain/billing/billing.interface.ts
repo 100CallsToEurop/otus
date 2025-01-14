@@ -9,8 +9,12 @@ export interface IBilling {
   histories: IHistory[];
 
   addWalletFunds(amount: number): void;
-  deductWalletFunds(orderId: number, amount: number): boolean;
-  cancelTransaction(orderId: number): void;
+  deductWalletFunds(
+    orderId: number,
+    transactionId: string,
+    amount: number,
+  ): boolean;
+  cancelTransaction(orderId: number, transactionId: string): void;
   getWalletFunds(): number;
   plainToInstance(): void;
 }

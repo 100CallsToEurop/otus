@@ -21,9 +21,12 @@ export class BillingAdapter implements BillingRepository {
       relations: { wallet: true, histories: true },
     });
   }
-  async getUserByOrderId(orderId: number): Promise<IBilling> {
+  async getUserByTransactionId(
+    orderId: number,
+    transactionId: string,
+  ): Promise<IBilling> {
     return await this.billingRepository.findOne({
-      where: { histories: { orderId } },
+      where: { histories: { orderId, transactionId } },
       relations: { wallet: true, histories: true },
     });
   }

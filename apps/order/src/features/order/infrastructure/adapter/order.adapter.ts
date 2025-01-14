@@ -14,7 +14,10 @@ export class OrderAdapter implements OrderRepository {
     return await this.orderRepository.save(order);
   }
 
-  async getById(orderId: number): Promise<IOrder | null> {
-    return await this.orderRepository.findOneBy({ id: orderId });
+  async getById(
+    orderId: number,
+    transactionId: string,
+  ): Promise<IOrder | null> {
+    return await this.orderRepository.findOneBy({ orderId, transactionId });
   }
 }

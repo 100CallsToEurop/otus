@@ -11,7 +11,8 @@ export class PlaceOrderSagaReserveProduct extends PlaceOrderSagaState {
       ReserveProductContract.queue.exchange.name,
       ReserveProductContract.queue.routingKey,
       {
-        orderId: this.saga.order.id,
+        orderId: this.saga.order.orderId,
+        transactionId: this.saga.order.transactionId,
         itemsIds: this.saga.order.items,
       },
     );

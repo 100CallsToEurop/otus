@@ -17,7 +17,8 @@ export class PlaceOrderSagaReserveCourier extends PlaceOrderSagaState {
       ReserveCourierContract.queue.exchange.name,
       ReserveCourierContract.queue.routingKey,
       {
-        orderId: this.saga.order.id,
+        orderId: this.saga.order.orderId,
+        transactionId: this.saga.order.transactionId,
         deliveryDate: this.saga.order.deliveryDate,
       },
     );

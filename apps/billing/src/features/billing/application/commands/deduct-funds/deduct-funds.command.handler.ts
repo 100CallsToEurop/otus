@@ -14,17 +14,17 @@ export class DeductFundsCommandHandler
   ) {}
 
   async execute({
-    deductFundsDto: { userId, orderId, amount },
+    deductFundsDto: { userId, orderId, transactionId, amount },
   }: DeductFundsCommand): Promise<void> {
     const user = await this.userRepository.getUser(userId);
 
     await sleep(1000);
 
-    const operation = user.deductWalletFunds(orderId, amount);
+    const operation = user.deductWalletFunds(orderId, transactionId, amount);
     operation && (await this.userRepository.save(user));
 
     await this.eventBus.publish(
-      new FundsOperationEvent(userId, orderId, operation),
+      new FundsOperationEvent(userId, orderId, transactionId, operation),
     );
   }
 }

@@ -37,14 +37,18 @@ export class CourierEntity implements ICourier {
     return _courier;
   }
 
-  addSlot(orderId: number, date: Date): void {
-    const _slot = AvailabilitySlotEntity.create({ orderId, date });
+  addSlot(orderId: number, transactionId: string, date: Date): void {
+    const _slot = AvailabilitySlotEntity.create({
+      orderId,
+      transactionId,
+      date,
+    });
     this.availabilitySlots.push(_slot);
   }
 
-  deleteSlot(orderId: number): void {
+  deleteSlot(orderId: number, transactionId: string): void {
     this.availabilitySlots = this.availabilitySlots.filter(
-      (slot) => slot.orderId !== orderId,
+      (slot) => slot.transactionId !== transactionId,
     );
   }
 

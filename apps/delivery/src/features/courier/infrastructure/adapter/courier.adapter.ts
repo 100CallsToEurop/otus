@@ -36,11 +36,15 @@ export class CourierAdapter implements CourierRepository {
     if (!freeCouriers.length) return null;
     return freeCouriers[0];
   }
-  async getCourierByOrderId(orderId: number): Promise<ICourier | null> {
+  async getCourierByOrderId(
+    orderId: number,
+    transactionId: string,
+  ): Promise<ICourier | null> {
     return await this.courierRepository.findOne({
       where: {
         availabilitySlots: {
           orderId,
+          transactionId,
         },
       },
       relations: { availabilitySlots: true },

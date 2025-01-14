@@ -10,8 +10,11 @@ export class GetOrderQueryHandler
 {
   constructor(private readonly orderRepository: OrderViewRepository) {}
 
-  async execute({ orderId }: GetOrderQuery): Promise<OrderViewResponse> {
-    const order = await this.orderRepository.getOrder(orderId);
+  async execute({
+    userId,
+    orderId,
+  }: GetOrderQuery): Promise<OrderViewResponse> {
+    const order = await this.orderRepository.getOrder(userId, orderId);
     if (!order) throw new NotFoundException('Order not found');
     return new OrderViewResponse(order);
   }

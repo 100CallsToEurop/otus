@@ -17,14 +17,19 @@ export class CreateOrderCommandHandler
   ) {}
 
   async execute({
-    orderDto: { userId, itemsIds, totalPrice, deliveryDate },
+    orderDto: { userId, orderId, itemsIds, totalPrice, deliveryDate },
   }: CreateOrderCommand): Promise<{ orderId: number }> {
-    const newOrder = OrderEntity.create(userId, totalPrice, deliveryDate);
+    const newOrder = OrderEntity.create(
+      userId,
+      orderId,
+      totalPrice,
+      deliveryDate,
+    );
     newOrder.addItemsIds(itemsIds);
     const saga = new PlaceOrderSaga(newOrder, this.amqpConnection);
     const order = await saga.getState().started();
     await this.orderRepository.save(order);
     await this.eventBus.publish(new SaveViewOrderEvent(order));
-    return { orderId: newOrder.id };
+    return { orderId: newOrder.orderId };
   }
 }

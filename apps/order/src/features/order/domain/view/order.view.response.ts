@@ -2,8 +2,9 @@ import { STATUS_ORDER } from '@app/consts';
 import { IOrderView } from './order.view.interface';
 
 export class OrderViewResponse {
-  id: number;
+  orderId: number;
   userId: number;
+  transactionId: string;
   status: STATUS_ORDER;
   totalPrice: number;
   items: Record<string, any>[];
@@ -14,8 +15,9 @@ export class OrderViewResponse {
   transactionMessage: string;
 
   constructor(order: IOrderView) {
-    this.id = order.id;
+    this.orderId = order.orderId;
     this.userId = order.userId;
+    this.transactionId = order.transactionId;
     this.status = order.status;
     this.totalPrice = order.totalPrice;
     this.items = order.items;

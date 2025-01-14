@@ -16,15 +16,20 @@ export class ReserveProductCommandHandler
   ) {}
 
   async execute({
-    reserveProduct: { orderId, itemsIds },
+    reserveProduct: { orderId, transactionId, itemsIds },
   }: ReserveProductCommand): Promise<void> {
     const products = await this.productRepository.getAll(itemsIds);
     if (!products.length) {
-      await this.eventBus.publish(new ReservedEvent(orderId, false, []));
+      await this.eventBus.publish(
+        new ReservedEvent(orderId, transactionId, false, []),
+      );
       return;
     }
     const allReservedSuccessfully = products.every((product) => {
-      const reservationSuccessful = product.addReservedProduct(orderId);
+      const reservationSuccessful = product.addReservedProduct(
+        orderId,
+        transactionId,
+      );
       if (!reservationSuccessful) return false;
       return true;
     });
@@ -32,11 +37,15 @@ export class ReserveProductCommandHandler
     await sleep(1000);
 
     if (!allReservedSuccessfully) {
-      await this.eventBus.publish(new ReservedEvent(orderId, false, []));
+      await this.eventBus.publish(
+        new ReservedEvent(orderId, transactionId, false, []),
+      );
       return;
     }
 
     await this.productRepository.saveMany(products);
-    await this.eventBus.publish(new ReservedEvent(orderId, true, products));
+    await this.eventBus.publish(
+      new ReservedEvent(orderId, transactionId, true, products),
+    );
   }
 }
