@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   name: otus-app-ingress
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /$3
+    nginx.ingress.kubernetes.io/use-regex: 'true'
 spec:
   rules:
     - host: arch.homework
@@ -37,7 +37,7 @@ spec:
                 name: notifications
                 port:
                   number: 80
-          - path: /api/users/([^/]+)/orders
+          - path: /api/users/[A-Z0-9]{3}/orders
             pathType: Prefix
             backend:
               service:
