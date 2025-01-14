@@ -882,13 +882,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api//users/{{USER_ID}}/orders",
+							"raw": "{{BASE_URL}}/api/users/{{USER_ID}}/orders",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"api",
-								"",
 								"users",
 								"{{USER_ID}}",
 								"orders"
@@ -1263,7 +1262,7 @@
 	"variable": [
 		{
 			"key": "BASE_URL",
-			"value": "http://arch.homework",
+			"value": "http://localhost:8000",
 			"type": "string"
 		},
 		{
