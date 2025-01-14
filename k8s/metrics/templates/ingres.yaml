@@ -37,8 +37,8 @@ spec:
                 name: notifications
                 port:
                   number: 80
-          - path: /api/users/(.*)/orders
-            pathType: Prefix
+          - path: /api/users/(?<user_id>[^/]+)/orders
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: orders
