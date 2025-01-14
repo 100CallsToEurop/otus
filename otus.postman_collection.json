@@ -7,7 +7,7 @@
 	},
 	"item": [
 		{
-			"name": "saga",
+			"name": "idempotent",
 			"item": [
 				{
 					"name": "registration user",
@@ -640,6 +640,70 @@
 					"response": []
 				},
 				{
+					"name": "create new courier 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"  pm.response.to.have.status(201);",
+									"});",
+									"",
+									"let courierId = pm.response.json().courierId;",
+									"pm.environment.set(\"COURIER_ID_2\", courierId);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fullName\": \"{{$randomFirstName}} {{$randomLastName}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/couriers",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"couriers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "get all couriers",
 					"event": [
 						{
@@ -747,7 +811,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"itemsIds\": [{{PRODUCT_ID_1}}, {{PRODUCT_ID_2}}],\n    \"totalPrice\": 900,\n    \"deliveryDate\": \"2025-06-25 06:00:40.000\"\n}",
+							"raw": "{\n    \"orderId\": 24567,\n    \"itemsIds\": [{{PRODUCT_ID_1}}, {{PRODUCT_ID_2}}],\n    \"totalPrice\": 900,\n    \"deliveryDate\": \"2025-06-25 06:00:40.000\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -755,280 +819,22 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/orders/{{USER_ID}}",
+							"raw": "{{BASE_URL}}/api/users/{{USER_ID}}/orders",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"api",
-								"orders",
-								"{{USER_ID}}"
+								"users",
+								"{{USER_ID}}",
+								"orders"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "get order",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {",
-									"  pm.response.to.have.status(200);",
-									"});",
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						},
-						{
-							"listen": "prerequest",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{accessToken}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{BASE_URL}}/api/orders/{{ORDER_ID_1}}",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"orders",
-								"{{ORDER_ID_1}}"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "get billing",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {",
-									"  pm.response.to.have.status(200);",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						},
-						{
-							"listen": "prerequest",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{accessToken}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{BASE_URL}}/api/billings/{{USER_ID}}",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"billings",
-								"{{USER_ID}}"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "get all products",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {",
-									"  pm.response.to.have.status(200);",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						},
-						{
-							"listen": "prerequest",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{accessToken}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{BASE_URL}}/api/products",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"products"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "get all couriers",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {",
-									"  pm.response.to.have.status(200);",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						},
-						{
-							"listen": "prerequest",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{accessToken}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{BASE_URL}}/api/couriers",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"couriers"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "create order (bad balance)",
+					"name": "create order repeat",
 					"event": [
 						{
 							"listen": "test",
@@ -1036,10 +842,7 @@
 								"exec": [
 									"pm.test(\"Status code is 201\", function () {",
 									"  pm.response.to.have.status(201);",
-									"});",
-									"",
-									"let orderId = pm.response.json().orderId;",
-									"pm.environment.set(\"ORDER_ID_2\", orderId);"
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -1071,7 +874,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"itemsIds\": [{{PRODUCT_ID_1}}, {{PRODUCT_ID_2}}],\n    \"totalPrice\": 900,\n    \"deliveryDate\": \"2025-06-25 06:00:40.000\"\n}",
+							"raw": "{\n    \"orderId\": 24567,\n    \"itemsIds\": [{{PRODUCT_ID_1}}, {{PRODUCT_ID_2}}],\n    \"totalPrice\": 900,\n    \"deliveryDate\": \"2025-06-25 06:00:40.000\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1079,21 +882,23 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/orders/{{USER_ID}}",
+							"raw": "{{BASE_URL}}/api//users/{{USER_ID}}/orders",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"api",
-								"orders",
-								"{{USER_ID}}"
+								"",
+								"users",
+								"{{USER_ID}}",
+								"orders"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "get order (bad balance)",
+					"name": "get orders",
 					"event": [
 						{
 							"listen": "test",
@@ -1145,207 +950,15 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/orders/{{ORDER_ID_2}}",
+							"raw": "{{BASE_URL}}/api/users/{{USER_ID}}/orders",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"api",
-								"orders",
-								"{{ORDER_ID_2}}"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "get billing",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {",
-									"  pm.response.to.have.status(200);",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						},
-						{
-							"listen": "prerequest",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{accessToken}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{BASE_URL}}/api/billings/{{USER_ID}}",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"billings",
-								"{{USER_ID}}"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "get all products",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {",
-									"  pm.response.to.have.status(200);",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						},
-						{
-							"listen": "prerequest",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{accessToken}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{BASE_URL}}/api/products",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"products"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "get all couriers",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {",
-									"  pm.response.to.have.status(200);",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						},
-						{
-							"listen": "prerequest",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{accessToken}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{BASE_URL}}/api/couriers",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"couriers"
+								"users",
+								"{{USER_ID}}",
+								"orders"
 							]
 						}
 					},
@@ -1392,7 +1005,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"amount\": 1400\n}",
+							"raw": "{\n    \"amount\": 2000\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1415,72 +1028,7 @@
 					"response": []
 				},
 				{
-					"name": "get billing",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {",
-									"  pm.response.to.have.status(200);",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						},
-						{
-							"listen": "prerequest",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{accessToken}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{BASE_URL}}/api/billings/{{USER_ID}}",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"billings",
-								"{{USER_ID}}"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "create order (bad products)",
+					"name": "create order",
 					"event": [
 						{
 							"listen": "test",
@@ -1491,7 +1039,7 @@
 									"});",
 									"",
 									"let orderId = pm.response.json().orderId;",
-									"pm.environment.set(\"ORDER_ID_3\", orderId);"
+									"pm.environment.set(\"ORDER_ID_1\", orderId);"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -1520,10 +1068,16 @@
 							]
 						},
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "request-id",
+								"value": "97ae5d6d-a714-447a-a7b7-8673d17b9e57",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"itemsIds\": [{{PRODUCT_ID_1}}, {{PRODUCT_ID_2}}],\n    \"totalPrice\": 900,\n    \"deliveryDate\": \"2025-06-25 06:00:40.000\"\n}",
+							"raw": "{\n    \"orderId\": 24568,\n    \"itemsIds\": [{{PRODUCT_ID_3}}],\n    \"totalPrice\": 1500,\n    \"deliveryDate\": \"2025-06-25 06:00:40.000\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1531,291 +1085,30 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/orders/{{USER_ID}}",
+							"raw": "{{BASE_URL}}/api/users/{{USER_ID}}/orders",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"api",
-								"orders",
-								"{{USER_ID}}"
+								"users",
+								"{{USER_ID}}",
+								"orders"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "get order (bad products)",
+					"name": "create order repeat",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Status code is 200\", function () {",
-									"  pm.response.to.have.status(200);",
-									"});",
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						},
-						{
-							"listen": "prerequest",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{accessToken}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{BASE_URL}}/api/orders/{{ORDER_ID_3}}",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"orders",
-								"{{ORDER_ID_3}}"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "get billing",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {",
-									"  pm.response.to.have.status(200);",
+									"pm.test(\"Status code is 400\", function () {",
+									"  pm.response.to.have.status(400);",
 									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						},
-						{
-							"listen": "prerequest",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{accessToken}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{BASE_URL}}/api/billings/{{USER_ID}}",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"billings",
-								"{{USER_ID}}"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "get all products",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {",
-									"  pm.response.to.have.status(200);",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						},
-						{
-							"listen": "prerequest",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{accessToken}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{BASE_URL}}/api/products",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"products"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "get all couriers",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {",
-									"  pm.response.to.have.status(200);",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						},
-						{
-							"listen": "prerequest",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{accessToken}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{BASE_URL}}/api/couriers",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"couriers"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "create order (bad courier)",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 201\", function () {",
-									"  pm.response.to.have.status(201);",
-									"});",
-									"",
-									"let orderId = pm.response.json().orderId;",
-									"pm.environment.set(\"ORDER_ID_4\", orderId);"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -1844,10 +1137,16 @@
 							]
 						},
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "request-id",
+								"value": "97ae5d6d-a714-447a-a7b7-8673d17b9e57",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"itemsIds\": [{{PRODUCT_ID_3}}],\n    \"totalPrice\": 1500,\n    \"deliveryDate\": \"2025-06-25 06:00:40.000\"\n}",
+							"raw": "{\n    \"orderId\": 24568,\n    \"itemsIds\": [{{PRODUCT_ID_3}}],\n    \"totalPrice\": 1500,\n    \"deliveryDate\": \"2025-06-25 06:00:40.000\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1855,21 +1154,22 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/orders/{{USER_ID}}",
+							"raw": "{{BASE_URL}}/api/users/{{USER_ID}}/orders",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"api",
-								"orders",
-								"{{USER_ID}}"
+								"users",
+								"{{USER_ID}}",
+								"orders"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "get order (bad courier)",
+					"name": "get orders",
 					"event": [
 						{
 							"listen": "test",
@@ -1921,207 +1221,15 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/orders/{{ORDER_ID_4}}",
+							"raw": "{{BASE_URL}}/api/users/{{USER_ID}}/orders",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"api",
-								"orders",
-								"{{ORDER_ID_4}}"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "get billing",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {",
-									"  pm.response.to.have.status(200);",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						},
-						{
-							"listen": "prerequest",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{accessToken}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{BASE_URL}}/api/billings/{{USER_ID}}",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"billings",
-								"{{USER_ID}}"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "get all products",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {",
-									"  pm.response.to.have.status(200);",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						},
-						{
-							"listen": "prerequest",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{accessToken}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{BASE_URL}}/api/products",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"products"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "get all couriers",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {",
-									"  pm.response.to.have.status(200);",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						},
-						{
-							"listen": "prerequest",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{accessToken}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{BASE_URL}}/api/couriers",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"couriers"
+								"users",
+								"{{USER_ID}}",
+								"orders"
 							]
 						}
 					},
