@@ -3,19 +3,32 @@ import { CourierFacade } from '../application';
 import { RabbitSubscribe } from '@golevelup/nestjs-rabbitmq';
 import { ReserveCourierContract } from '@app/amqp-contracts/queues/order';
 import { Public } from '@app/common/decorators';
+import { IdempotencyService } from '@app/idempotency';
 
 @Public()
 @Controller()
 export class CourierEventController {
-  constructor(private readonly courierFacade: CourierFacade) {}
+  constructor(
+    private readonly idempotencyService: IdempotencyService,
+    private readonly courierFacade: CourierFacade,
+  ) {}
 
   @RabbitSubscribe({
     exchange: ReserveCourierContract.queue.exchange.name,
     routingKey: ReserveCourierContract.queue.routingKey,
     queue: ReserveCourierContract.queue.queue,
   })
-  async reserveCourier(payload: ReserveCourierContract.request): Promise<void> {
-    await this.courierFacade.commands.reserve(payload);
+  async reserveCourier(request: ReserveCourierContract.request): Promise<void> {
+    try {
+      const idempotency = await this.idempotencyService.checkIdempotency(
+        request.eventId,
+      );
+      if (!idempotency) {
+        await this.courierFacade.commands.reserve(request.payload);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   // @RabbitSubscribe({

@@ -1,6 +1,9 @@
 export interface IDeductFunds {
-  userId: number;
-  orderId: number;
-  transactionId: string;
-  amount: number;
+  eventId: string;
+  payload: {
+    userId: number;
+    orderId: number;
+    transactionId: string;
+    amount: number;
+  };
 }

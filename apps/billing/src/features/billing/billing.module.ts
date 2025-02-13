@@ -12,12 +12,14 @@ import { BillingAdapter } from './infrastructure/adapter';
 import { BillingRepository } from './infrastructure/repository';
 import { AmqpModule } from '@app/providers/amqp';
 import { HistoryEntity } from './domain/history';
+import { IdempotencyModule } from '@app/idempotency';
 
 @Module({
   imports: [
     CqrsModule,
     TypeOrmModule.forFeature([BillingEntity, WalletEntity, HistoryEntity]),
     AmqpModule,
+    IdempotencyModule,
   ],
   controllers: [BillingController, BillingEventController],
   providers: [

@@ -23,7 +23,10 @@ export class LoginUserCommandHandler
     ...payload
   }: LoginUserCommand): Promise<LoginResponseDto> {
     const user = await this.userRepository.findById(payload.userId);
-    const newTokens = await this.tokensService.createNewTokens(payload);
+    const newTokens = await this.tokensService.createNewTokens({
+      ...payload,
+      role: user.role,
+    });
 
     const { userId, iat, exp, deviceId } = await this.tokensService.decodeToken(
       newTokens.refreshToken,

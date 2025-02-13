@@ -1,4 +1,7 @@
 export interface ICancelProductReserved {
-  orderId: number;
-  transactionId: string;
+  eventId: string;
+  payload: {
+    orderId: number;
+    transactionId: string;
+  };
 }

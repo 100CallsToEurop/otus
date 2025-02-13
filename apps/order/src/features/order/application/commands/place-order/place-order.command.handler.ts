@@ -4,9 +4,9 @@ import { OrderRepository } from '../../../infrastructure/repository';
 import { PlaceOrderSaga } from '../../sagas/place-order';
 import { AmqpConnection } from '@golevelup/nestjs-rabbitmq';
 import { STATUS_ORDER } from '@app/consts';
-import { CancelPaymentConfirmationContract } from '@app/amqp-contracts/queues/billing';
-import { CancelProductReservedContract } from '@app/amqp-contracts/queues/warehouse';
 import { UpdateViewOrderStatusEvent } from '../../../domain/events';
+import { IOrder } from '../../../domain';
+import { OrderReadyEvent } from '../../../../user/domain/events';
 
 @CommandHandler(PlaceOrderCommand)
 export class PlaceOrderCommandHandler
@@ -18,27 +18,13 @@ export class PlaceOrderCommandHandler
     private readonly amqpConnection: AmqpConnection,
   ) {}
 
-  private async reserveProductFailed(orderId: number, transactionId: string) {
-    await this.amqpConnection.publish(
-      CancelPaymentConfirmationContract.queue.exchange.name,
-      CancelPaymentConfirmationContract.queue.routingKey,
-      {
-        orderId,
-        transactionId,
-      },
-    );
+  private async reserveProductFailed(transactionId: string, order: IOrder) {
+    await this.orderRepository.cancelPaymentConfirmation(transactionId, order);
   }
 
-  private async reserveCourierFailed(orderId: number, transactionId: string) {
-    await this.reserveProductFailed(orderId, transactionId);
-    await this.amqpConnection.publish(
-      CancelProductReservedContract.queue.exchange.name,
-      CancelProductReservedContract.queue.routingKey,
-      {
-        orderId,
-        transactionId,
-      },
-    );
+  private async reserveCourierFailed(transactionId: string, order: IOrder) {
+    await this.reserveProductFailed(transactionId, order);
+    await this.orderRepository.cancelProductReserved(transactionId, order);
   }
 
   private async saveViewOrder(
@@ -55,18 +41,24 @@ export class PlaceOrderCommandHandler
     placeOrderDto: { orderId, transactionId, status, completed },
   }: PlaceOrderCommand): Promise<void> {
     const order = await this.orderRepository.getById(orderId, transactionId);
-
     if (!completed) {
       order.setStatus(STATUS_ORDER.CANCELED);
-      await this.orderRepository.save(order);
       if (status === STATUS_ORDER.WAITING_FOR_RESERVE_PRODUCTS)
-        await this.reserveProductFailed(orderId, transactionId);
+        await this.reserveProductFailed(transactionId, order);
       if (status === STATUS_ORDER.WAITING_FOR_RESERVE_COURIER)
-        await this.reserveCourierFailed(orderId, transactionId);
+        await this.reserveCourierFailed(transactionId, order);
+
+      await this.eventBus.publish(
+        new OrderReadyEvent(orderId, order.userId, false),
+      );
       return;
     }
-    const saga = new PlaceOrderSaga(order, this.amqpConnection);
-    let orderSaga;
+    const saga = new PlaceOrderSaga(
+      order,
+      this.amqpConnection,
+      this.orderRepository,
+    );
+    let orderSaga: IOrder;
     switch (status) {
       case STATUS_ORDER.WAITING_FOR_PAYMENT:
         saga.setState(STATUS_ORDER.WAITING_FOR_RESERVE_PRODUCTS);
@@ -87,5 +79,8 @@ export class PlaceOrderCommandHandler
         break;
     }
     await this.orderRepository.save(orderSaga);
+    await this.eventBus.publish(
+      new OrderReadyEvent(orderId, order.userId, true),
+    );
   }
 }

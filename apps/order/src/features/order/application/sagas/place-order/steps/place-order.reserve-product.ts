@@ -1,4 +1,3 @@
-import { ReserveProductContract } from '@app/amqp-contracts/queues/order';
 import { PlaceOrderSagaState } from '../place-order.state';
 import { IOrder } from '../../../../domain';
 
@@ -7,15 +6,7 @@ export class PlaceOrderSagaReserveProduct extends PlaceOrderSagaState {
     throw new Error('Невозможно начать покупку товаров в процессе');
   }
   public async reserveProducts(): Promise<IOrder> {
-    await this.saga.amqpConnection.publish(
-      ReserveProductContract.queue.exchange.name,
-      ReserveProductContract.queue.routingKey,
-      {
-        orderId: this.saga.order.orderId,
-        transactionId: this.saga.order.transactionId,
-        itemsIds: this.saga.order.items,
-      },
-    );
+    await this.saga.orderRepository.reserveProduct(this.saga.order);
     return this.saga.order;
   }
   public async paymentOrder(): Promise<IOrder> {

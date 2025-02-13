@@ -1,5 +1,8 @@
 export interface ICourierReserved {
-  orderId: number;
-  transactionId: string;
-  courierFullName: string;
+  eventId: string;
+  payload: {
+    orderId: number;
+    transactionId: string;
+    courierFullName: string;
+  };
 }

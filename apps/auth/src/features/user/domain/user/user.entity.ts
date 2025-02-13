@@ -7,6 +7,7 @@ import {
 } from 'typeorm';
 import {
   IsEmail,
+  IsEnum,
   IsNumber,
   IsOptional,
   IsString,
@@ -16,6 +17,7 @@ import {
 import { Logger } from '@nestjs/common';
 import { IProfile, ProfileEntity } from '../profile';
 import { IUser } from './user.interface';
+import { ROLE } from '@app/consts';
 
 @Entity('users')
 export class UserEntity implements IUser {
@@ -37,6 +39,10 @@ export class UserEntity implements IUser {
   @Column({ name: 'password_hash' })
   @IsString()
   passwordHash: string;
+  @Column({ type: 'enum', enum: ROLE })
+  @IsString()
+  @IsEnum(ROLE)
+  role: ROLE;
   @IsOptional()
   @OneToOne(() => ProfileEntity, (profile) => profile.user, { cascade: true })
   @JoinColumn()
@@ -49,6 +55,7 @@ export class UserEntity implements IUser {
     _user.email = user.email;
     _user.passwordHash = user.passwordHash;
     _user.profile = ProfileEntity.create(user);
+    _user.role = user.role;
     const error = validateSync(_user);
     if (!!error.length) {
       error.forEach((e) => _user.logger.error(e.constraints));

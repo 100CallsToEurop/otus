@@ -5,6 +5,7 @@ import { OrderEntity } from '../../../domain';
 import { AmqpConnection } from '@golevelup/nestjs-rabbitmq';
 import { PlaceOrderSaga } from '../../sagas/place-order';
 import { SaveViewOrderEvent } from '../../../domain/events';
+import { BadRequestException } from '@nestjs/common';
 
 @CommandHandler(CreateOrderCommand)
 export class CreateOrderCommandHandler
@@ -19,6 +20,8 @@ export class CreateOrderCommandHandler
   async execute({
     orderDto: { userId, orderId, itemsIds, totalPrice, deliveryDate },
   }: CreateOrderCommand): Promise<{ orderId: number }> {
+    const checkOrder = await this.orderRepository.checkById(orderId);
+    if (checkOrder) throw new BadRequestException('Order already created');
     const newOrder = OrderEntity.create(
       userId,
       orderId,
@@ -26,7 +29,11 @@ export class CreateOrderCommandHandler
       deliveryDate,
     );
     newOrder.addItemsIds(itemsIds);
-    const saga = new PlaceOrderSaga(newOrder, this.amqpConnection);
+    const saga = new PlaceOrderSaga(
+      newOrder,
+      this.amqpConnection,
+      this.orderRepository,
+    );
     const order = await saga.getState().started();
     await this.orderRepository.save(order);
     await this.eventBus.publish(new SaveViewOrderEvent(order));

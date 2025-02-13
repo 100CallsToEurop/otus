@@ -1,0 +1,47 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: auth-migration-job
+spec:
+  completions: 1
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: auth
+        image: 100callstoeurop/otus-app_auth
+        command: ["sh", "-c", "yarn migration-auth:seed"]
+        env:
+        - name: PG_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: auth-secret-credentials
+              key: PG_USERNAME
+        - name: PG_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: auth-secret-credentials
+              key: PG_PASSWORD
+        - name: PG_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: auth-secret-credentials
+              key: PG_DATABASE
+        - name: PORT
+          valueFrom:
+            configMapKeyRef:
+              name: auth-cm
+              key: PORT
+        - name: PG_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: auth-cm
+              key: PG_HOST
+        volumeMounts:
+        - name: postgresql-auth-data
+          mountPath: /data/volume/auth
+      volumes:
+      - name: postgresql-auth-data
+        persistentVolumeClaim:
+          claimName: data-auth-postgresql-0

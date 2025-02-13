@@ -10,8 +10,9 @@ import {
 import { OrderFacade } from '../application';
 import { CreateOrderDto } from './models/input';
 import { OrderViewModel } from './models/views';
-import { RequestId } from '@app/common/decorators';
+import { RequestId, Roles } from '@app/common/decorators';
 import { IdempotentFacade } from '../../idempotent/application';
+import { ROLE } from '@app/consts';
 
 @Controller('users/:userId/orders')
 export class OrderController {
@@ -29,6 +30,7 @@ export class OrderController {
     await this.idempotentFacade.commands.createKey(requestId);
   }
 
+  @Roles(ROLE.USER)
   @Post()
   async createOrder(
     @Param('userId', ParseIntPipe) userId: number,
@@ -42,6 +44,7 @@ export class OrderController {
     });
   }
 
+  @Roles(ROLE.USER)
   @Get(':orderId')
   async getOrder(
     @Param('userId', ParseIntPipe) userId: number,
@@ -50,6 +53,7 @@ export class OrderController {
     return this.orderFacade.queries.getOrder(userId, orderId);
   }
 
+  @Roles(ROLE.USER)
   @Get()
   async getOrders(
     @Param('userId', ParseIntPipe) userId: number,

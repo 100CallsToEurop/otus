@@ -133,6 +133,24 @@
       "compilerOptions": {
         "tsConfigPath": "libs/consts/tsconfig.lib.json"
       }
+    },
+    "outbox": {
+      "type": "library",
+      "root": "libs/outbox",
+      "entryFile": "index",
+      "sourceRoot": "libs/outbox/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/outbox/tsconfig.lib.json"
+      }
+    },
+    "idempotency": {
+      "type": "library",
+      "root": "libs/idempotency",
+      "entryFile": "index",
+      "sourceRoot": "libs/idempotency/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/idempotency/tsconfig.lib.json"
+      }
     }
   },
   "monorepo": true,

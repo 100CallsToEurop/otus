@@ -7,6 +7,7 @@ import { JwtAuthGuard } from '@app/common/guards';
 import { JwtStrategy } from '@app/common/strategies';
 import { APP_GUARD, APP_FILTER } from '@nestjs/core';
 import { TypeOrmConfigService } from '../db/config';
+import { OutboxModule } from '@app/outbox';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { TypeOrmConfigService } from '../db/config';
     }),
     TypeOrmModule.forRootAsync(TypeOrmConfigService()),
     CourierModule,
+    OutboxModule,
   ],
   controllers: [],
   providers: [

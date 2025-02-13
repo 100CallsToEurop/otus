@@ -4,19 +4,32 @@ import { RabbitSubscribe } from '@golevelup/nestjs-rabbitmq';
 import { ReserveProductContract } from '@app/amqp-contracts/queues/order';
 import { Public } from '@app/common/decorators';
 import { CancelProductReservedContract } from '@app/amqp-contracts/queues/warehouse';
+import { IdempotencyService } from '@app/idempotency';
 
 @Public()
 @Controller()
 export class ProductEventController {
-  constructor(private readonly productFacade: ProductFacade) {}
+  constructor(
+    private readonly idempotencyService: IdempotencyService,
+    private readonly productFacade: ProductFacade,
+  ) {}
 
   @RabbitSubscribe({
     exchange: ReserveProductContract.queue.exchange.name,
     routingKey: ReserveProductContract.queue.routingKey,
     queue: ReserveProductContract.queue.queue,
   })
-  async reserveCourier(payload: ReserveProductContract.request): Promise<void> {
-    await this.productFacade.commands.reserve(payload);
+  async reserveCourier(request: ReserveProductContract.request): Promise<void> {
+    try {
+      const idempotency = await this.idempotencyService.checkIdempotency(
+        request.eventId,
+      );
+      if (!idempotency) {
+        await this.productFacade.commands.reserve(request.payload);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   @RabbitSubscribe({
@@ -25,8 +38,17 @@ export class ProductEventController {
     queue: CancelProductReservedContract.queue.queue,
   })
   async cancelReserveCourier(
-    payload: CancelProductReservedContract.request,
+    request: CancelProductReservedContract.request,
   ): Promise<void> {
-    await this.productFacade.commands.cancelReserve(payload);
+    try {
+      const idempotency = await this.idempotencyService.checkIdempotency(
+        request.eventId,
+      );
+      if (!idempotency) {
+        await this.productFacade.commands.cancelReserve(request.payload);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   }
 }

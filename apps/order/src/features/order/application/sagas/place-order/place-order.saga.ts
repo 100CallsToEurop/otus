@@ -10,6 +10,7 @@ import {
 } from './steps';
 import { PlaceOrderSagaStarted } from './steps/place-order.reserve-started';
 import { PlaceOrderSagaFinished } from './steps/place-order.finished';
+import { OrderRepository } from '../../../infrastructure/repository';
 
 export class PlaceOrderSaga {
   private state: PlaceOrderSagaState;
@@ -17,6 +18,7 @@ export class PlaceOrderSaga {
   constructor(
     public readonly order: IOrder,
     public readonly amqpConnection: AmqpConnection,
+    public readonly orderRepository: OrderRepository,
   ) {
     this.setState(this.order.status);
   }

@@ -2,8 +2,8 @@ import { CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs';
 import { ReserveCourierCommand } from './reserve-courier.command';
 import { Logger } from '@nestjs/common';
 import { CourierRepository } from '../../../infrastructure/repository';
-import { ReservedEvent } from '../../../domain/events';
 import { sleep } from '@app/utils';
+import { FailReservedEvent } from '../../../domain/events';
 
 @CommandHandler(ReserveCourierCommand)
 export class ReserveCourierCommandHandler
@@ -18,21 +18,23 @@ export class ReserveCourierCommandHandler
   async execute({
     reserveCourier: { orderId, transactionId, deliveryDate },
   }: ReserveCourierCommand): Promise<void> {
+    this.logger.log(`резервация курьера orderId: ${orderId}`);
     const courier = await this.courierRepository.getFreeCourier(deliveryDate);
 
     await sleep(1000);
 
     if (!courier) {
       await this.eventBus.publish(
-        new ReservedEvent(orderId, transactionId, false),
+        new FailReservedEvent(orderId, transactionId),
       );
       return;
     }
     courier.addSlot(orderId, transactionId, deliveryDate);
     courier.plainToInstance();
-    await this.courierRepository.save(courier);
-    await this.eventBus.publish(
-      new ReservedEvent(orderId, transactionId, true, courier.fullName),
+    await this.courierRepository.reserveCourier(
+      orderId,
+      transactionId,
+      courier,
     );
   }
 }

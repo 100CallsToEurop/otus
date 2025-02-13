@@ -15,6 +15,8 @@ import { ORDER_EVENT_HANDLERS } from './application/events';
 import { AmqpModule } from '@app/providers/amqp';
 import { OrderViewEntity } from './domain/view';
 import { IdempotentModule } from '../idempotent/idempotent.module';
+import { IdempotencyModule } from '@app/idempotency';
+import { OrderUserModule } from '../user/user.module';
 
 @Module({
   imports: [
@@ -22,6 +24,8 @@ import { IdempotentModule } from '../idempotent/idempotent.module';
     TypeOrmModule.forFeature([OrderEntity, OrderViewEntity]),
     AmqpModule,
     IdempotentModule,
+    IdempotencyModule,
+    OrderUserModule,
   ],
   controllers: [OrderController, OrderEventController],
   providers: [

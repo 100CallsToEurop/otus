@@ -1,5 +1,9 @@
 export interface IReserveCourier {
-  orderId: number;
-  transactionId: string;
-  deliveryDate: Date;
+  eventId: string;
+  payload: {
+    eventType: string;
+    orderId: number;
+    transactionId: string;
+    deliveryDate: Date;
+  };
 }

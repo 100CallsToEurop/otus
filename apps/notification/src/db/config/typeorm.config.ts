@@ -1,6 +1,7 @@
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModuleAsyncOptions } from '@nestjs/typeorm';
 import { MessageEntity } from '../../features/message/domain';
+import { IdempotencyEntity } from '@app/idempotency/domain';
 
 export const TypeOrmConfigService = (): TypeOrmModuleAsyncOptions => ({
   useFactory: (configService: ConfigService) => ({
@@ -10,7 +11,7 @@ export const TypeOrmConfigService = (): TypeOrmModuleAsyncOptions => ({
     username: configService.get('PG_USERNAME'),
     password: configService.get('PG_PASSWORD'),
     database: configService.get('PG_DATABASE'),
-    entities: [MessageEntity],
+    entities: [MessageEntity, IdempotencyEntity],
   }),
   inject: [ConfigService],
   imports: [ConfigModule],

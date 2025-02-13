@@ -6,6 +6,7 @@ import { DataSource, DataSourceOptions } from 'typeorm';
 import { ProfileEntity } from '../../features/user/domain/profile';
 import { BadTokenEntity } from '../../features/auth/domain';
 import { SecurityDeviceEntity } from '../../features/security-device/domain';
+import { OutboxEntity } from '@app/outbox/domain';
 
 config({
   path: './apps/auth/.env',
@@ -20,7 +21,13 @@ const options = (): DataSourceOptions => {
     username: configService.get('PG_USERNAME'),
     password: configService.get('PG_PASSWORD'),
     database: configService.get('PG_DATABASE'),
-    entities: [SecurityDeviceEntity, BadTokenEntity, UserEntity, ProfileEntity],
+    entities: [
+      SecurityDeviceEntity,
+      BadTokenEntity,
+      UserEntity,
+      ProfileEntity,
+      OutboxEntity,
+    ],
     logging: false,
     synchronize: false,
     migrations: [

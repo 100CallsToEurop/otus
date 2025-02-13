@@ -9,9 +9,15 @@ import { MessageEntity } from './domain';
 import { MessageAdapter } from './infrastructure/adapter';
 import { MessageRepository } from './infrastructure/repository';
 import { AmqpModule } from '@app/providers/amqp';
+import { IdempotencyModule } from '@app/idempotency';
 
 @Module({
-  imports: [CqrsModule, TypeOrmModule.forFeature([MessageEntity]), AmqpModule],
+  imports: [
+    CqrsModule,
+    TypeOrmModule.forFeature([MessageEntity]),
+    AmqpModule,
+    IdempotencyModule,
+  ],
   controllers: [MessageController, MessageEventController],
   providers: [
     ...MESSAGE_COMMAND_HANDLERS,

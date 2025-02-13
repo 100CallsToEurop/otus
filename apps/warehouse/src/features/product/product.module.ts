@@ -12,12 +12,14 @@ import { ReservedProductEntity } from './domain/reserved-product';
 import { PRODUCT_EVENT_HANDLERS } from './application/events';
 import { ProductEventController } from './api';
 import { AmqpModule } from '@app/providers/amqp';
+import { IdempotencyModule } from '@app/idempotency';
 
 @Module({
   imports: [
     CqrsModule,
     TypeOrmModule.forFeature([ProductEntity, ReservedProductEntity]),
     AmqpModule,
+    IdempotencyModule,
   ],
   controllers: [ProductController, ProductEventController],
   providers: [

@@ -12,6 +12,7 @@ import { AuthModule } from './auth/auth.module';
 import { JwtAuthGuard } from '@app/common/guards';
 import { AtStrategy } from '@app/common/strategies';
 import { SecurityDeviceModule } from './security-device/security-device.module';
+import { OutboxModule } from '@app/outbox';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { SecurityDeviceModule } from './security-device/security-device.module';
     UserModule,
     AuthModule,
     SecurityDeviceModule,
+    OutboxModule,
   ],
   controllers: [AppController],
   providers: [

@@ -19,7 +19,7 @@ import {
 } from 'class-validator';
 import { Logger } from '@nestjs/common';
 import { STATUS_ORDER } from '@app/consts';
-import { randomInt, randomUUID } from 'crypto';
+import { randomUUID } from 'crypto';
 
 @Entity('orders')
 export class OrderEntity implements IOrder {
@@ -67,7 +67,7 @@ export class OrderEntity implements IOrder {
     deliveryTime: Date,
   ): IOrder {
     const _order = new OrderEntity();
-    _order.id = randomInt(100);
+    _order.id = orderId;
     _order.orderId = orderId;
     _order.userId = userId;
     _order.transactionId = randomUUID();

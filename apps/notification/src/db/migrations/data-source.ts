@@ -3,6 +3,7 @@ import { config } from 'dotenv';
 import { join } from 'path';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { MessageEntity } from '../../features/message/domain';
+import { IdempotencyEntity } from '@app/idempotency/domain';
 
 config({
   path: './apps/notification/.env',
@@ -17,7 +18,7 @@ const options = (): DataSourceOptions => {
     username: configService.get('PG_USERNAME'),
     password: configService.get('PG_PASSWORD'),
     database: configService.get('PG_DATABASE'),
-    entities: [MessageEntity],
+    entities: [MessageEntity, IdempotencyEntity],
     logging: false,
     synchronize: false,
     migrations: [

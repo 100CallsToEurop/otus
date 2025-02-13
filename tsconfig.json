@@ -53,6 +53,18 @@
       ],
       "@app/consts/*": [
         "libs/consts/src/*"
+      ],
+      "@app/outbox": [
+        "libs/outbox/src"
+      ],
+      "@app/outbox/*": [
+        "libs/outbox/src/*"
+      ],
+      "@app/idempotency": [
+        "libs/idempotency/src"
+      ],
+      "@app/idempotency/*": [
+        "libs/idempotency/src/*"
       ]
     }
   }

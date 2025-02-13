@@ -24,13 +24,6 @@ export class PlaceOrderSagaStarted extends PlaceOrderSagaState {
   }
 
   public async canceled(): Promise<IOrder> {
-    // await this.saga.amqpConnection.publish(
-    //   CancelPlaceOrderContract.queue.exchange.name,
-    //   CancelPlaceOrderContract.queue.routingKey,
-    //   {
-    //     orderId: this.saga.order.orderId,
-    //   },
-    // );
     this.saga.order.status = STATUS_ORDER.CANCELED;
     return this.saga.order;
   }

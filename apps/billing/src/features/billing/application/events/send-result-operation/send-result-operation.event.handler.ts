@@ -1,39 +1,46 @@
 import { EventsHandler, IEventHandler } from '@nestjs/cqrs';
-import { FundsOperationEvent } from '../../../domain/billing/events';
+import { FailFundsOperationEvent } from '../../../domain/billing/events';
 import { AmqpConnection } from '@golevelup/nestjs-rabbitmq';
 import { STATUS_ORDER } from '@app/consts';
 import {
   PlaceOrderContract,
   UpdateViewOrderContract,
 } from '@app/amqp-contracts/queues/order';
+import { randomUUID } from 'crypto';
 
-@EventsHandler(FundsOperationEvent)
+@EventsHandler(FailFundsOperationEvent)
 export class SendResultOperationEventHandler
-  implements IEventHandler<FundsOperationEvent>
+  implements IEventHandler<FailFundsOperationEvent>
 {
   constructor(private readonly amqpConnection: AmqpConnection) {}
-  async handle({ orderId, transactionId, result }: FundsOperationEvent) {
-    const payload = {
-      orderId,
-      transactionId,
-      status: STATUS_ORDER.WAITING_FOR_PAYMENT,
-      completed: result,
+  async handle({ orderId, transactionId }: FailFundsOperationEvent) {
+    const request = {
+      eventId: randomUUID(),
+      payload: {
+        orderId,
+        transactionId,
+        status: STATUS_ORDER.WAITING_FOR_PAYMENT,
+        completed: false,
+      },
     };
-    const updatePayload = {
-      orderId,
-      transactionId,
-      status: result ? STATUS_ORDER.WAITING_FOR_PAYMENT : STATUS_ORDER.CANCELED,
-      transactionMessage: result ? '' : 'Не удалось списать средства',
+    const updateRequest = {
+      eventId: randomUUID(),
+      payload: {
+        orderId,
+        transactionId,
+        status: STATUS_ORDER.CANCELED,
+        transactionMessage: 'Не удалось списать средства',
+      },
     };
     this.amqpConnection.publish(
       PlaceOrderContract.queue.exchange.name,
       PlaceOrderContract.queue.routingKey,
-      payload,
+      request,
     );
     this.amqpConnection.publish(
       UpdateViewOrderContract.queue.exchange.name,
       UpdateViewOrderContract.queue.routingKey,
-      updatePayload,
+      updateRequest,
     );
   }
 }

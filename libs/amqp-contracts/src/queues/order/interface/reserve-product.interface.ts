@@ -1,5 +1,8 @@
 export interface IReserveProduct {
-  orderId: number;
-  transactionId: string;
-  itemsIds: number[];
+  eventId: string;
+  payload: {
+    orderId: number;
+    transactionId: string;
+    itemsIds: number[];
+  };
 }

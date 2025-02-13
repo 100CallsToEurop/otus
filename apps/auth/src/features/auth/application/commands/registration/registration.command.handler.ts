@@ -4,7 +4,8 @@ import { RegistrationCommand } from './registration.command';
 import { UserRepository } from '../../../../user/infrastructure/repository';
 import { UserEntity } from '../../../../user/domain/user';
 import { hashPassword } from '@app/utils';
-import { RegistrationUserEvent } from '../../../domain/events';
+import { ROLE } from '@app/consts';
+// import { RegistrationUserEvent } from '../../../domain/events';
 
 @CommandHandler(RegistrationCommand)
 export class RegistrationCommandHandler
@@ -33,16 +34,21 @@ export class RegistrationCommandHandler
     await this.checkEmailOrUsername(username);
 
     const passwordHash = await hashPassword(password);
-    const newUser = UserEntity.create({ ...registrationDto, passwordHash });
-    await this.userRepository.save(newUser);
+    const role = ROLE.USER;
+    const newUser = UserEntity.create({
+      ...registrationDto,
+      passwordHash,
+      role,
+    });
+    await this.userRepository.saveUser(newUser);
 
-    await this.eventBus.publish(
-      new RegistrationUserEvent(
-        newUser.id,
-        newUser.email,
-        newUser.profile.getFullName(),
-      ),
-    );
+    // await this.eventBus.publish(
+    //   new RegistrationUserEvent(
+    //     newUser.id,
+    //     newUser.email,
+    //     newUser.profile.getFullName(),
+    //   ),
+    // );
     return { userId: newUser.id };
   }
 }

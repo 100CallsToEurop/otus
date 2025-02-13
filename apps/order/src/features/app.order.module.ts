@@ -8,6 +8,8 @@ import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD, APP_FILTER } from '@nestjs/core';
 import { OrderModule } from './order/order.module';
 import { IdempotentModule } from './idempotent/idempotent.module';
+import { OrderUserModule } from './user/user.module';
+import { OutboxModule } from '@app/outbox';
 
 @Module({
   imports: [
@@ -18,6 +20,8 @@ import { IdempotentModule } from './idempotent/idempotent.module';
     TypeOrmModule.forRootAsync(TypeOrmConfigService()),
     OrderModule,
     IdempotentModule,
+    OrderUserModule,
+    OutboxModule,
   ],
   controllers: [],
   providers: [

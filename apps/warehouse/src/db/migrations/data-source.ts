@@ -4,6 +4,8 @@ import { join } from 'path';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { ProductEntity } from '../../features/product/domain/product';
 import { ReservedProductEntity } from '../../features/product/domain/reserved-product';
+import { OutboxEntity } from '@app/outbox/domain';
+import { IdempotencyEntity } from '@app/idempotency/domain';
 
 config({
   path: './apps/warehouse/.env',
@@ -18,7 +20,12 @@ const options = (): DataSourceOptions => {
     username: configService.get('PG_USERNAME'),
     password: configService.get('PG_PASSWORD'),
     database: configService.get('PG_DATABASE'),
-    entities: [ProductEntity, ReservedProductEntity],
+    entities: [
+      ProductEntity,
+      ReservedProductEntity,
+      OutboxEntity,
+      IdempotencyEntity,
+    ],
     logging: false,
     synchronize: false,
     migrations: [

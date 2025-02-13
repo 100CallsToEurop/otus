@@ -4,6 +4,8 @@ import { join } from 'path';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { CourierEntity } from '../../features/courier/domain/courier';
 import { AvailabilitySlotEntity } from '../../features/courier/domain/availability-slot';
+import { IdempotencyEntity } from '@app/idempotency/domain';
+import { OutboxEntity } from '@app/outbox/domain';
 
 config({
   path: './apps/delivery/.env',
@@ -18,7 +20,12 @@ const options = (): DataSourceOptions => {
     username: configService.get('PG_USERNAME'),
     password: configService.get('PG_PASSWORD'),
     database: configService.get('PG_DATABASE'),
-    entities: [CourierEntity, AvailabilitySlotEntity],
+    entities: [
+      CourierEntity,
+      AvailabilitySlotEntity,
+      OutboxEntity,
+      IdempotencyEntity,
+    ],
     logging: false,
     synchronize: false,
     migrations: [

@@ -7,6 +7,7 @@ import { APP_GUARD, APP_FILTER } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeOrmConfigService } from '../db/config';
 import { BillingModule } from './billing/billing.module';
+import { OutboxModule } from '@app/outbox';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { BillingModule } from './billing/billing.module';
     }),
     TypeOrmModule.forRootAsync(TypeOrmConfigService()),
     BillingModule,
+    OutboxModule,
   ],
   controllers: [],
   providers: [
