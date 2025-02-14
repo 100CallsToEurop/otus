@@ -24,7 +24,7 @@ ingress-nginx:
           external: 9094
     controller:
       service:
-        type: LoadBalancer
+        type: NodePort #LoadBalancer
         containerPorts:
           external: 9094
 
