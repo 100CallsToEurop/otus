@@ -5,7 +5,7 @@
           "builtIn": 1,
           "datasource": {
             "type": "grafana",
-            "uid": "-- Grafana --"
+            "uid": "grafana"
           },
           "enable": true,
           "hide": true,
@@ -24,7 +24,7 @@
       {
         "datasource": {
           "type": "prometheus",
-          "uid": "ae34l8ewdaq68a"
+          "uid": "eed1gupmxdds0a"
         },
         "fieldConfig": {
           "defaults": {
@@ -112,7 +112,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "ae34l8ewdaq68a"
+              "uid": "eed1gupmxdds0a"
             },
             "editorMode": "code",
             "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{method!=\"GET\"}[10m])) by(le))  ",
@@ -125,7 +125,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "ae34l8ewdaq68a"
+              "uid": "eed1gupmxdds0a"
             },
             "editorMode": "code",
             "expr": "histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket{method!=\"GET\"}[10m])) by(le))  ",
@@ -138,7 +138,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "ae34l8ewdaq68a"
+              "uid": "eed1gupmxdds0a"
             },
             "editorMode": "code",
             "expr": "histogram_quantile(1, sum(rate(http_request_duration_seconds_bucket{method!=\"GET\"}[10m])) by(le)) ",
@@ -155,7 +155,7 @@
       {
         "datasource": {
           "type": "prometheus",
-          "uid": "ae34l8ewdaq68a"
+          "uid": "eed1gupmxdds0a"
         },
         "fieldConfig": {
           "defaults": {
@@ -243,7 +243,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "ae34l8ewdaq68a"
+              "uid": "eed1gupmxdds0a"
             },
             "editorMode": "code",
             "expr": "histogram_quantile(0.95, sum(rate(nginx_ingress_controller_request_duration_seconds_bucket[10m])) by(le)) ",
@@ -256,7 +256,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "ae34l8ewdaq68a"
+              "uid": "eed1gupmxdds0a"
             },
             "editorMode": "code",
             "expr": "histogram_quantile(0.99, sum(rate(nginx_ingress_controller_request_duration_seconds_bucket[10m])) by(le))  ",
@@ -269,7 +269,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "ae34l8ewdaq68a"
+              "uid": "eed1gupmxdds0a"
             },
             "editorMode": "code",
             "expr": "histogram_quantile(1.0, sum(rate(nginx_ingress_controller_request_duration_seconds_bucket[10m])) by(le))  ",
@@ -286,7 +286,7 @@
       {
         "datasource": {
           "type": "prometheus",
-          "uid": "ae34l8ewdaq68a"
+          "uid": "eed1gupmxdds0a"
         },
         "fieldConfig": {
           "defaults": {
@@ -378,7 +378,7 @@
       {
         "datasource": {
           "type": "prometheus",
-          "uid": "ae34l8ewdaq68a"
+          "uid": "eed1gupmxdds0a"
         },
         "fieldConfig": {
           "defaults": {
@@ -459,7 +459,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "ae34l8ewdaq68a"
+              "uid": "eed1gupmxdds0a"
             },
             "editorMode": "code",
             "expr": "sum(rate(nginx_ingress_controller_request_duration_seconds_count{status=~'2..'}[10m])) by(status)",
@@ -474,7 +474,7 @@
       {
         "datasource": {
           "type": "prometheus",
-          "uid": "ae34l8ewdaq68a"
+          "uid": "eed1gupmxdds0a"
         },
         "fieldConfig": {
           "defaults": {
@@ -570,7 +570,7 @@
       {
         "datasource": {
           "type": "prometheus",
-          "uid": "ae34l8ewdaq68a"
+          "uid": "eed1gupmxdds0a"
         },
         "fieldConfig": {
           "defaults": {
@@ -673,7 +673,7 @@
     "timepicker": {},
     "timezone": "browser",
     "title": "OTUS-APP",
-    "uid": "de34la0qe5xq8a",
+    "uid": "de34la0qe5xq8q",
     "version": 49,
     "weekStart": ""
   }
