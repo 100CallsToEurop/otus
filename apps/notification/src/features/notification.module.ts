@@ -21,7 +21,7 @@ import { JwtStrategy } from '@app/common/strategies';
   providers: [
     JwtStrategy,
     { provide: APP_GUARD, useClass: RolesGuard },
-    // { provide: APP_GUARD, useClass: JwtAuthGuard },
+    { provide: APP_GUARD, useClass: JwtAuthGuard },
     {
       provide: APP_FILTER,
       useClass: AllExceptionsFilter,
