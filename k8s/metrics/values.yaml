@@ -19,7 +19,7 @@ ingress-nginx:
     enabled: true
     broker:
       service:
-        type: LoadBalancer
+        type: NodePort #LoadBalancer
         ports:
           external: 9094
     controller:
