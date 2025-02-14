@@ -1,14 +1,15 @@
-import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { MessageFacade } from '../application';
 import { MessageViewModel } from './models/views';
+import { GetCurrentUserId } from '@app/common/decorators';
 
-@Controller('notifications/:userId/messages')
+@Controller('notifications')
 export class MessageController {
   constructor(private readonly messageFacade: MessageFacade) {}
 
-  @Get()
+  @Get('messages')
   async getMessage(
-    @Param('userId', ParseIntPipe) userId: number,
+    @GetCurrentUserId() userId: number,
   ): Promise<MessageViewModel[]> {
     return this.messageFacade.queries.getMessages(userId);
   }
