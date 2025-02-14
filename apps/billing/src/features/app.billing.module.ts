@@ -1,5 +1,5 @@
 import { AllExceptionsFilter } from '@app/common';
-import { JwtAuthGuard } from '@app/common/guards';
+import { JwtAuthGuard, RolesGuard } from '@app/common/guards';
 import { JwtStrategy } from '@app/common/strategies';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
@@ -23,6 +23,7 @@ import { OutboxModule } from '@app/outbox';
   providers: [
     JwtStrategy,
     { provide: APP_GUARD, useClass: JwtAuthGuard },
+    { provide: APP_GUARD, useClass: RolesGuard },
     {
       provide: APP_FILTER,
       useClass: AllExceptionsFilter,

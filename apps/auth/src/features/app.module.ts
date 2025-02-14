@@ -9,7 +9,7 @@ import { AppController } from './app.controller';
 import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 import { MetricsMiddleware } from '@app/common/middlewares';
 import { AuthModule } from './auth/auth.module';
-import { JwtAuthGuard } from '@app/common/guards';
+import { JwtAuthGuard, RolesGuard } from '@app/common/guards';
 import { AtStrategy } from '@app/common/strategies';
 import { SecurityDeviceModule } from './security-device/security-device.module';
 import { OutboxModule } from '@app/outbox';
@@ -35,6 +35,7 @@ import { OutboxModule } from '@app/outbox';
   providers: [
     AtStrategy,
     { provide: APP_GUARD, useClass: JwtAuthGuard },
+    { provide: APP_GUARD, useClass: RolesGuard },
     {
       provide: APP_FILTER,
       useClass: AllExceptionsFilter,
