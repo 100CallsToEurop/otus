@@ -13,7 +13,7 @@ spec:
         app: auth
       annotations:
         prometheus.io/scrape: 'true'
-        prometheus.io/path: /metrics
+        prometheus.io/path: /api/metrics
         prometheus.io/port: '10254'
     spec:
       containers:

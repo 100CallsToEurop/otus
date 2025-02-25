@@ -1,16 +1,22 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { CourierModule } from './courier/courier.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AllExceptionsFilter } from '@app/common';
+import { AllExceptionsFilter, MetricsMiddleware } from '@app/common';
 import { JwtAuthGuard, RolesGuard } from '@app/common/guards';
 import { JwtStrategy } from '@app/common/strategies';
 import { APP_GUARD, APP_FILTER } from '@nestjs/core';
 import { TypeOrmConfigService } from '../db/config';
 import { OutboxModule } from '@app/outbox';
+import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 
 @Module({
   imports: [
+    PrometheusModule.register({
+      defaultMetrics: {
+        enabled: true,
+      },
+    }),
     ConfigModule.forRoot({
       envFilePath: './apps/delivery/.env',
       isGlobal: true,
@@ -30,4 +36,8 @@ import { OutboxModule } from '@app/outbox';
     },
   ],
 })
-export class DeliveryModule {}
+export class DeliveryModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(MetricsMiddleware).forRoutes('*');
+  }
+}

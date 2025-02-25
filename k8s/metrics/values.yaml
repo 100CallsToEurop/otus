@@ -13,6 +13,7 @@ ingress-nginx:
       service:
         annotations:
           prometheus.io/port: "10254"
+          prometheus.io/path: "api/metrics"
           prometheus.io/scrape: "true"
 
   externalAccess:

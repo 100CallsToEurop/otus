@@ -1,7 +1,7 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeOrmConfigService } from '../db/config';
-import { AllExceptionsFilter } from '@app/common';
+import { AllExceptionsFilter, MetricsMiddleware } from '@app/common';
 import { JwtAuthGuard, RolesGuard } from '@app/common/guards';
 import { JwtStrategy } from '@app/common/strategies';
 import { ConfigModule } from '@nestjs/config';
@@ -10,9 +10,15 @@ import { OrderModule } from './order/order.module';
 import { IdempotentModule } from './idempotent/idempotent.module';
 import { OrderUserModule } from './user/user.module';
 import { OutboxModule } from '@app/outbox';
+import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 
 @Module({
   imports: [
+    PrometheusModule.register({
+      defaultMetrics: {
+        enabled: true,
+      },
+    }),
     ConfigModule.forRoot({
       envFilePath: './apps/order/.env',
       isGlobal: true,
@@ -34,4 +40,8 @@ import { OutboxModule } from '@app/outbox';
     },
   ],
 })
-export class AppOrderModule {}
+export class AppOrderModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(MetricsMiddleware).forRoutes('*');
+  }
+}

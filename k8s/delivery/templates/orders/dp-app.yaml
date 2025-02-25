@@ -11,6 +11,10 @@ spec:
     metadata:
       labels:
         app: deliveries
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/path: /api/metrics
+        prometheus.io/port: '10254'
     spec:
       containers:
         - name: deliveries
