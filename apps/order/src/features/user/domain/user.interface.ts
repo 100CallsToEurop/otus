@@ -3,5 +3,6 @@ export interface IOrderUser {
   email: string;
   fullName: string;
 
+  update(user: Partial<IOrderUser>): void;
   plainToInstance(): void;
 }

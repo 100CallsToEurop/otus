@@ -8,6 +8,7 @@ export interface IBilling {
   wallet: IWallet;
   histories: IHistory[];
 
+  update(user: Partial<IBilling>): void;
   addWalletFunds(amount: number): void;
   deductWalletFunds(
     orderId: number,

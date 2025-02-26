@@ -28,12 +28,15 @@ export class PlaceOrderCommandHandler
   }
 
   private async saveViewOrder(
-    orderId: number,
+    order: IOrder,
     transactionId: string,
     status: STATUS_ORDER,
   ) {
     await this.eventBus.publish(
-      new UpdateViewOrderStatusEvent(orderId, transactionId, status),
+      new UpdateViewOrderStatusEvent(order.id, transactionId, status),
+    );
+    await this.eventBus.publish(
+      new OrderReadyEvent(order.id, order.userId, true),
     );
   }
 
@@ -71,16 +74,9 @@ export class PlaceOrderCommandHandler
       case STATUS_ORDER.WAITING_FOR_RESERVE_COURIER:
         saga.setState(STATUS_ORDER.COMPLETED);
         orderSaga = await saga.getState().finished();
-        await this.saveViewOrder(
-          orderId,
-          transactionId,
-          STATUS_ORDER.COMPLETED,
-        );
+        await this.saveViewOrder(order, transactionId, STATUS_ORDER.COMPLETED);
         break;
     }
     await this.orderRepository.save(orderSaga);
-    await this.eventBus.publish(
-      new OrderReadyEvent(orderId, order.userId, true),
-    );
   }
 }

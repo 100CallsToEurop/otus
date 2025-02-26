@@ -59,6 +59,11 @@ export class BillingEntity implements IBilling {
     return _user;
   }
 
+  update(user: Partial<IBilling>): void {
+    this.email = user.email ?? this.email;
+    this.fullName = user.fullName ?? this.fullName;
+  }
+
   addWalletFunds(amount: number): void {
     if (amount <= 0) {
       return;

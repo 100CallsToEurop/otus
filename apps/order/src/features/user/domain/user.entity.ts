@@ -33,6 +33,11 @@ export class OrderUserEntity implements IOrderUser {
     return _user;
   }
 
+  update(user: Partial<IOrderUser>): void {
+    this.email = user.email ?? this.email;
+    this.fullName = user.fullName ?? this.fullName;
+  }
+
   plainToInstance(): void {
     validateSync(this, { whitelist: true });
   }

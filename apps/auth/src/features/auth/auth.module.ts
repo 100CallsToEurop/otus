@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { RtStrategy } from '@app/common/strategies/jwt.refresh.strategy';
 import { CqrsModule, CommandBus, QueryBus, EventBus } from '@nestjs/cqrs';
 import { JwtModule } from '@nestjs/jwt';
@@ -15,7 +15,6 @@ import { SecurityDeviceModule } from '../security-device/security-device.module'
 import { AUTH_EVENT_HANDLERS } from './application/events';
 import { AtStrategy } from '@app/common/strategies';
 import { AmqpModule } from '@app/providers/amqp';
-import { MetricsMiddleware } from '@app/common';
 
 @Module({
   imports: [
@@ -45,8 +44,4 @@ import { MetricsMiddleware } from '@app/common';
   ],
   exports: [AuthFacade],
 })
-export class AuthModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(MetricsMiddleware).forRoutes('*');
-  }
-}
+export class AuthModule {}

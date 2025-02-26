@@ -4,7 +4,10 @@ import { DataSource, Repository } from 'typeorm';
 import { IUser, UserEntity } from '../../domain/user';
 import { UserRepository } from '../repository/user.repository';
 import { OutboxEntity } from '@app/outbox/domain';
-import { RegistrationUserContract } from '@app/amqp-contracts/queues/auth';
+import {
+  RegistrationUserContract,
+  UpdateUserContract,
+} from '@app/amqp-contracts/queues/auth';
 
 @Injectable()
 export class UserAdapter implements UserRepository {
@@ -24,6 +27,23 @@ export class UserAdapter implements UserRepository {
       const outboxPayload = {
         routingKey: RegistrationUserContract.queue.routingKey,
         eventType: 'user.created',
+        payload: {
+          userId: id,
+          email: user.email,
+          fullName: user.profile.getFullName(),
+        },
+      };
+      const outbox = OutboxEntity.create(outboxPayload);
+      await manager.getRepository(OutboxEntity).save(outbox);
+    });
+  }
+
+  async updateUser(user: IUser): Promise<void> {
+    await this.dataSource.transaction(async (manager) => {
+      const { id } = await manager.getRepository(UserEntity).save(user);
+      const outboxPayload = {
+        routingKey: UpdateUserContract.queue.routingKey,
+        eventType: 'user.updated',
         payload: {
           userId: id,
           email: user.email,

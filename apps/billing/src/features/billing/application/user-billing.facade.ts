@@ -16,6 +16,11 @@ import {
   CancelPaymentCommandHandler,
   CancelPaymentType,
 } from './commands/cancel-payment';
+import {
+  UpdateUserCommand,
+  UpdateUserCommandHandler,
+  UpdateUserDto,
+} from './commands/update-user';
 
 export class UserBillingFacade {
   constructor(
@@ -25,8 +30,10 @@ export class UserBillingFacade {
   ) {}
 
   commands = {
-    createUser: (createProductDto: CreateUserDto) =>
-      this.createUser(createProductDto),
+    createUser: (createUserDto: CreateUserDto) =>
+      this.createUser(createUserDto),
+    updateUser: (updateUserDto: UpdateUserDto) =>
+      this.updateUser(updateUserDto),
     addFunds: (userId: number, amount: number) => this.addFunds(userId, amount),
     deductFunds: (deductFundsDto: DeductFundsDto) =>
       this.deductFunds(deductFundsDto),
@@ -36,11 +43,18 @@ export class UserBillingFacade {
     getUserInfo: (userId: number) => this.getUser(userId),
   };
 
-  createUser(createProductDto: CreateUserDto) {
+  createUser(createUserDto: CreateUserDto) {
     return this.commandBus.execute<
       CreateUserCommand,
       Awaited<ReturnType<CreateUserCommandHandler['execute']>>
-    >(new CreateUserCommand(createProductDto));
+    >(new CreateUserCommand(createUserDto));
+  }
+
+  updateUser(updateUserDto: UpdateUserDto) {
+    return this.commandBus.execute<
+      UpdateUserCommand,
+      Awaited<ReturnType<UpdateUserCommandHandler['execute']>>
+    >(new UpdateUserCommand(updateUserDto));
   }
 
   addFunds(userId: number, amount: number) {

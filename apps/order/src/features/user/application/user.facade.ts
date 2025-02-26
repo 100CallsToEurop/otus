@@ -4,6 +4,11 @@ import {
   CreateUserCommandHandler,
   CreateUserDto,
 } from './commands/create-user';
+import {
+  UpdateUserDto,
+  UpdateUserCommand,
+  UpdateUserCommandHandler,
+} from './commands/update-user';
 
 export class OrderUserFacade {
   constructor(
@@ -15,6 +20,8 @@ export class OrderUserFacade {
   commands = {
     createUser: (createProductDto: CreateUserDto) =>
       this.createUser(createProductDto),
+    updateUser: (updateUserDto: UpdateUserDto) =>
+      this.updateUser(updateUserDto),
   };
   queries = {};
 
@@ -23,5 +30,12 @@ export class OrderUserFacade {
       CreateUserCommand,
       Awaited<ReturnType<CreateUserCommandHandler['execute']>>
     >(new CreateUserCommand(createProductDto));
+  }
+
+  updateUser(updateUserDto: UpdateUserDto) {
+    return this.commandBus.execute<
+      UpdateUserCommand,
+      Awaited<ReturnType<UpdateUserCommandHandler['execute']>>
+    >(new UpdateUserCommand(updateUserDto));
   }
 }

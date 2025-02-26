@@ -1,7 +1,10 @@
 import { Controller } from '@nestjs/common';
 import { UserBillingFacade } from '../application';
 import { RabbitSubscribe } from '@golevelup/nestjs-rabbitmq';
-import { RegistrationUserContract } from '@app/amqp-contracts/queues/auth';
+import {
+  RegistrationUserContract,
+  UpdateUserContract,
+} from '@app/amqp-contracts/queues/auth';
 import { DeductFundsContract } from '@app/amqp-contracts/queues/order';
 import { Public } from '@app/common/decorators';
 import { CancelPaymentConfirmationContract } from '@app/amqp-contracts/queues/billing';
@@ -27,6 +30,24 @@ export class BillingEventController {
       );
       if (!idempotency) {
         await this.userFacade.commands.createUser(request.payload);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  @RabbitSubscribe({
+    exchange: UpdateUserContract.queue.exchange.name,
+    routingKey: UpdateUserContract.queue.routingKey,
+    queue: UpdateUserContract.queue.queue,
+  })
+  async updateUser(request: UpdateUserContract.request): Promise<void> {
+    try {
+      const idempotency = await this.idempotencyService.checkIdempotency(
+        request.eventId,
+      );
+      if (!idempotency) {
+        await this.userFacade.commands.updateUser(request.payload);
       }
     } catch (error) {
       console.error(error);
