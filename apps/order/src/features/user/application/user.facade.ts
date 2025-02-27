@@ -18,24 +18,24 @@ export class OrderUserFacade {
   ) {}
 
   commands = {
-    createUser: (createProductDto: CreateUserDto) =>
-      this.createUser(createProductDto),
-    updateUser: (updateUserDto: UpdateUserDto) =>
-      this.updateUser(updateUserDto),
+    createUser: (eventId: string, createUserDto: CreateUserDto) =>
+      this.createUser(eventId, createUserDto),
+    updateUser: (eventId: string, updateUserDto: UpdateUserDto) =>
+      this.updateUser(eventId, updateUserDto),
   };
   queries = {};
 
-  createUser(createProductDto: CreateUserDto) {
+  createUser(eventId: string, createUserDto: CreateUserDto) {
     return this.commandBus.execute<
       CreateUserCommand,
       Awaited<ReturnType<CreateUserCommandHandler['execute']>>
-    >(new CreateUserCommand(createProductDto));
+    >(new CreateUserCommand(eventId, createUserDto));
   }
 
-  updateUser(updateUserDto: UpdateUserDto) {
+  updateUser(eventId: string, updateUserDto: UpdateUserDto) {
     return this.commandBus.execute<
       UpdateUserCommand,
       Awaited<ReturnType<UpdateUserCommandHandler['execute']>>
-    >(new UpdateUserCommand(updateUserDto));
+    >(new UpdateUserCommand(eventId, updateUserDto));
   }
 }

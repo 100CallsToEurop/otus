@@ -9,6 +9,7 @@ import {
   UpdateViewOrderContract,
 } from '@app/amqp-contracts/queues/order';
 import { STATUS_ORDER } from '@app/consts';
+import { IdempotencyEntity } from '@app/idempotency/domain';
 
 @Injectable()
 export class CourierAdapter implements CourierRepository {
@@ -21,6 +22,10 @@ export class CourierAdapter implements CourierRepository {
   ) {}
   async save(courier: ICourier): Promise<ICourier> {
     return await this.courierRepository.save(courier);
+  }
+
+  async saveCourier(eventId: string): Promise<void> {
+    await this.saveIdempotency(eventId);
   }
   async getFreeCourier(checkDate: Date): Promise<ICourier | null> {
     const cd = new Date(checkDate);
@@ -65,6 +70,7 @@ export class CourierAdapter implements CourierRepository {
   }
 
   async reserveCourier(
+    eventId: string,
     orderId: number,
     transactionId: string,
     courier: ICourier,
@@ -92,12 +98,22 @@ export class CourierAdapter implements CourierRepository {
       },
     };
 
-    await this.saveTransaction(outboxPayload, courier);
-    await this.saveTransaction(updatePayload, courier);
+    await this.saveOperationTransaction(
+      eventId,
+      outboxPayload,
+      updatePayload,
+      courier,
+    );
   }
 
-  private async saveTransaction(
+  private async saveOperationTransaction(
+    eventId: string,
     outboxPayload: {
+      routingKey: string;
+      eventType: string;
+      payload: any;
+    },
+    updatePayload: {
       routingKey: string;
       eventType: string;
       payload: any;
@@ -105,10 +121,22 @@ export class CourierAdapter implements CourierRepository {
     courier: ICourier,
   ): Promise<void> {
     const outbox = OutboxEntity.create(outboxPayload);
+    const outboxUpdate = OutboxEntity.create(updatePayload);
+    const idempotency = IdempotencyEntity.create({ eventId });
 
     await this.dataSource.transaction(async (manager) => {
       await manager.getRepository(OutboxEntity).save(outbox);
+      await manager.getRepository(OutboxEntity).save(outboxUpdate);
+      await manager.getRepository(IdempotencyEntity).save(idempotency);
       await manager.getRepository(CourierEntity).save(courier);
+    });
+  }
+
+  private async saveIdempotency(eventId: string): Promise<void> {
+    const idempotency = IdempotencyEntity.create({ eventId });
+
+    await this.dataSource.transaction(async (manager) => {
+      await manager.getRepository(IdempotencyEntity).save(idempotency);
     });
   }
 }

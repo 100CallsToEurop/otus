@@ -5,8 +5,8 @@ export class PlaceOrderSagaReserveProduct extends PlaceOrderSagaState {
   public started(): Promise<IOrder> {
     throw new Error('Невозможно начать покупку товаров в процессе');
   }
-  public async reserveProducts(): Promise<IOrder> {
-    await this.saga.orderRepository.reserveProduct(this.saga.order);
+  public async reserveProducts(eventId: string): Promise<IOrder> {
+    await this.saga.orderRepository.reserveProduct(eventId, this.saga.order);
     return this.saga.order;
   }
   public async paymentOrder(): Promise<IOrder> {

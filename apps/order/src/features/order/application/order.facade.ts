@@ -27,8 +27,10 @@ export class OrderFacade {
   commands = {
     createOrder: (createOrderDto: CreateOrderDto) =>
       this.createOrder(createOrderDto),
-    updateViewOrder: (dto: UpdateViewOrderDto) => this.updateViewOrder(dto),
-    placeOrder: (dto: PlaceOrderDto) => this.placeOrder(dto),
+    updateViewOrder: (eventId: string, dto: UpdateViewOrderDto) =>
+      this.updateViewOrder(eventId, dto),
+    placeOrder: (eventId: string, dto: PlaceOrderDto) =>
+      this.placeOrder(eventId, dto),
   };
   queries = {
     getOrder: (userId: number, orderId: number) =>
@@ -43,18 +45,18 @@ export class OrderFacade {
     >(new CreateOrderCommand(createProductDto));
   }
 
-  private placeOrder(dto: PlaceOrderDto) {
+  private placeOrder(eventId: string, dto: PlaceOrderDto) {
     return this.commandBus.execute<
       PlaceOrderCommand,
       Awaited<ReturnType<PlaceOrderCommandHandler['execute']>>
-    >(new PlaceOrderCommand(dto));
+    >(new PlaceOrderCommand(eventId, dto));
   }
 
-  private updateViewOrder(dto: UpdateViewOrderDto) {
+  private updateViewOrder(eventId: string, dto: UpdateViewOrderDto) {
     return this.commandBus.execute<
       UpdateViewOrderCommand,
       Awaited<ReturnType<UpdateViewOrderCommandHandler['execute']>>
-    >(new UpdateViewOrderCommand(dto));
+    >(new UpdateViewOrderCommand(eventId, dto));
   }
 
   private getOrder(userId: number, orderId: number) {

@@ -8,8 +8,8 @@ export class PlaceOrderSagaPaymentOrder extends PlaceOrderSagaState {
   public async reserveProducts(): Promise<IOrder> {
     throw new Error('Резервирование товаров невозможно');
   }
-  public async paymentOrder(): Promise<IOrder> {
-    await this.saga.orderRepository.deductFunds(this.saga.order);
+  public async paymentOrder(eventId: string): Promise<IOrder> {
+    await this.saga.orderRepository.deductFunds(eventId, this.saga.order);
     return this.saga.order;
   }
   public async reserveCourier(): Promise<IOrder> {

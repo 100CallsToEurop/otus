@@ -11,6 +11,7 @@ export class CancelPaymentCommandHandler
   constructor(private readonly userRepository: BillingRepository) {}
 
   async execute({
+    eventId,
     cancelPaymentDto: { orderId, transactionId },
   }: CancelPaymentCommand): Promise<void> {
     this.logger.log(`Возврат списанных средств ordetId: ${orderId}`);
@@ -20,6 +21,6 @@ export class CancelPaymentCommandHandler
     );
     if (!user) return;
     user.cancelTransaction(orderId, transactionId);
-    await this.userRepository.save(user);
+    await this.userRepository.saveUser(eventId, user);
   }
 }

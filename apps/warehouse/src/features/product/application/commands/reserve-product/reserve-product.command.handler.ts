@@ -2,7 +2,7 @@ import { CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs';
 import { ReserveProductCommand } from './reserve-product.command';
 import { Logger } from '@nestjs/common';
 import { ProductRepository } from '../../../infrastructure/repository';
-import { FailReservedEvent } from '../../../domain/events';
+import { FailReservedProductEvent } from '../../../domain/events';
 import { sleep } from '@app/utils';
 
 @CommandHandler(ReserveProductCommand)
@@ -16,14 +16,16 @@ export class ReserveProductCommandHandler
   ) {}
 
   async execute({
+    eventId,
     reserveProduct: { orderId, transactionId, itemsIds },
   }: ReserveProductCommand): Promise<void> {
     this.logger.log(`резервация продуктов orderId: ${orderId}`);
     const products = await this.productRepository.getAll(itemsIds);
     if (!products.length) {
-      await this.eventBus.publish(
-        new FailReservedEvent(orderId, transactionId),
+      this.eventBus.publish(
+        new FailReservedProductEvent(orderId, transactionId),
       );
+      await this.productRepository.saveManyProducts(eventId, products);
       return;
     }
     const allReservedSuccessfully = products.every((product) => {
@@ -39,12 +41,15 @@ export class ReserveProductCommandHandler
 
     if (!allReservedSuccessfully) {
       await this.eventBus.publish(
-        new FailReservedEvent(orderId, transactionId),
+        new FailReservedProductEvent(orderId, transactionId),
       );
+      await this.productRepository.saveManyProducts(eventId, products);
       return;
     }
 
+
     await this.productRepository.reserveProducts(
+      eventId,
       orderId,
       transactionId,
       products,

@@ -5,21 +5,18 @@ import { Logger } from '@nestjs/common';
 
 @CommandHandler(UpdateUserCommand)
 export class UpdateUserCommandHandler
-  implements ICommandHandler<UpdateUserCommand, { userId: number }>
+  implements ICommandHandler<UpdateUserCommand, void>
 {
   private readonly logger = new Logger(UpdateUserCommandHandler.name);
   constructor(private readonly userRepository: BillingRepository) {}
 
-  async execute({
-    updateUserDto,
-  }: UpdateUserCommand): Promise<{ userId: number }> {
+  async execute({ eventId, updateUserDto }: UpdateUserCommand): Promise<void> {
     const { userId, ...updateUser } = updateUserDto;
     this.logger.log(
       `Update user: userId: ${userId}, email: ${updateUser.email}`,
     );
     const user = await this.userRepository.getUser(userId);
     user.update(updateUser);
-    await this.userRepository.save(user);
-    return { userId };
+    await this.userRepository.saveUser(eventId, user);
   }
 }

@@ -17,18 +17,18 @@ export class MessageFacade {
   ) {}
 
   commands = {
-    createMessage: (createOrderDto: CreateMessageDto) =>
-      this.createMessage(createOrderDto),
+    createMessage: (eventId: string, createOrderDto: CreateMessageDto) =>
+      this.createMessage(eventId, createOrderDto),
   };
   queries = {
     getMessages: (userId: number) => this.getMessages(userId),
   };
 
-  createMessage(createProductDto: CreateMessageDto) {
+  createMessage(eventId: string, createProductDto: CreateMessageDto) {
     return this.commandBus.execute<
       CreateMessageCommand,
       Awaited<ReturnType<CreateMessageCommandHandler['execute']>>
-    >(new CreateMessageCommand(createProductDto));
+    >(new CreateMessageCommand(eventId, createProductDto));
   }
   getMessages(userId: number) {
     return this.queryBus.execute<

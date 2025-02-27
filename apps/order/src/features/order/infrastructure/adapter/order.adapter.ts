@@ -11,6 +11,7 @@ import {
   ReserveCourierContract,
   ReserveProductContract,
 } from '@app/amqp-contracts/queues/order';
+import { IdempotencyEntity } from '@app/idempotency/domain';
 
 @Injectable()
 export class OrderAdapter implements OrderRepository {
@@ -21,6 +22,10 @@ export class OrderAdapter implements OrderRepository {
   ) {}
   async save(order: IOrder): Promise<IOrder> {
     return await this.orderRepository.save(order);
+  }
+
+  async saveOrder(eventId: string, order: IOrder): Promise<void> {
+    await this.saveIdempotency(eventId, order);
   }
 
   async getById(
@@ -35,6 +40,7 @@ export class OrderAdapter implements OrderRepository {
   }
 
   async cancelPaymentConfirmation(
+    eventId: string,
     transactionId: string,
     order: IOrder,
   ): Promise<void> {
@@ -46,10 +52,11 @@ export class OrderAdapter implements OrderRepository {
         transactionId,
       },
     };
-    await this.saveTransaction(outboxPayload, order);
+    await this.saveOperation(eventId, outboxPayload, order);
   }
 
   async cancelProductReserved(
+    eventId: string,
     transactionId: string,
     order: IOrder,
   ): Promise<void> {
@@ -61,10 +68,10 @@ export class OrderAdapter implements OrderRepository {
         transactionId,
       },
     };
-    await this.saveTransaction(outboxPayload, order);
+    await this.saveOperation(eventId, outboxPayload, order);
   }
 
-  async deductFunds(order: IOrder): Promise<void> {
+  async deductFunds(eventId: string, order: IOrder): Promise<void> {
     const outboxPayload = {
       routingKey: DeductFundsContract.queue.routingKey,
       eventType: 'deduct.funds',
@@ -75,9 +82,9 @@ export class OrderAdapter implements OrderRepository {
         amount: order.totalPrice,
       },
     };
-    await this.saveTransaction(outboxPayload, order);
+    await this.saveOperation(eventId, outboxPayload, order);
   }
-  async reserveProduct(order: IOrder): Promise<void> {
+  async reserveProduct(eventId: string, order: IOrder): Promise<void> {
     const outboxPayload = {
       routingKey: ReserveProductContract.queue.routingKey,
       eventType: 'reserve.product',
@@ -87,9 +94,9 @@ export class OrderAdapter implements OrderRepository {
         itemsIds: order.items,
       },
     };
-    await this.saveTransaction(outboxPayload, order);
+    await this.saveOperation(eventId, outboxPayload, order);
   }
-  async reserveCourier(order: IOrder): Promise<void> {
+  async reserveCourier(eventId: string, order: IOrder): Promise<void> {
     const outboxPayload = {
       routingKey: ReserveCourierContract.queue.routingKey,
       eventType: 'reserve.courier',
@@ -99,7 +106,25 @@ export class OrderAdapter implements OrderRepository {
         deliveryDate: order.deliveryDate,
       },
     };
-    await this.saveTransaction(outboxPayload, order);
+    await this.saveOperation(eventId, outboxPayload, order);
+  }
+
+  private async saveOperation(
+    eventId: string,
+    outboxPayload: {
+      routingKey: string;
+      eventType: string;
+      payload: any;
+    },
+    order: IOrder,
+  ): Promise<void> {
+    const outbox = OutboxEntity.create(outboxPayload);
+    const idempotency = IdempotencyEntity.create({ eventId });
+    await this.dataSource.transaction(async (manager) => {
+      await manager.getRepository(OutboxEntity).save(outbox);
+      await manager.getRepository(IdempotencyEntity).save(idempotency);
+      await manager.getRepository(OrderEntity).save(order);
+    });
   }
 
   private async saveTransaction(
@@ -114,6 +139,15 @@ export class OrderAdapter implements OrderRepository {
 
     await this.dataSource.transaction(async (manager) => {
       await manager.getRepository(OutboxEntity).save(outbox);
+      await manager.getRepository(OrderEntity).save(order);
+    });
+  }
+
+  private async saveIdempotency(eventId: string, order: IOrder): Promise<void> {
+    const idempotency = IdempotencyEntity.create({ eventId });
+
+    await this.dataSource.transaction(async (manager) => {
+      await manager.getRepository(IdempotencyEntity).save(idempotency);
       await manager.getRepository(OrderEntity).save(order);
     });
   }

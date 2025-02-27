@@ -1,5 +1,8 @@
 import { CreateUserDto } from './create-user.dto';
 
 export class CreateUserCommand {
-  constructor(public createUserDto: CreateUserDto) {}
+  constructor(
+    public eventId: string,
+    public createUserDto: CreateUserDto,
+  ) {}
 }

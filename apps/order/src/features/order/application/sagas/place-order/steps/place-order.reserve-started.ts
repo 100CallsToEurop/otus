@@ -3,9 +3,9 @@ import { IOrder } from '../../../../domain';
 import { STATUS_ORDER } from '@app/consts';
 
 export class PlaceOrderSagaStarted extends PlaceOrderSagaState {
-  public async started(): Promise<IOrder> {
+  public async started(eventId: string): Promise<IOrder> {
     this.saga.setState(STATUS_ORDER.WAITING_FOR_PAYMENT);
-    await this.saga.getState().paymentOrder();
+    await this.saga.getState().paymentOrder(eventId);
     return this.saga.order;
   }
 

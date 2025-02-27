@@ -11,6 +11,7 @@ export class CancelReserveProductCommandHandler
   constructor(private readonly productRepository: ProductRepository) {}
 
   async execute({
+    eventId,
     cancelReserveProduct: { orderId, transactionId },
   }: CancelReserveProductCommand): Promise<void> {
     const ids = [];
@@ -24,7 +25,7 @@ export class CancelReserveProductCommandHandler
       const idr = product.reservedProducts.find((r) => r.orderId === orderId);
       ids.push(idr.id);
     });
-    await this.productRepository.saveMany(products);
+    await this.productRepository.saveManyProducts(eventId, products);
     if (ids.length) await this.productRepository.deleteReservedProduct(ids);
   }
 }

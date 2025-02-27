@@ -12,6 +12,7 @@ import {
 } from '@app/amqp-contracts/queues/order';
 import { STATUS_ORDER } from '@app/consts';
 import { ProductResponse } from '../../domain/product';
+import { IdempotencyEntity } from '@app/idempotency/domain';
 
 @Injectable()
 export class ProductAdapter implements ProductRepository {
@@ -26,8 +27,8 @@ export class ProductAdapter implements ProductRepository {
     return await this.productRepository.save(product);
   }
 
-  async saveMany(products: IProduct[]): Promise<void> {
-    await this.productRepository.save(products);
+  async saveManyProducts(eventId: string, products: IProduct[]): Promise<void> {
+    await this.saveIdempotency(eventId, products);
   }
 
   async getByName(name: string): Promise<IProduct | null> {
@@ -61,6 +62,7 @@ export class ProductAdapter implements ProductRepository {
   }
 
   async reserveProducts(
+    eventId: string,
     orderId: number,
     transactionId: string,
     products: IProduct[],
@@ -86,8 +88,12 @@ export class ProductAdapter implements ProductRepository {
         transactionMessage: '',
       },
     };
-    await this.saveTransaction(outboxPayload, products);
-    await this.saveTransaction(updatePayload, products);
+    await this.saveOperationTransaction(
+      eventId,
+      outboxPayload,
+      updatePayload,
+      products,
+    );
   }
 
   private async saveTransaction(
@@ -102,6 +108,44 @@ export class ProductAdapter implements ProductRepository {
 
     await this.dataSource.transaction(async (manager) => {
       await manager.getRepository(OutboxEntity).save(outbox);
+      await manager.getRepository(ProductEntity).save(products);
+    });
+  }
+
+  private async saveOperationTransaction(
+    eventId: string,
+    outboxPayload: {
+      routingKey: string;
+      eventType: string;
+      payload: any;
+    },
+    updatePayload: {
+      routingKey: string;
+      eventType: string;
+      payload: any;
+    },
+    products: IProduct[],
+  ): Promise<void> {
+    const outbox = OutboxEntity.create(outboxPayload);
+    const outboxUpdate = OutboxEntity.create(updatePayload);
+    const idempotency = IdempotencyEntity.create({ eventId });
+
+    await this.dataSource.transaction(async (manager) => {
+      await manager.getRepository(OutboxEntity).save(outbox);
+      await manager.getRepository(OutboxEntity).save(outboxUpdate);
+      await manager.getRepository(IdempotencyEntity).save(idempotency);
+      await manager.getRepository(ProductEntity).save(products);
+    });
+  }
+
+  private async saveIdempotency(
+    eventId: string,
+    products: IProduct[],
+  ): Promise<void> {
+    const idempotency = IdempotencyEntity.create({ eventId });
+
+    await this.dataSource.transaction(async (manager) => {
+      await manager.getRepository(IdempotencyEntity).save(idempotency);
       await manager.getRepository(ProductEntity).save(products);
     });
   }

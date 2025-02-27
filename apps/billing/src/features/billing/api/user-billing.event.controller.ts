@@ -1,6 +1,6 @@
 import { Controller } from '@nestjs/common';
 import { UserBillingFacade } from '../application';
-import { RabbitSubscribe } from '@golevelup/nestjs-rabbitmq';
+import { Nack, RabbitRPC } from '@golevelup/nestjs-rabbitmq';
 import {
   RegistrationUserContract,
   UpdateUserContract,
@@ -18,74 +18,88 @@ export class BillingEventController {
     private readonly idempotencyService: IdempotencyService,
   ) {}
 
-  @RabbitSubscribe({
+  @RabbitRPC({
     exchange: RegistrationUserContract.queue.exchange.name,
     routingKey: RegistrationUserContract.queue.routingKey,
     queue: RegistrationUserContract.queue.queue,
   })
-  async createUser(request: RegistrationUserContract.request): Promise<void> {
+  async createUser(request: RegistrationUserContract.request) {
     try {
       const idempotency = await this.idempotencyService.checkIdempotency(
         request.eventId,
       );
+      if (idempotency) return new Nack();
       if (!idempotency) {
-        await this.userFacade.commands.createUser(request.payload);
+        await this.userFacade.commands.createUser(
+          request.eventId,
+          request.payload,
+        );
       }
     } catch (error) {
       console.error(error);
     }
   }
 
-  @RabbitSubscribe({
+  @RabbitRPC({
     exchange: UpdateUserContract.queue.exchange.name,
     routingKey: UpdateUserContract.queue.routingKey,
     queue: UpdateUserContract.queue.queue,
   })
-  async updateUser(request: UpdateUserContract.request): Promise<void> {
+  async updateUser(request: UpdateUserContract.request) {
     try {
       const idempotency = await this.idempotencyService.checkIdempotency(
         request.eventId,
       );
+      if (idempotency) return new Nack();
       if (!idempotency) {
-        await this.userFacade.commands.updateUser(request.payload);
+        await this.userFacade.commands.updateUser(
+          request.eventId,
+          request.payload,
+        );
       }
     } catch (error) {
       console.error(error);
     }
   }
 
-  @RabbitSubscribe({
+  @RabbitRPC({
     exchange: DeductFundsContract.queue.exchange.name,
     routingKey: DeductFundsContract.queue.routingKey,
     queue: DeductFundsContract.queue.queue,
   })
-  async deductFunds(request: DeductFundsContract.request): Promise<void> {
+  async deductFunds(request: DeductFundsContract.request) {
     try {
       const idempotency = await this.idempotencyService.checkIdempotency(
         request.eventId,
       );
+      if (idempotency) return new Nack();
       if (!idempotency) {
-        await this.userFacade.commands.deductFunds(request.payload);
+        await this.userFacade.commands.deductFunds(
+          request.eventId,
+          request.payload,
+        );
       }
     } catch (error) {
       console.error(error);
     }
   }
 
-  @RabbitSubscribe({
+  @RabbitRPC({
     exchange: CancelPaymentConfirmationContract.queue.exchange.name,
     routingKey: CancelPaymentConfirmationContract.queue.routingKey,
     queue: CancelPaymentConfirmationContract.queue.queue,
   })
-  async cancelPayment(
-    request: CancelPaymentConfirmationContract.request,
-  ): Promise<void> {
+  async cancelPayment(request: CancelPaymentConfirmationContract.request) {
     try {
       const idempotency = await this.idempotencyService.checkIdempotency(
         request.eventId,
       );
+      if (idempotency) return new Nack();
       if (!idempotency) {
-        await this.userFacade.commands.cancelPayment(request.payload);
+        await this.userFacade.commands.cancelPayment(
+          request.eventId,
+          request.payload,
+        );
       }
     } catch (error) {
       console.error(error);

@@ -12,8 +12,8 @@ export class PlaceOrderSagaReserveCourier extends PlaceOrderSagaState {
   public async paymentOrder(): Promise<IOrder> {
     throw new Error('Оплата невозможна');
   }
-  public async reserveCourier(): Promise<IOrder> {
-    await this.saga.orderRepository.reserveCourier(this.saga.order);
+  public async reserveCourier(eventId: string): Promise<IOrder> {
+    await this.saga.orderRepository.reserveCourier(eventId, this.saga.order);
     return this.saga.order;
   }
 

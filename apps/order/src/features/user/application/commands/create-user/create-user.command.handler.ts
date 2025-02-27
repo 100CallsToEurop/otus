@@ -11,7 +11,7 @@ export class CreateUserCommandHandler
   private readonly logger = new Logger(CreateUserCommandHandler.name);
   constructor(private readonly userRepository: OrderUserRepository) {}
 
-  async execute({ createUserDto }: CreateUserCommand): Promise<void> {
+  async execute({ eventId, createUserDto }: CreateUserCommand): Promise<void> {
     this.logger.log(
       `Create user: userId: ${createUserDto.userId}, email: ${createUserDto.email}`,
     );
@@ -19,6 +19,6 @@ export class CreateUserCommandHandler
       ...createUserDto,
       id: createUserDto.userId,
     });
-    await this.userRepository.save(newUser);
+    await this.userRepository.saveUser(eventId, newUser);
   }
 }

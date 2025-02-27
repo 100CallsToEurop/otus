@@ -6,6 +6,7 @@ import { AmqpConnection } from '@golevelup/nestjs-rabbitmq';
 import { PlaceOrderSaga } from '../../sagas/place-order';
 import { SaveViewOrderEvent } from '../../../domain/events';
 import { BadRequestException } from '@nestjs/common';
+import { randomUUID } from 'crypto';
 
 @CommandHandler(CreateOrderCommand)
 export class CreateOrderCommandHandler
@@ -34,7 +35,7 @@ export class CreateOrderCommandHandler
       this.amqpConnection,
       this.orderRepository,
     );
-    const order = await saga.getState().started();
+    const order = await saga.getState().started(randomUUID());
     await this.orderRepository.save(order);
     await this.eventBus.publish(new SaveViewOrderEvent(order));
     return { orderId: newOrder.orderId };

@@ -6,14 +6,12 @@ import { Logger } from '@nestjs/common';
 
 @CommandHandler(CreateUserCommand)
 export class CreateUserCommandHandler
-  implements ICommandHandler<CreateUserCommand, { userId: number }>
+  implements ICommandHandler<CreateUserCommand, void>
 {
   private readonly logger = new Logger(CreateUserCommandHandler.name);
   constructor(private readonly userRepository: BillingRepository) {}
 
-  async execute({
-    createUserDto,
-  }: CreateUserCommand): Promise<{ userId: number }> {
+  async execute({ eventId, createUserDto }: CreateUserCommand): Promise<void> {
     this.logger.log(
       `Create user: userId: ${createUserDto.userId}, email: ${createUserDto.email}`,
     );
@@ -21,7 +19,6 @@ export class CreateUserCommandHandler
       ...createUserDto,
       id: createUserDto.userId,
     });
-    const user = await this.userRepository.save(newUser);
-    return { userId: user.id };
+    await this.userRepository.saveUser(eventId, newUser);
   }
 }

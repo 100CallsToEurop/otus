@@ -8,13 +8,13 @@ export abstract class PlaceOrderSagaState {
     this.saga = saga;
   }
 
-  public abstract started(): Promise<IOrder>;
+  public abstract started(eventId: string): Promise<IOrder>;
 
-  public abstract reserveProducts(): Promise<IOrder>;
+  public abstract reserveProducts(eventId: string): Promise<IOrder>;
 
-  public abstract paymentOrder(): Promise<IOrder>;
+  public abstract paymentOrder(eventId: string): Promise<IOrder>;
 
-  public abstract reserveCourier(): Promise<IOrder>;
+  public abstract reserveCourier(eventId: string): Promise<IOrder>;
 
   public abstract finished(): Promise<IOrder>;
 

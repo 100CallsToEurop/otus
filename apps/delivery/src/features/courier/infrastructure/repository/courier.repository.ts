@@ -2,7 +2,9 @@ import { ICourier } from '../../domain/courier';
 
 export abstract class CourierRepository {
   abstract save(courier: ICourier): Promise<ICourier>;
+  abstract saveCourier(eventId: string): Promise<void>;
   abstract reserveCourier(
+    eventId: string,
     orderId: number,
     transactionId: string,
     courier: ICourier,

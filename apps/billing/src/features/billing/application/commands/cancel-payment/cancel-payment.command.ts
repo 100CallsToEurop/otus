@@ -1,5 +1,8 @@
 import { CancelPaymentType } from './cancel-payment.type';
 
 export class CancelPaymentCommand {
-  constructor(public cancelPaymentDto: CancelPaymentType) {}
+  constructor(
+    public eventId: string,
+    public cancelPaymentDto: CancelPaymentType,
+  ) {}
 }

@@ -1,6 +1,6 @@
 import { Controller } from '@nestjs/common';
 import { OrderFacade } from '../application';
-import { RabbitSubscribe } from '@golevelup/nestjs-rabbitmq';
+import { Nack, RabbitRPC } from '@golevelup/nestjs-rabbitmq';
 import { Public } from '@app/common/decorators';
 import {
   PlaceOrderContract,
@@ -16,7 +16,7 @@ export class OrderEventController {
     private readonly orderFacade: OrderFacade,
   ) {}
 
-  @RabbitSubscribe({
+  @RabbitRPC({
     exchange: PlaceOrderContract.queue.exchange.name,
     routingKey: PlaceOrderContract.queue.routingKey,
     queue: PlaceOrderContract.queue.queue,
@@ -26,15 +26,19 @@ export class OrderEventController {
       const idempotency = await this.idempotencyService.checkIdempotency(
         request.eventId,
       );
+      if (idempotency) return new Nack();
       if (!idempotency) {
-        await this.orderFacade.commands.placeOrder(request.payload);
+        await this.orderFacade.commands.placeOrder(
+          request.eventId,
+          request.payload,
+        );
       }
     } catch (error) {
       console.error(error);
     }
   }
 
-  @RabbitSubscribe({
+  @RabbitRPC({
     exchange: UpdateViewOrderContract.queue.exchange.name,
     routingKey: UpdateViewOrderContract.queue.routingKey,
     queue: UpdateViewOrderContract.queue.queue,
@@ -44,8 +48,12 @@ export class OrderEventController {
       const idempotency = await this.idempotencyService.checkIdempotency(
         request.eventId,
       );
+      if (idempotency) return new Nack();
       if (!idempotency) {
-        await this.orderFacade.commands.updateViewOrder(request.payload);
+        await this.orderFacade.commands.updateViewOrder(
+          request.eventId,
+          request.payload,
+        );
       }
     } catch (error) {
       console.error(error);

@@ -30,31 +30,32 @@ export class UserBillingFacade {
   ) {}
 
   commands = {
-    createUser: (createUserDto: CreateUserDto) =>
-      this.createUser(createUserDto),
-    updateUser: (updateUserDto: UpdateUserDto) =>
-      this.updateUser(updateUserDto),
+    createUser: (eventId: string, createUserDto: CreateUserDto) =>
+      this.createUser(eventId, createUserDto),
+    updateUser: (eventId: string, updateUserDto: UpdateUserDto) =>
+      this.updateUser(eventId, updateUserDto),
     addFunds: (userId: number, amount: number) => this.addFunds(userId, amount),
-    deductFunds: (deductFundsDto: DeductFundsDto) =>
-      this.deductFunds(deductFundsDto),
-    cancelPayment: (dto: CancelPaymentType) => this.cancelPayment(dto),
+    deductFunds: (eventId: string, deductFundsDto: DeductFundsDto) =>
+      this.deductFunds(eventId, deductFundsDto),
+    cancelPayment: (eventId: string, dto: CancelPaymentType) =>
+      this.cancelPayment(eventId, dto),
   };
   queries = {
     getUserInfo: (userId: number) => this.getUser(userId),
   };
 
-  createUser(createUserDto: CreateUserDto) {
+  createUser(eventId: string, createUserDto: CreateUserDto) {
     return this.commandBus.execute<
       CreateUserCommand,
       Awaited<ReturnType<CreateUserCommandHandler['execute']>>
-    >(new CreateUserCommand(createUserDto));
+    >(new CreateUserCommand(eventId, createUserDto));
   }
 
-  updateUser(updateUserDto: UpdateUserDto) {
+  updateUser(eventId: string, updateUserDto: UpdateUserDto) {
     return this.commandBus.execute<
       UpdateUserCommand,
       Awaited<ReturnType<UpdateUserCommandHandler['execute']>>
-    >(new UpdateUserCommand(updateUserDto));
+    >(new UpdateUserCommand(eventId, updateUserDto));
   }
 
   addFunds(userId: number, amount: number) {
@@ -64,18 +65,18 @@ export class UserBillingFacade {
     >(new AddFundsCommand(userId, amount));
   }
 
-  deductFunds(deductFundsDto: DeductFundsDto) {
+  deductFunds(eventId: string, deductFundsDto: DeductFundsDto) {
     return this.commandBus.execute<
       DeductFundsCommand,
       Awaited<ReturnType<DeductFundsCommandHandler['execute']>>
-    >(new DeductFundsCommand(deductFundsDto));
+    >(new DeductFundsCommand(eventId, deductFundsDto));
   }
 
-  cancelPayment(dto: CancelPaymentType) {
+  cancelPayment(eventId: string, dto: CancelPaymentType) {
     return this.commandBus.execute<
       CancelPaymentCommand,
       Awaited<ReturnType<CancelPaymentCommandHandler['execute']>>
-    >(new CancelPaymentCommand(dto));
+    >(new CancelPaymentCommand(eventId, dto));
   }
 
   getUser(userId: number) {

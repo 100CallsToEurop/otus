@@ -29,8 +29,10 @@ export class ProductFacade {
   commands = {
     createProduct: (createProductDto: CreateProductDto) =>
       this.createProduct(createProductDto),
-    reserve: (dto: ReserveProductType) => this.reserve(dto),
-    cancelReserve: (dto: CancelReserveProductType) => this.cancelReserve(dto),
+    reserve: (eventId: string, dto: ReserveProductType) =>
+      this.reserve(eventId, dto),
+    cancelReserve: (eventId: string, dto: CancelReserveProductType) =>
+      this.cancelReserve(eventId, dto),
   };
   queries = {
     getAllProducts: () => this.getAllProducts(),
@@ -49,17 +51,17 @@ export class ProductFacade {
     >(new GetProductsQuery());
   }
 
-  async reserve(dto: ReserveProductType) {
+  async reserve(eventId: string, dto: ReserveProductType) {
     return this.commandBus.execute<
       ReserveProductCommand,
       Awaited<ReturnType<ReserveProductCommandHandler['execute']>>
-    >(new ReserveProductCommand(dto));
+    >(new ReserveProductCommand(eventId, dto));
   }
 
-  async cancelReserve(dto: CancelReserveProductType) {
+  async cancelReserve(eventId: string, dto: CancelReserveProductType) {
     return this.commandBus.execute<
       CancelReserveProductCommand,
       Awaited<ReturnType<CancelReserveProductCommandHandler['execute']>>
-    >(new CancelReserveProductCommand(dto));
+    >(new CancelReserveProductCommand(eventId, dto));
   }
 }

@@ -28,7 +28,8 @@ export class CourierFacade {
 
   commands = {
     create: (dto: CreateCourierType) => this.createUser(dto),
-    reserve: (dto: ReserveCourierType) => this.reserve(dto),
+    reserve: (eventId: string, dto: ReserveCourierType) =>
+      this.reserve(eventId, dto),
     cancelReserve: (dto: CancelReserveCourierType) => this.cancelReserve(dto),
   };
   queries = {
@@ -42,11 +43,11 @@ export class CourierFacade {
     >(new CreateCourierCommand(dto));
   }
 
-  async reserve(dto: ReserveCourierType) {
+  async reserve(eventId: string, dto: ReserveCourierType) {
     return this.commandBus.execute<
       ReserveCourierCommand,
       Awaited<ReturnType<ReserveCourierCommandHandler['execute']>>
-    >(new ReserveCourierCommand(dto));
+    >(new ReserveCourierCommand(eventId, dto));
   }
 
   async cancelReserve(dto: CancelReserveCourierType) {

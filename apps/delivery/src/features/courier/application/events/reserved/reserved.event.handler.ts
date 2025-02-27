@@ -1,5 +1,5 @@
 import { EventsHandler, IEventHandler } from '@nestjs/cqrs';
-import { FailReservedEvent } from '../../../domain/events';
+import { FailReservedCourierEvent } from '../../../domain/events';
 import { AmqpConnection } from '@golevelup/nestjs-rabbitmq';
 import {
   PlaceOrderContract,
@@ -8,10 +8,10 @@ import {
 import { STATUS_ORDER } from '@app/consts';
 import { randomUUID } from 'crypto';
 
-@EventsHandler(FailReservedEvent)
-export class ReservedEventHandler implements IEventHandler<FailReservedEvent> {
+@EventsHandler(FailReservedCourierEvent)
+export class ReservedEventHandler implements IEventHandler<FailReservedCourierEvent> {
   constructor(private readonly amqpConnection: AmqpConnection) {}
-  async handle({ orderId, transactionId }: FailReservedEvent) {
+  async handle({ orderId, transactionId }: FailReservedCourierEvent) {
     const request = {
       eventId: randomUUID(),
       payload: {

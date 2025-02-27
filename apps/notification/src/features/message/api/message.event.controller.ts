@@ -1,6 +1,6 @@
 import { Controller } from '@nestjs/common';
 import { MessageFacade } from '../application';
-import { RabbitSubscribe } from '@golevelup/nestjs-rabbitmq';
+import { Nack, RabbitRPC } from '@golevelup/nestjs-rabbitmq';
 import { NotificationMessageContract } from '@app/amqp-contracts/queues/billing';
 import { Public } from '@app/common/decorators';
 import { IdempotencyService } from '@app/idempotency';
@@ -13,7 +13,7 @@ export class MessageEventController {
     private readonly messageFacade: MessageFacade,
   ) {}
 
-  @RabbitSubscribe({
+  @RabbitRPC({
     exchange: NotificationMessageContract.queue.exchange.name,
     routingKey: NotificationMessageContract.queue.routingKey,
     queue: NotificationMessageContract.queue.queue,
@@ -23,8 +23,12 @@ export class MessageEventController {
       const idempotency = await this.idempotencyService.checkIdempotency(
         request.eventId,
       );
+      if (idempotency) return new Nack();
       if (!idempotency) {
-        await this.messageFacade.commands.createMessage(request.payload);
+        await this.messageFacade.commands.createMessage(
+          request.eventId,
+          request.payload,
+        );
       }
     } catch (error) {
       console.error(error);

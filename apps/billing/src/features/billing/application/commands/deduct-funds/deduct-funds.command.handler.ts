@@ -16,6 +16,7 @@ export class DeductFundsCommandHandler
   ) {}
 
   async execute({
+    eventId,
     deductFundsDto: { userId, orderId, transactionId, amount },
   }: DeductFundsCommand): Promise<void> {
     this.logger.log(
@@ -24,14 +25,19 @@ export class DeductFundsCommandHandler
     const user = await this.userRepository.getUser(userId);
 
     await sleep(1000);
-
     const operation = user.deductWalletFunds(orderId, transactionId, amount);
     if (!operation) {
-      await this.eventBus.publish(
+      this.eventBus.publish(
         new FailFundsOperationEvent(orderId, transactionId, userId),
       );
+      await this.userRepository.saveUser(eventId, user);
       return;
     }
-    await this.userRepository.saveOperation(orderId, transactionId, user);
+    await this.userRepository.saveOperation(
+      eventId,
+      orderId,
+      transactionId,
+      user,
+    );
   }
 }

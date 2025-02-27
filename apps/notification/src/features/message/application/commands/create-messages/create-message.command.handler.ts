@@ -5,15 +5,12 @@ import { MessageEntity } from '../../../domain';
 
 @CommandHandler(CreateMessageCommand)
 export class CreateMessageCommandHandler
-  implements ICommandHandler<CreateMessageCommand, { messageId: number }>
+  implements ICommandHandler<CreateMessageCommand, void>
 {
   constructor(private readonly messageRepository: MessageRepository) {}
 
-  async execute({
-    messageDto,
-  }: CreateMessageCommand): Promise<{ messageId: number }> {
+  async execute({ eventId, messageDto }: CreateMessageCommand): Promise<void> {
     const newMessage = MessageEntity.create(messageDto);
-    await this.messageRepository.save(newMessage);
-    return { messageId: newMessage.id };
+    await this.messageRepository.saveMessage(eventId, newMessage);
   }
 }
