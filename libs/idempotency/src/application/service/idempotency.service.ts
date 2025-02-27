@@ -13,7 +13,8 @@ export class IdempotencyService {
       await this.idempotencyRepository.save(
         IdempotencyEntity.create({ eventId }),
       );
+      return false;
     }
-    return checkEventId;
+    return true;
   }
 }
